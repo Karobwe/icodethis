@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(7, 85%, 67%)",
+                        },
+                        secondary: {
+                            100: "hsl(240, 65%, 89%)",
+                            400: "hsl(243, 41%, 58%)",
+                            500: "hsl(240, 29%, 26%)",
+                            600: "hsl(238, 30%, 24%)",
+                            700: "hsl(236, 30%, 21%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+        main::-webkit-scrollbar { 
+            display: none;  /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react'
+
+        function App() {
+            const [users, setUsers] = React.useState([])
+
+            const fetchUserData = () => {
+                fetch("https://jsonplaceholder.typicode.com/users")
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    setUsers(data)
+                })
+            }
+
+            React.useEffect(() => {
+                fetchUserData()
+            }, [])
+
+            return (
+                <main className={"bg-secondary-700 text-secondary-100 w-full min-h-screen flex items-center justify-center"}>
+                    {users.length > 0 && (
+                        <ul className={"max-w-4xl flex justify-center flex-wrap gap-4"}>
+                            {users.map(user => (
+                                <li key={user.id} className={"bg-secondary-500 w-72 h-44 rounded flex flex-col items-start justify-center gap-1 px-8"}>
+                                    <h2 className={"text-lg font-semibold"}>
+                                        {user.name}
+                                    </h2>
+
+                                    <p className="text-sm">@{user.username}</p>
+
+                                    <p className={"italic"}>{user.email}</p>
+
+                                    <Rating/>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function Rating() {
+            let rating = Math.floor(Math.random() * (5 - 1) + 1)
+            return (
+                <div className="mt-2 flex items-center gap-2">
+                        <HeroIcons.Star className={`w-6 h-6 ${rating >= 1 && "text-primary-400"}`} />
+                        <HeroIcons.Star className={`w-6 h-6 ${rating >= 2 && "text-primary-400"}`} />
+                        <HeroIcons.Star className={`w-6 h-6 ${rating >= 3 && "text-primary-400"}`} />
+                        <HeroIcons.Star className={`w-6 h-6 ${rating >= 4 && "text-primary-400"}`} />
+                        <HeroIcons.Star className={`w-6 h-6 ${rating >= 5 && "text-primary-400"}`} />
+                </div>
+            )
+        }
+
+    </script>
+</body>
+
+</html>

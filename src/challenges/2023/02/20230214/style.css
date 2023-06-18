@@ -1,0 +1,9 @@
+progress[value]::-webkit-progress-bar {
+	background-color: hsla(0, 4%, 1%, 0.38);
+	border-radius: 2rem;
+  }
+
+  progress[value]::-webkit-progress-value {
+	background-color: hsla(44, 100%, 50%, 1);
+	border-radius: 2rem;
+  }

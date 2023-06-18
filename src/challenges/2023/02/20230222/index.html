@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            darkpurple: "hsl(246, 30.4%, 13.5%)",
+                            dark: "hsl(244, 30.9%, 10.8%)",
+                        },
+                        backgroundImage: {
+                            "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body class="bg-gradient-radial from-gray-400 to-gray-200 flex justify-center items-center min-h-screen">
+        <div class="bg-slate-50 w-[392px] space-y-16 m-4 sm:m-8">
+            <header class="relative z-10 overflow-hidden text-slate-50 h-56">
+                <ul>
+                    <li>
+                        <div class="absolute object-cover  -z-10 sepia-[30%]">
+                            <div class="absolute w-full h-full bg-slate-800 opacity-30"></div>
+                            <img src="https://images.pexels.com/photos/248195/pexels-photo-248195.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                        </div>
+
+                        <ul class="flex ite
+                         justify-evenly">
+                            <li>
+                                <i class="ti ti-antenna-bars-4"></i>
+
+                                <span>EE</span>
+
+                                <i class="ri-wifi-line"></i>
+                            </li>
+
+                            <li>9:25 am</li>
+
+                            <li>
+                                <span>50%</span>
+                                <i class="ri-battery-charge-line"></i>
+                            </li>
+                        </ul>
+        
+                        <div class="flex items-center justify-center">
+                            <h3 class="text-xl text-light uppercase mr-12">Tokyo, Japan</h3>
+                            <button class="">
+                                <i class="ri-arrow-drop-down-line text-5xl"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col items-center space-y-1 mt-6">
+                            <span class="text-5xl font-black">20°</span>
+                            <span class="text-lg font-medium">Cloudy</span>
+                        </div>
+
+                        <div class="text-slate-300/80 text-md text-center mt-4">
+                            <i class="ti ti-point-filled"></i>
+                            <i class="ti ti-point-filled text-slate-100"></i>
+                            <i class="ti ti-point-filled"></i>
+                            <i class="ti ti-point-filled"></i>
+                            <i class="ti ti-point-filled"></i>
+                        </div>
+                    </li>
+                </ul>
+            </header>
+
+            <main class="">
+                <table class="table-fixed text-2xl text-slate-500 w-9/12 mx-auto">
+                    <tbody class="flex flex-col">
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Monday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-showers-line text-5xl"></i></td>
+                      </tr>
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Tuesday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-cloudy-2-line text-5xl"></i></i></td>
+                      </tr>
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Wednesday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-cloudy-2-line text-5xl"></i></i></td>
+                      </tr>
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Thursday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-rainy-line text-5xl"></i></td>
+                      </tr>
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Friday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-thunderstorms-line text-5xl"></i></td>
+                      </tr>
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Saturday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-cloud-windy-line text-5xl"></i></td>
+                      </tr>
+                      <tr class="flex items-center justify-evenly">
+                        <th class="font-normal mr-auto">Sunday</th>
+                        <td class="text-3xl font-medium mx-3">0°</td>
+                        <td><i class="ri-cloud-windy-line text-5xl"></i></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </main>
+
+            <footer class="h-24">
+                <button class="bg-zinc-400 text-zinc-50 text-2xl w-full h-full">Add Location</button>
+            </footer>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

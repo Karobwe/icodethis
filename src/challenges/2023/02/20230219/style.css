@@ -1,0 +1,16 @@
+@layer base {
+    :root {
+        --deepocean: rgb(18, 21, 73);
+        --turquoise: hsl(179, 70.1%, 54.1%);
+    }
+}
+
+progress[value]::-webkit-progress-bar {
+	background-color: var(--deepocean);
+	border-radius: 2rem;
+  }
+
+  progress[value]::-webkit-progress-value {
+	background-color: var(--turquoise);
+	border-radius: 2rem;
+  }

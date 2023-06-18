@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            indigo: "hsl(235, 51.7%, 22.7%)",
+                            realblue:  "hsl(235, 49.6%, 24.1%)",
+                            crimson: "hsl(324, 94.5%, 49.6%)",
+                            turquoise: "hsl(179, 70.1%, 54.1%)",
+                            deepocean: "rgb(18, 21, 73)",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body class="bg-indigo flex justify-center items-center min-h-screen">
+        <div class="bg-realblue text-slate-300 shadow-[0_8px_24px_4px_rgba(0,0,0,.3)] rounded-lg overflow-hidden w-[24rem] min-w-[16em] max-w-md md:max-w-3xl m-2">
+            <div class="border-t-4 border-crimson p-4 space-y-2">
+                <div class="flex space-between">
+                    <h1 class="text-2xl text-slate-50 font-semibold">Improve accessibility for visually impaired users</h1>
+
+                    <a href="#" class="rounded-full border border-deepocean w-10 h-10 aspect-square flex items-center justify-center hover:bg-deepocean hover:text-turquoise transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
+                            <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <p class="text-sm pb-4">Created on 19.02.2023</p>
+
+                <p>Make the website more user-friendly for people with visual impairments by optimizing for screen readers, adding alt text to images, and ensuring easy navigation.</p>
+
+                <div class="flex items-center space-x-4 py-6">
+                    <label for="progressbar">Tasks</label>
+
+                    <progress id="progressbar" value="43" max="100" class="flex-1 h-2"></progress>
+
+                    <output>43%</output>
+                </div>
+
+                <div class="flex justify-evenly space-x-4 sm:space-x-8">
+                    <a href="#" class="w-12 h-12 aspect-square rounded-full overflow-hidden outline outline-[2px] outline-deepocean outline-offset-4">
+                        <img src="https://images.unsplash.com/photo-1675796744874-ba243d97fc3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="" class="object-cover hover:scale-125 transition-all duration-300">
+                    </a>
+
+                    <a href="#" class="w-12 h-12 aspect-square rounded-full overflow-hidden outline outline-[2px] outline-deepocean outline-offset-4">
+                        <img src="https://images.unsplash.com/photo-1674502403205-935af2e11074?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="" class="object-cover hover:scale-125 transition-all duration-300">
+                    </a>
+
+                    <a href="#" class="w-12 h-12 aspect-square rounded-full overflow-hidden outline outline-[2px] outline-deepocean outline-offset-4">
+                        <img src="https://images.unsplash.com/photo-1673867727274-8dff25d9beef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="" class="object-cover hover:scale-125 transition-all duration-300">
+                    </a>
+
+                    <a href="#" class="w-12 h-12 aspect-square rounded-full overflow-hidden outline outline-[2px] outline-deepocean outline-offset-4">
+                        <img src="https://images.unsplash.com/photo-1674037204170-ca7f46a68b0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="" class="object-cover hover:scale-125 transition-all duration-300">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

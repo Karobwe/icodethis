@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "#ff7882",
+                        },
+                        secondary: {
+                            400: "#ff8c52",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+        main::-webkit-scrollbar { 
+            display: none;  /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import Chart from 'https://cdn.skypack.dev//react-apexcharts'
+
+        function App() {
+            return (
+                <div className={"bg-slate-100 w-full h-screen overflow-hidden grid grid-cols-4 auto-rows-min gap-x-8"}>
+                    <Navbar/>
+                    <Aside/>
+                    <Main/>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+
+        function Navbar() {
+            return (
+                <nav className={"bg-slate-900 text-white col-start-1 col-end-5 flex items-center h-20 p-2"}>
+                    <div className={"bg-slate-700 w-fit min-h-max px-3 py-1 border border-1 rounded"}>navbar</div>
+                </nav>
+            );
+        }
+
+        function Aside() {
+            return (
+                <aside className={"bg-slate-800 text-white col-start-1 col-end-2 row-start-2 flex items-center h-screen p-2"}>
+                    <div className={"bg-slate-700 w-fit min-h-max px-3 py-1 border border-1 rounded"}>aside</div>
+                </aside>
+            );
+        }
+
+        function Main() {
+            return (
+                <main className={"bg-white/0 text-black col-start-2 col-span-3 row-start-2 flex flex-wrap items-start h-full overflow-scroll p-6 mt-8 rounded-l-lg"}>
+                    <Card className={"w-full h-32"}>
+                        <div className="grid grid-cols-4 divide-x">
+                            <StatCard value={31} label={"Retweets"}/>
+                            <StatCard value={98} label={"Clicks"}/>
+                            <StatCard value={56} label={"Comments"}/>
+                            <StatCard value={372} label={"Impressions"}/>
+                        </div>
+                    </Card>
+
+                    <div className="flex gap-8">
+                        <Card className={"w-96 md:w-[36rem] xl:w-[49rem]"}>
+                            <h3 className="text-2xl font-bold">Overview</h3>
+                        </Card>
+
+                        <Card className={"flex-1 min-w-max"}>
+                            <ApexChart/>
+                        </Card>
+                    </div>
+                </main>
+            );
+        }
+
+        function Card({children, className}) {
+            return (
+                <div className={`bg-white p-8 rounded-lg ${className}`}>
+                    {children}
+                </div>
+            );
+        }
+
+        function StatCard({value, label}) {
+            return (
+                <div className={"flex flex-col items-center justify-center"}>
+                    <div className={"text-2xl font-bold"}>{value}</div>
+                    <div>{label}</div>
+                </div>
+            );
+        }
+
+        function ApexChart() {
+            const data = {
+                options: {
+                    chart: {
+                        id: 'apexchart-example'
+                    },
+                    xaxis: {
+                        categories: [
+                            1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999
+                        ]
+                    }
+                },
+                series: [{
+                    name: 'series-1',
+                    data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+                }]
+            }
+
+            return (
+                <Chart options={data.options} series={data.series} type="bar" width={500} height={320} />
+            )
+        }
+
+    </script>
+</body>
+
+</html>

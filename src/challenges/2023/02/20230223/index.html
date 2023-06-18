@@ -1,0 +1,198 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+        />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            darkpurple: "hsl(246, 30.4%, 13.5%)",
+                            dark: "hsl(244, 30.9%, 10.8%)",
+                        },
+                        backgroundImage: {
+                            "gradient-radial":
+                                "radial-gradient(var(--tw-gradient-stops))",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body
+        class="bg-gradient-radial from-gray-200 to-gray-50 flex justify-center items-center min-h-screen"
+    >
+        <div
+            class="-translate-y-24 text-slate-900 font-medium flex flex-col items-center space-y-3 w-[392px] m-4 sm:m-8"
+        >
+            <div
+                id="popup"
+                data-open="false"
+                class="opacity-0 scale-0 data-[open=true]:opacity-100 data-[open=true]:scale-100 origin-bottom duration-500 bg-white rounded-xl flex flex-col gap-y-6 w-full p-2 sm:p-6"
+            >
+                <div class="flex items-center space-x-2 w-full px-2 py-2">
+                    <div
+                        class="w-16 aspect-square overflow-hidden rounded-full"
+                    >
+                        <img
+                            src="https://images.unsplash.com/photo-1631513318856-6f16482c8c7b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                            alt=""
+                            class="object-cover"
+                        />
+                    </div>
+
+                    <div class="flex-1 text-left space-y-1 pr-12">
+                        <h2 class="font-bold">Annie Ingram</h2>
+                        <h3>@anngram</h3>
+                    </div>
+
+                    <div
+                        class="flex items-center justify-center w-8 aspect-square rounded-full border"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            class="fill-current"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"
+                            />
+                        </svg>
+                    </div>
+                </div>
+
+                <a href="#" class="text-blue-400">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        class="fill-current inline"
+                    >
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" />
+                    </svg>
+                    <button>Connect other account</button>
+                </a>
+
+                <hr />
+
+                <div class="grid grid-cols-2 gap-4 justify-items-center">
+                    <a
+                        href="#"
+                        class="flex space-x-3 hover:text-blue-400/80 duration-200"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            class="fill-current"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 15a4.987 4.987 0 0 1-1.828-.345l-2.236 2.237A7.963 7.963 0 0 0 12 20a7.963 7.963 0 0 0 4.064-1.108l-2.236-2.237A4.987 4.987 0 0 1 12 17zm-8-5c0 1.484.404 2.873 1.108 4.064l2.237-2.236A4.987 4.987 0 0 1 7 12c0-.645.122-1.261.345-1.828L5.108 7.936A7.963 7.963 0 0 0 4 12zm14.892-4.064l-2.237 2.236c.223.567.345 1.183.345 1.828s-.122 1.261-.345 1.828l2.237 2.236A7.963 7.963 0 0 0 20 12a7.963 7.963 0 0 0-1.108-4.064zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0-5a7.963 7.963 0 0 0-4.064 1.108l2.236 2.237A4.987 4.987 0 0 1 12 7c.645 0 1.261.122 1.828.345l2.236-2.237A7.963 7.963 0 0 0 12 4z"
+                            />
+                        </svg>
+
+                        <span>Support</span>
+                    </a>
+
+                    <a
+                        href="#"
+                        class="flex space-x-3 hover:text-blue-400/80 duration-200"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            class="fill-current"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M8.686 4l2.607-2.607a1 1 0 0 1 1.414 0L15.314 4H19a1 1 0 0 1 1 1v3.686l2.607 2.607a1 1 0 0 1 0 1.414L20 15.314V19a1 1 0 0 1-1 1h-3.686l-2.607 2.607a1 1 0 0 1-1.414 0L8.686 20H5a1 1 0 0 1-1-1v-3.686l-2.607-2.607a1 1 0 0 1 0-1.414L4 8.686V5a1 1 0 0 1 1-1h3.686zM6 6v3.515L3.515 12 6 14.485V18h3.515L12 20.485 14.485 18H18v-3.515L20.485 12 18 9.515V6h-3.515L12 3.515 9.515 6H6zm6 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"
+                            />
+                        </svg>
+
+                        <span>Settings</span>
+                    </a>
+
+                    <a
+                        href="#"
+                        class="flex space-x-3 hover:text-blue-400/80 duration-200"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            class="fill-current"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 18.26l-7.053 3.948 1.575-7.928L.587 8.792l8.027-.952L12 .5l3.386 7.34 8.027.952-5.935 5.488 1.575 7.928L12 18.26zm0-2.292l4.247 2.377-.949-4.773 3.573-3.305-4.833-.573L12 5.275l-2.038 4.42-4.833.572 3.573 3.305-.949 4.773L12 15.968z"
+                            />
+                        </svg>
+
+                        <span>Upgrade</span>
+                    </a>
+
+                    <a
+                        href="#"
+                        class="flex space-x-3 hover:text-blue-400/80 duration-200"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            class="fill-current"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M5 22a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3h-2V4H6v16h12v-2h2v3a1 1 0 0 1-1 1H5zm13-6v-3h-7v-2h7V8l5 4-5 4z"
+                            />
+                        </svg>
+
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <button
+                id="open-popup"
+                class="z-10 bg-slate-300 rounded-full flex items-center justify-start space-x-2 max-w-max px-2 py-2"
+            >
+                <div class="w-16 aspect-square overflow-hidden rounded-full">
+                    <img
+                        src="https://images.unsplash.com/photo-1631513318856-6f16482c8c7b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                        alt=""
+                        class="object-cover"
+                    />
+                </div>
+
+                <div class="text-left space-y-1 pr-12">
+                    <h2 class="font-bold">Annie Ingram</h2>
+                    <h3>@anngram</h3>
+                </div>
+            </button>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

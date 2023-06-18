@@ -1,0 +1,88 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            darkpurple: "hsl(246, 30.4%, 13.5%)",
+                            dark: "hsl(244, 30.9%, 10.8%)",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body class="bg-darkpurple text-blue-50 flex justify-center items-center min-h-screen">
+        <div class="bg-dark text-center w-92 p-12 sm:m-8">
+            <h2 class="text-2xl">Who is playing now?</h2>
+
+            <div class="flex space-x-4 mt-10 mb-16">
+                <figure class="bg-darkpurple px-6 py-6 space-y-4 rounded">
+                    <svg class="rotate-12 hover:rotate-0 duration-500" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                        <mask id="a" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36">
+                          <rect width="36" height="36" rx="72" fill="#FFF"/>
+                        </mask>
+                        <g mask="url(#a)">
+                          <path fill="#789048" d="M0 0h36v36H0z"/>
+                          <rect width="36" height="36" transform="rotate(168 15.58 21.79)" fill="#f0f0d8" rx="36"/>
+                          <g transform="rotate(-8 46.601 20)" fill="#000">
+                            <path d="M13 19a1 .75 0 0 0 10 0"/>
+                            <rect x="11" y="14" width="1.5" height="2" rx="1"/>
+                            <rect x="23" y="14" width="1.5" height="2" rx="1"/>
+                          </g>
+                        </g>
+                    </svg>
+
+                    <figcaption>
+                        <h4>Allevini</h4>
+                    </figcaption>
+                </figure>
+
+                <figure class="bg-darkpurple px-6 py-6 space-y-4 rounded">
+                    <svg class="rotate-12 hover:rotate-0 duration-500" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                        <mask id="a" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36">
+                          <rect width="36" height="36" rx="72" fill="#FFF"/>
+                        </mask>
+                        <g mask="url(#a)">
+                          <path fill="#789048" d="M0 0h36v36H0z"/>
+                          <rect width="36" height="36" transform="rotate(23 1.297 23.958) scale(1.2)" fill="#f0f0d8" rx="36"/>
+                          <g transform="rotate(3 -52.33 -113.91)" fill="#000">
+                            <path d="M13 21a1 .75 0 0 0 10 0"/>
+                            <rect x="11" y="14" width="1.5" height="2" rx="1"/>
+                            <rect x="23" y="14" width="1.5" height="2" rx="1"/>
+                          </g>
+                        </g>
+                    </svg>
+                      
+
+                    <figcaption>
+                        <h4>Nookiety</h4>
+                    </figcaption>
+                </figure>
+
+                <figure class="bg-darkpurple text-sky-400/50 px-6 py-6 space-y-4 rounded hover:text-sky-400/75 duration-300 group">
+                    <button class="h-[80px] text-4xl font-semibold">
+                        <svg class="rounded-full outline outline-1 outline-offset-2 outline-sky-400/50 group-hover:hover:outline-sky-400/75 group-hover:scale-110 duration-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M0 0h24v24H0z" stroke="none"/><path d="M12 5v14m-7-7h14"/>
+                        </svg>                                                
+                    </button>
+                      
+
+                    <figcaption>
+                        <h4>Add user</h4>
+                    </figcaption>
+                </figure>
+            </div>
+
+            <button class="text-sky-400/50 font-semibold rounded-full border border-sky-400/50 px-8 py-2 hover:text-sky-400/75 hover:border-sky-400/75 transition-all duration-300">Manage users</button>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

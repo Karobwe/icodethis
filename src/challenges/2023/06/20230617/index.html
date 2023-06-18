@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "rgb(0, 135, 255)",
+                        },
+                        secondary: {
+                            400: "rgb(151, 203, 94)",
+                        },
+                        neutral: {
+                            200: "rgb(133, 136, 154)",
+                            400: "rgb(25, 28, 55)",
+                            600: "rgb(19, 22, 43)",
+                            800: "rgb(17, 19, 38)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        
+        function App() {
+            return (
+                <main className={"bg-neutral-600 text-black-700 w-full min-h-screen flex items-center justify-center"}>
+                    
+                    <div className={"bg-neutral-400 min-w-[24rem] shadow-lg flex flex-col items-center justify-center"}>
+                        <header className="bg-neutral-800 w-full h-10 p-4 rounded-t flex items-center justify-end gap-4">
+                            <div className="bg-neutral-400 flex-none w-5 h-5 rounded-full"></div>
+                            <div className="bg-neutral-400 flex-none w-5 h-5 rounded-full"></div>
+                            <div className="bg-neutral-400 flex-none w-5 h-5 rounded-full"></div>
+                        </header>
+
+                        <section className="p-8 rounded-b grid content-center">
+                            <UploadScreen/>
+                        </section>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function UploadScreen() {
+            return (
+                <div class="p-12 text-neutral-100 border border-dashed border-neutral-800 flex flex-col items-center jsutify-center gap-4 md:m-20 md:p-20">
+                    <p>Drag and drop your <span class="text-white font-semibold">.json</span> file</p>
+
+                    <p class="uppercase">Or</p>
+
+                    <input type="file" id="document" name="document" accept="text/json" className={"peer hidden"} />
+                    <label for="document" className={"bg-primary-400 text-white w-64 h-16 rounded grid content-center justify-center"}>Select files to upload</label>
+                </div>
+            );
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+@layer base {
+    :root {
+        --dark: hsl(210deg 10.81% 14.51%);
+        --light: hsl(210deg 16.67% 95.29%);
+        --radius: 10rem;
+    }
+}
+
+progress[value]::-webkit-progress-bar {
+	background-color: var(--dark);
+	border-radius: var(--radius);
+}
+
+progress[value]::-webkit-progress-value {
+	background-color: var(--light);
+	border-radius: var(--radius);
+}

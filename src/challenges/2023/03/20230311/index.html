@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body class="bg-[#f8f9fa] flex justify-center items-center min-h-screen">
+        <div class="text-[#181028] max-w-md md:max-w-lg">
+            <div class="space-y-1 shadow-lg">
+                <section class="space-y-3 p-4 bg-white rounded-t-xl">
+                    <div class="flex justify-between">
+                        <h2 class="text-xl font-semibold font-serif">Take a quick tour</h2>
+    
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>                      
+                    </div>
+    
+                    <p>Here are few steps to help you hit the ground.</p>
+    
+                    <div class="space-x-2">
+                        <output class="font-serif">40%</output>
+    
+                        <progress id="progressbar" value="40"  max="100" class="flex-1 h-2"></progress>
+                    </div>
+                </section>
+    
+                <section class="p-4 bg-white rounded-b-xl">
+                    <ul class="flex flex-col items-start gap-y-2">
+                        <li class="flex items-center justify-center">
+                            <input id="item1" class="hidden" type="checkbox" checked />
+    
+                            <label for="item1" data-checked="false" class="flex group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-data-[checked=true]:hidden">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                </svg>
+    
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden group-data-[checked=true]:block">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+    
+                                <span class="ml-1">Experience contextual conversations</span>
+                            </label>
+                        </li>
+    
+                        <li class="flex items-center justify-center">
+                            <input id="item2" class="hidden" type="checkbox" checked />
+    
+                            <label for="item2" data-checked="false" class="flex group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-data-[checked=true]:hidden">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                </svg>
+    
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden group-data-[checked=true]:block">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+    
+                                <span class="ml-1">Brand your customer experience</span>
+                            </label>
+                        </li>
+    
+                        <li class="flex items-center justify-center">
+                            <input id="item3" class="hidden" type="checkbox" checked />
+    
+                            <label for="item3" data-checked="false" class="flex group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-data-[checked=true]:hidden">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                </svg>
+    
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden group-data-[checked=true]:block">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+    
+                                <span class="ml-1">Offer support beyound your website</span>
+                            </label>
+                        </li>
+    
+                        <li class="flex items-center justify-center">
+                            <input id="item4" class="hidden" type="checkbox" checked />
+    
+                            <label for="item4" data-checked="false" class="flex group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-data-[checked=true]:hidden">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                </svg>
+    
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden group-data-[checked=true]:block">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+    
+                                <span class="ml-1">Top customer support with bots</span>
+                            </label>
+                        </li>
+    
+                        <li class="flex items-center justify-center">
+                            <input id="item5" class="hidden" type="checkbox" checked />
+    
+                            <label for="item5" data-checked="false" class="flex group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-data-[checked=true]:hidden">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                </svg>
+    
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden group-data-[checked=true]:block">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+    
+                                <span class="ml-1">Build your team</span>
+                            </label>
+                        </li>
+                    </ul>
+    
+                    <button class="mt-8">Skip this</button>
+                </section>
+            </div>
+
+            <section class="flex p-4">
+                <button class="flex items-center gap-x-2 h-10 ml-auto px-4 py-1 rounded-full bg-slate-800 text-slate-50">
+                    <span>Get started</span>
+
+                    <span class="flex items-center justify-center w-5 h-5 aspect-square rounded-full bg-slate-50 text-slate-800">5</span>
+                </button>
+            </section>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

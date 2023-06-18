@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            green: "hsl(152, 56.6%, 29.8%)",
+                            orange: "hsl(19, 100%, 40.6%)",
+                            red: "hsl(345, 80.6%, 48.4%)",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body class="bg-slate-100 flex justify-center items-center min-h-screen">
+        <div class="space-y-12 text-slate-900 max-w-3xl m-8">
+            <h1 class="text-2xl font-semibold space-x-3">
+                <span class="font-bold">Incident History</span>
+                <span class="bg-slate-800 text-lg text-slate-100 rounded px-4 py-1">New</span>
+            </h1>
+
+            <section class="space-y-6">
+                <article class="bg-slate-50 rounded shadow-lg min-w-[400px] p-8">
+                    <h4 class="text-lg font-medium">Feb 20, 2023</h4>
+
+                    <h2>
+                        <span class="text-xl font-semibold">Users are unaable to rearrange screens</span>
+                        <span class="bg-green text-md text-slate-100 rounded px-2 py-1">Resolved</span>
+                    </h2>
+
+                    <p class="my-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Placeat, praesentium eius eum necessitatibus eveniet tenetur iure unde obcaecati odit quas voluptas aliquid aperiam illum cum distinctio fugit sint magnam neque.</p>
+
+                    <button class="bg-slate-300 text-slate-600 rounded space-x-3 px-4 py-1 hover:bg-slate-400/75 transition-all duration-300">
+                        <span>Full Report</span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-current inline-block" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/>
+                        </svg>
+                    </button>
+                </article>
+
+                <article class="bg-slate-50 rounded shadow-lg min-w-[400px] p-8">
+                    <h4 class="text-lg font-medium">Feb 20, 2023</h4>
+
+                    <h2>
+                        <span class="text-xl font-semibold">Cloud V7 users may be experiencing some slowness or issues loading projects</span>
+                        <span class="bg-orange text-md text-slate-100 rounded px-2 py-1">Monitoring</span>
+                    </h2>
+
+                    <p class="my-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Placeat, praesentium eius eum necessitatibus eveniet tenetur iure unde obcaecati odit quas voluptas aliquid aperiam illum cum distinctio fugit sint magnam neque.</p>
+
+                    <button class="bg-slate-300 text-slate-600 rounded space-x-3 px-4 py-1 hover:bg-slate-400/75 transition-all duration-300">
+                        <span>Full Report</span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-current inline-block" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/>
+                        </svg>
+                    </button>
+                </article>
+
+                <article class="bg-slate-50 rounded shadow-lg min-w-[400px] p-8">
+                    <h4 class="text-lg font-medium">Feb 20, 2023</h4>
+
+                    <h2>
+                        <span class="text-xl font-semibold">Users are unaable to rearrange screens</span>
+                        <span class="bg-red text-md text-slate-100 rounded px-2 py-1">Investigating</span>
+                    </h2>
+
+                    <p class="my-4">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Placeat, praesentium eius eum necessitatibus eveniet tenetur iure unde obcaecati odit quas voluptas aliquid aperiam illum cum distinctio fugit sint magnam neque.</p>
+
+                    <button class="bg-slate-300 text-slate-600 rounded space-x-3 px-4 py-1 hover:bg-slate-400/75 transition-all duration-300">
+                        <span>Full Report</span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-current inline-block" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/>
+                        </svg>
+                    </button>
+                </article>
+            </section>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

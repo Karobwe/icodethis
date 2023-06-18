@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class'
+            }
+        </script>
+    </head>
+
+    <body class="bg-slate-100 flex justify-center items-center min-h-screen">
+        <div class="w-sm max-w-7xl m-4 px-8 py-16 rounded-xl bg-white">
+            <header class="flex justify-center">
+                <ul class="flex gap-x-0">
+                    <li class="px-4 py-1 bg-orange-50 rounded-lg">
+                        <a href="">All</a>
+                    </li>
+
+                    <li class="px-4 py-1 rounded-lg">
+                        <a href="">Photography</a>
+                    </li>
+
+                    <li class="px-4 py-1 rounded-lg">
+                        <a href="">Fashion</a>
+                    </li>
+
+                    <li class="px-4 py-1 rounded-lg">
+                        <a href="">Sculpture</a>
+                    </li>
+                </ul>
+            </header>
+
+            <main class="flex gap-x-10 mt-20 mb-10">
+                <button class="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                      </svg>                      
+                </button class="flex gap-x-1">
+                
+                <section class="flex gap-x-8">
+                    <article class="w-56 rounded-xl overflow-hidden border border-gray-200/40">
+                        <figure class="">
+                            <div class="h-36 overflow-hidden">
+                                <img class="h-full w-full object-cover" src="https://images.pexels.com/photos/12366046/pexels-photo-12366046.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                            </div>
+
+                            <figcaption class="px-2 py-6 bg-white text-center">
+                                <h3 class="text-lg font-semibold">Mystical montains</h3>
+                                <p class="text-sm text-gray-400">Sat, May 2022</p>
+                            </figcaption>
+                        </figure class="flex gap-x-1">
+                    </article>
+
+                    <article class="w-56 rounded-xl overflow-hidden border border-gray-200/40">
+                        <figure class="">
+                            <div class="h-36 overflow-hidden">
+                                <img class="h-full w-full object-cover" src="https://images.pexels.com/photos/15188442/pexels-photo-15188442.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                            </div>
+
+                            <figcaption class="px-2 py-6 bg-white text-center">
+                                <h3 class="text-lg font-semibold">Lake walk</h3>
+                                <p class="text-sm text-gray-400">Thu, July 2022</p>
+                            </figcaption>
+                        </figure>
+                    </article>
+
+                    <article class="w-56 rounded-xl overflow-hidden border border-gray-200/40">
+                        <figure class="">
+                            <div class="h-36 overflow-hidden">
+                                <img class="h-full w-full object-cover" src="https://images.pexels.com/photos/14417008/pexels-photo-14417008.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                            </div>
+
+                            <figcaption class="px-2 py-6 bg-white text-center">
+                                <h3 class="text-lg font-semibold">Living shadows</h3>
+                                <p class="text-sm text-gray-400">Fri, October 2022</p>
+                            </figcaption>
+                        </figure>
+                    </article>
+
+                </section>
+
+                <button class="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>                      
+                </button>
+            </main>
+
+            <footer class="text-center">
+                <button class="px-4 py-2 rounded bg-orange-500 text-white">View more</button>
+            </footer>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

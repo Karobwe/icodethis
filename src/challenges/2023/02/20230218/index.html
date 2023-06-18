@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-200 flex justify-center items-center min-h-screen">
+    <div class="space-y-8 text-slate-900 p-8 max-w-2xl md:max-w-7xl">
+        <div data-payment="yealry" class="space-y-8 max-w-sm md:max-w-5xl">
+            <div class="space-y-3 flex flex-col items-center justify-center sm:flex-row sm:justify-between sm:w-full">
+                <h1 class="text-4xl font-black">Choose your plan</h1>
+    
+                <div class="relative grid grid-cols-2 bg-slate-300 border-4 border-slate-300 rounded-full w-fit">
+                    <button id="monthly" data-selected="false" class="w-36 px-4 py-2 data-[selected=true]:bg-slate-50 data-[selected=true]:rounded-full">Monthly</button>
+                    <button id="yearly" data-selected="true" class="w-36 px-4 py-2 data-[selected=true]:bg-slate-50 data-[selected=true]:rounded-full">Yearly</button>
+                </div>
+            </div>
+    
+            <div data-payment="yearly" class="group sm:flex sm:space-x-8">
+                <section class="bg-slate-50 rounded shadow-lg p-8 space-y-8">
+                    <h2 class="text-xl font-bold mb-8">Starter</h2>
+                    <div class="space-y-1">
+                        <h3 class="text-lg font-bold">$<output id="price--starter">8.99</output> / month</h3>
+                        <p class="text-slate-600">Billed yearly</p>
+                    </div>
+    
+                    <p class="mt-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti in quisquam eius labore illum a ex accusantium, consequuntur neque impedit quibusdam temporibus dignissimos eligendi ipsa maiores vitae? Architecto, sequi earum.</p>
+            
+                    <button class="bg-slate-800 text-slate-100 rounded w-full px-8 py-4 hover:bg-slate-900 transition-all duration-300">Get started</button>
+                </section>
+
+                <section class="bg-slate-50 rounded shadow-lg p-8 space-y-8">
+                    <h2 class="text-xl font-bold mb-8">Professional</h2>
+                    <div class="space-y-1">
+                        <h3 class="text-lg font-bold">$<output id="price--pro">21.99</output> / month</h3>
+                        <p class="text-slate-600">
+                            Billed 
+                            <span class="group-data[payment=monthly]:block group-data[payment=yearly]:hidden">monthly</span>
+                            <span class="group-data[payment=monthly]:hidden group-data[payment=yearly]:block">yearly</span>
+                        </p>
+                    </div>
+    
+                    <p class="mt-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti in quisquam eius labore illum a ex accusantium, consequuntur neque impedit quibusdam temporibus dignissimos eligendi ipsa maiores vitae? Architecto, sequi earum.</p>
+            
+                    <button class="bg-slate-100 text-slate-800 rounded border border-slate-600 w-full px-8 py-4 hover:bg-slate-200 transition-all duration-300">Get started</button>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            darkpurple: "hsl(246, 30.4%, 13.5%)",
+                            dark: "hsl(244, 30.9%, 10.8%)",
+                        },
+                        backgroundImage: {
+                            "gradient-radial":
+                                "radial-gradient(var(--tw-gradient-stops))",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body class="bg-gradient-radial from-gray-200 to-gray-50 flex justify-center items-center min-h-screen">
+        <div class="relative bg-slate-50 rounded-lg w-full max-w-4xl m-4 sm:m-8 p-8 flex items-center justify-center">
+            <canvas id="chart"></canvas>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>

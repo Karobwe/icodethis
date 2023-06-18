@@ -1,0 +1,190 @@
+<html class="group/theme">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+            }
+        </script>
+    </head>
+
+    <body class="bg-slate-100 flex justify-center items-center min-h-screen">
+        <div class="bg-white max-w-3xl min-w-[320px] space-y-6 dark:bg-slate-900">
+            <header class="flex flex-col space-y-8">
+                <div class="w-full text-gray-700 bg-white dark:text-gray-200 dark:bg-gray-800">
+                    <div class="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8">
+                      <div class="p-4 flex flex-row items-center justify-between">
+                        <a href="#" class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">Pixelgato</a>
+                        <button id="toggle-responsive-nav" class="md:hidden rounded-lg ml-auto focus:outline-none focus:shadow-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>  
+                        </button>
+                      </div>
+                      <nav data-open="false" class="flex-col flex-grow pb-4 md:pb-0 hidden md:flex md:justify-end md:flex-row data-[open=true]:flex">
+                        <a class="px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:bg-gray-600 dark:focus:text-white dark:hover:text-white dark:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" href="#">Vector</a>
+                        <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark:bg-transparent dark:hover:bg-gray-600 dark:focus:bg-gray-600 dark:focus:text-white dark:hover:text-white dark:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" href="#">Illustrations</a>
+                        <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark:bg-transparent dark:hover:bg-gray-600 dark:focus:bg-gray-600 dark:focus:text-white dark:hover:text-white dark:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" href="#">Images</a>
+                        <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark:bg-transparent dark:hover:bg-gray-600 dark:focus:bg-gray-600 dark:focus:text-white dark:hover:text-white dark:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" href="#">Icons</a>
+                        <button id="theme-toggler" data-active="false" class="group flex flex-row items-center w-full px-4 py-2 mt-2 text-sm font-semibold text-left bg-transparent rounded-lg dark:bg-transparent dark:focus:text-white dark:hover:text-white dark:focus:bg-gray-600 dark:hover:bg-gray-600 md:w-auto md:inline md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path class="block group-[.dark]/theme:hidden" stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                                <path class="hidden group-[.dark]/theme:block" stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                            </svg>
+                        </button>  
+                      </nav>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:justify-between px-8">
+                    <form class="flex justify-between border-b w-full sm:w-8/12" action="#">
+                        <label for="search" class="hidden">Search</label>
+                        <input type="search" name="search" id="search" placeholder="Search" class="flex-1 py-2 focus:outline-none bg-transparent text-xl dark:text-slate-50">
+                        <button type="submit" class="text-slate-400 hover:text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>                              
+                        </button>
+                    </form>
+
+                    <form action="#" class="mt-6 sm:mt-0 flex">
+                        <label for="upload" class="bg-slate-900 text-slate-50 rounded px-16 py-3 flex-1 dark:bg-slate-50 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 duration-200">Upload</label>
+                        <input id="upload" type="file" accept="image/*" multiple class="hidden" />
+                    </form>
+                </div>
+            </header>
+
+            <main class="p-8 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 lg:grid-rows-auto lg:gap-4">
+                <figure class="relative group">
+                    <div class="aspect-square overflow-hidden">
+                        <img class="object-cover" src="https://images.pexels.com/photos/15566278/pexels-photo-15566278.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                    </div>
+                    <figcaption class="absolute bottom-0 bg-slate-900/80 text-slate-50 w-full flex items-center px-4 py-2 opacity-0 dark:bg-slate-50/80 dark:text-slate-900 group-hover:opacity-100 duration-300">
+                        <div class="flex flex-col">
+                            <h2 class="font-medium">People</h2>
+                            <div class="text-sm">
+                                <span>82 likes</span>
+                                •
+                                <span>73 shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto hover:text-emerald-400 duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                        </div>
+                    </figcaption>
+                </figure class="grid grid-cols-3">
+                <figure class="relative group">
+                    <div class="aspect-square overflow-hidden">
+                        <img class="object-cover" src="https://images.pexels.com/photos/3208612/pexels-photo-3208612.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                    </div>
+                    <figcaption class="absolute bottom-0 bg-slate-900/80 text-slate-50 w-full flex items-center px-4 py-2 opacity-0 dark:bg-slate-50/80 dark:text-slate-900 group-hover:opacity-100 duration-300">
+                        <div class="flex flex-col">
+                            <h2 class="font-medium">Ladies</h2>
+                            <div class="text-sm">
+                                <span>264 likes</span>
+                                •
+                                <span>148 shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto hover:text-emerald-400 duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                        </div>
+                    </figcaption>
+                </figure class="grid grid-cols-3">
+                <figure class="relative group">
+                    <div class="aspect-square overflow-hidden">
+                        <img class="object-cover" src="https://images.pexels.com/photos/15740548/pexels-photo-15740548.jpeg" alt="">
+                    </div>
+                    <figcaption class="absolute bottom-0 bg-slate-900/80 text-slate-50 w-full flex items-center px-4 py-2 opacity-0 dark:bg-slate-50/80 dark:text-slate-900 group-hover:opacity-100 duration-300">
+                        <div class="flex flex-col">
+                            <h2 class="font-medium">Pattern</h2>
+                            <div class="text-sm">
+                                <span>409 likes</span>
+                                •
+                                <span>221 shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto hover:text-emerald-400 duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                        </div>
+                    </figcaption>
+                </figure class="grid grid-cols-3">
+                <figure class="relative group">
+                    <div class="aspect-square overflow-hidden">
+                        <img class="object-cover" src="https://images.pexels.com/photos/15524933/pexels-photo-15524933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                    </div>
+                    <figcaption class="absolute bottom-0 bg-slate-900/80 text-slate-50 w-full flex items-center px-4 py-2 opacity-0 dark:bg-slate-50/80 dark:text-slate-900 group-hover:opacity-100 duration-300">
+                        <div class="flex flex-col">
+                            <h2 class="font-medium">Winter</h2>
+                            <div class="text-sm">
+                                <span>138 likes</span>
+                                •
+                                <span>94 shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto hover:text-emerald-400 duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                        </div>
+                    </figcaption>
+                </figure class="grid grid-cols-3">
+                <figure class="relative group">
+                    <div class="aspect-square overflow-hidden">
+                        <img class="object-cover" src="https://images.pexels.com/photos/15463121/pexels-photo-15463121.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                    </div>
+                    <figcaption class="absolute bottom-0 bg-slate-900/80 text-slate-50 w-full flex items-center px-4 py-2 opacity-0 dark:bg-slate-50/80 dark:text-slate-900 group-hover:opacity-100 duration-300">
+                        <div class="flex flex-col">
+                            <h2 class="font-medium">Fall</h2>
+                            <div class="text-sm">
+                                <span>97 likes</span>
+                                •
+                                <span>38 shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto hover:text-emerald-400 duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                        </div>
+                    </figcaption>
+                </figure class="grid grid-cols-3">
+                <figure class="relative group">
+                    <div class="aspect-square overflow-hidden">
+                        <img class="object-cover" src="https://images.pexels.com/photos/15426268/pexels-photo-15426268.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                    </div>
+                    <figcaption class="absolute bottom-0 bg-slate-900/80 text-slate-50 w-full flex items-center px-4 py-2 opacity-0 dark:bg-slate-50/80 dark:text-slate-900 group-hover:opacity-100 duration-300">
+                        <div class="flex flex-col">
+                            <h2 class="font-medium">Canyon</h2>
+                            <div class="text-sm">
+                                <span>320 likes</span>
+                                •
+                                <span>80 shares</span>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto hover:text-emerald-400 duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                        </div>
+                    </figcaption>
+                </figure>
+            </main>
+        </div>
+        <script src="./script.js"></script>
+    </body>
+</html>
