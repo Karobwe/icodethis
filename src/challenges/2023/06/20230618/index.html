@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(37, 91%, 55%)",
+                        },
+                        secondary: {
+                            400: "hsl(212, 72%, 59%)",
+                        },
+                        neutral: {
+                            200: "rgb(133, 136, 154)",
+                            400: "rgb(25, 28, 55)",
+                            600: "rgb(19, 22, 43)",
+                            800: "rgb(17, 19, 38)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+        
+        function App() {
+            return (
+                <div className={"bg-neutral-100 text-black-700 w-full min-h-screen flex items-center justify-center"}>
+                    
+                    <main className={"bg-neutral-400 relative min-w-[52rem] h-[36rem] max-w-7xl shadow-lg flex flex-col items-center justify-center"}>
+                        <div className="absolute w-full h-full overflow-hidden">
+                            <img src="https://cdn.midjourney.com/3b8d730c-c51a-4fd3-824f-55be4dd8e442/0_2.png" alt="" className="w-full h-full object-cover" />
+                        </div>
+
+                        <header className="bg-neutral-800/70  text-white z-10 w-full h-full p-4 flex flex-col justify-start">
+                            <nav className="">
+                                <ul className="flex items-center justify-end gap-4">
+                                    <li>Account</li>
+                                    <li>My List</li>
+                                    <li>Manage Trips</li>
+                                    <li>Support</li>
+                                    <li>Log In</li>
+                                    <li className="bg-primary-400 px-4 py-2 rounded">
+                                        Create an account
+                                    </li>
+                                </ul>
+                            </nav>
+
+                            <section className="h-full flex flex-col items-center justify-center gap-8">
+                                <h1 className="text-2xl font-bold">Explore thr World</h1>
+
+                                <p className="text-white/70 max-w-[42rem]">
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                                    Suscipit quas molestiae excepturi ad illo numquam omnis 
+                                    praesentium facilis, ipsam maxime quisquam repellat iusto 
+                                    natus expedita saepe, ut deserunt. Ut, delectus!
+                                </p>
+
+                                <form action="#" className="flex bg-gray-700/50">
+                                    <button className="w-8 h-8">
+                                        <HeroIcons.Play/>
+                                    </button>
+
+                                    <input type="search" name="search" id="search" placeholder="Enter country, city or address" className="bg-transparent border-none focus:outline-none" />
+
+                                    <button className="bg-secondary-400">Search</button>
+                                </form>
+                            </section>
+                        </header>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
