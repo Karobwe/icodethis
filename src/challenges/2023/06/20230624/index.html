@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(228, 86%, 65%)",
+                            600: "hsl(228, 71%, 53%)",
+                        },
+                        secondary: {
+                            400: "hsl(350, 75%, 65%)",
+                        },
+                        neutral: {
+                            200: "rgb(133, 136, 154)",
+                            400: "rgb(25, 28, 55)",
+                            600: "rgb(19, 22, 43)",
+                            800: "rgb(17, 19, 38)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <main className={"bg-primary-600/20 w-full min-h-screen grid items-center justify-center"}>
+                    <div className={"bg-white w-[28rem] flex flex-col items-center justify-center gap-16"}>
+                        <header className="h-[16rem] px-8 py-12 flex flex-col items-center justify-center">
+                            <img src="https://cdn.midjourney.com/139d8a4e-4b99-4b59-8609-fdc90cf1caa4/0_1.png" alt="" class="w-auto h-24" />
+
+                            <h1 className="text-xl font-semibold">Unlock to see more like source</h1>
+
+                            <p>
+                                Upgrade to see who liked your shots in the last 90 days.
+                            </p>
+
+                            <button className="bg-primary-400 text-white px-8 py-2 shadow-lg rounded">
+                                Try Free
+                            </button>
+                        </header>
+
+                        <section className="min-h-[24rem] px-8 py-12 flex justify-center gap-8 border-t pt-12">
+                            <img src="https://cdn.midjourney.com/5c7cd1d0-b9cc-4283-b1c3-069e74ce039f/0_3.png" alt="" class="w-auto h-24" />
+
+                            <div className="space-y-4">
+                                <h2 class="text-lg font-semibold">Profile views matter</h2>
+
+                                <h3 className="font-medium">
+                                    Getting more profile views can help you
+                                    get found for the right oportunity.
+                                </h3>
+
+                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam, voluptatibus?</p>
+
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti, distinctio.</p>
+
+                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eius, totam?</p>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        let data = [
+            {
+                name: "Annie Jump",
+                avatar: "https://i.pravatar.cc/150?img=9",
+            },
+            {
+                name: "Annie Jump",
+                avatar: "https://i.pravatar.cc/150?img=56",
+            },
+            {
+                name: "Margaret Chase",
+                avatar: "https://i.pravatar.cc/150?img=10",
+            },
+            {
+                name: "Annie Jump",
+                avatar: "https://i.pravatar.cc/150?img=7",
+            },
+        ]
+
+    </script>
+</body>
+
+</html>
