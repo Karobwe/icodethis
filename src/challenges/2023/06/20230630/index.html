@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(7, 85%, 67%)",
+                        },
+                        secondary: {
+                            100: "hsl(228, 79%, 96%)",
+                            400: "hsl(228, 81%, 94%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+        main::-webkit-scrollbar { 
+            display: none;  /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react'
+        import Chart from 'https://cdn.skypack.dev//react-apexcharts'
+
+        function App() {
+            return (
+                <main className={"bg-secondary-100 text-black-700 w-full min-h-screen flex flex-col items-center justify-start"}>
+                    <div className="bg-secondary-400 w-full p-8 flex items-center justify-center">
+                        <div className="bg-secondary-100 px-8 py-3 rounded-full flex items-center justify-center gap-3">
+                            <Profile username="Goku" avatar="https://cdn.midjourney.com/64d434ab-cdd1-424e-b4c5-9589a1d93e6f/0_2_384_N.webp" />
+
+                            <span>vs</span>
+
+                            <Profile username="Vegeta" avatar="https://cdn.midjourney.com/5ad4c7e1-881e-42f2-bfd2-f532da2d55bf/0_1.png" />
+                        </div>
+                    </div>
+
+                    <div className={"flex-1 px-8 pb-8 flex flex-col items-center justify-center"}>
+                        <ApexChart />
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function ApexChart() {
+            const [series, setSeries] = React.useState(
+                [
+                    {
+                        name: 'Vegeta',
+                        data: [0, 300, 200, 200, 200, 200]
+                    }, 
+                    {
+                        name: 'Son Goku',
+                        data: [200, 100, 300, 500, 100, 400]
+                    }, 
+                ]
+            );
+
+            const [options, setOptions] = React.useState(
+                {
+                    chart: {
+                        type: 'radar',
+                        height: 500,
+                        toolbar: {
+                            show: false,
+                        },
+                        animations: {
+                            enabled: false,
+                        }
+                    },
+                    plotOptions: {
+                        radar: {
+                            size: 170,
+                            polygons: {
+                                fill: {
+                                    colors: ['hsl(228, 77%, 95%)', 'hsl(224, 79%, 96%)']
+                                }
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent'],
+                        lineCap: 'round',
+                    },
+                    xaxis: {
+                        categories: ['Pushing', 'Supporting', 'Versatility', 'Farming', 'Emotionless', 'Fighting'],
+                    },
+                    yaxis: {
+                        show: false,
+                        min: 0,
+                        max: 600
+                    },
+                    fill: {
+                        opacity: 0.5,
+                        colors: ["#0389ff", "#ea1d5d"],
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " points"
+                            }
+                        }
+                    },
+                    legend: {
+                        show: false,
+                    },
+                }
+            )
+
+            return (
+                <Chart options={options} series={series} type="radar" width={700} height={400} />
+            )
+        }
+
+        function Profile({username = "", avatar = "", className}) {
+            return (
+                <div className="flex items-center gap-4">
+                    <div className={`w-16 h-16 rounded-full overflow-hidden ring ring-4 ${className}`}>
+                        <img src={avatar} alt={`${username}'s avatar`} className="w-full h-full object-cover" />
+                    </div>
+
+                    <div className="font-semibold">
+                        {username}
+                    </div>
+                </div>
+            )
+        }
+
+    </script>
+</body>
+
+</html>
