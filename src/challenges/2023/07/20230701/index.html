@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(7, 85%, 67%)",
+                        },
+                        secondary: {
+                            100: "hsl(228, 79%, 96%)",
+                            400: "hsl(228, 81%, 94%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+        main::-webkit-scrollbar { 
+            display: none;  /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react'
+
+        function App() {
+            return (
+                <main className={"bg-slate-100 text-black w-full min-h-screen flex flex-col items-center justify-center"}>
+                    <div className="bg-white w-full max-w-lg p-5 rounded-xl shadow-xl flex flex-col items-start justify-center gap-4">
+                        <div className="flex justify-end w-full">
+                            <button className="text-slate-700 hover:text-black duration-200">
+                                <HeroIcons.X />
+                            </button>
+                        </div>
+
+                        <h2 className="font-semibold">
+                            Send install link to mobile device
+                        </h2>
+
+                        <p className="text-sm">
+                            Send via SMS or visit the private URL on the mobile device 
+                            to install this app directly to the device.
+                        </p>
+
+                        <fieldset className="bg-gray-200 h-12 rounded overflow-hidden flex items-center justify-center">
+                            <input type="tel" name="tel" id="tel" placeholder="Enter mobile number" className="bg-transparent px-4 py-1 placeholder:text-slate-400" />
+
+                            <button className="bg-blue-400 text-white h-full px-4 py-1">
+                                Send
+                            </button>
+                        </fieldset>
+
+                        <div className="pt-4 space-y-4">
+                            <h3 className="uppercase font-semibold">Share link</h3>
+
+                            <div className="flex items-start justify-between gap-4">
+                                <output className="text-zinc-400 text-sm">https://www.example.com/blog/getting-started-with-nextjs</output>
+
+                                <button className="text-blue-300 hover:text-blue-400 duration-200">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
