@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            200: "hsl(210, 88%, 84%)",
+                            400: "hsl(213, 90%, 61%)",
+                        },
+                        secondary: {
+                            400: "hsl(335, 83%, 75%)",
+                        },
+                        accent: {
+                            400: "7ed321",
+                        },
+                        neutral: {
+                            100: "hsl(210, 100%, 99%)",
+                            200: "hsl(206, 28%, 95%)",
+                            400: "hsl(210, 44%, 93%)",
+                            600: "hsl(216, 12%, 76%)",
+                            800: "hsl(224, 10%, 55%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        body,
+        aside {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        body::-webkit-scrollbar,
+        aside::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <main className={"bg-neutral-200 text-slate-900 w-full min-h-screen flex flex-col items-center justify-center gap-4 md:flex-row"}>
+
+                    <aside className="w-[24rem] pt-4 overflow-x-scroll flex items-center justify-center gap-4 md:flex-col">
+                        <UserCard user={data.users[0]} conversation={data.conversations[0]} />
+
+                        <UserCard user={data.users[1]} conversation={data.conversations[0]} />
+
+                        <UserCard user={data.users[2]} conversation={data.conversations[0]} />
+
+                        <UserCard user={data.users[3]} conversation={data.conversations[0]} />
+                    </aside>
+                    
+                    <div className={"sticky top-[0vh] max-w-5xl space-y-4 md:self-start md:translate-y-[23vh]"}>
+                        <Chat/>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function UserCard({user, conversation}) {
+            let unreadMessages = 0
+            conversation.messages.forEach(message => {
+                if(!message.hasBeenRead) {
+                    return unreadMessages++
+                }
+            })
+
+            return (
+                <article className="bg-white relative min-w-[16rem] w-[24rem] p-4 rounded-lg md:w-[16rem]">
+                    <button className="bg-secondary-400 text-white text-sm absolute top-0 left-0 w-8 h-8 rounded-lg flex items-center justify-center">
+                        {unreadMessages}
+                    </button>
+
+                    <div className="flex justify-center">
+                        <button>
+                            <HeroIcons.DotsHorizontal />
+                        </button>
+                    </div>
+
+                    <div className="py-4 space-y-4">
+                        <div className="w-full aspect-square overflow-hidden rounded">
+                            <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                        </div>
+
+                        <div className="text-center">
+                            <h2 className="font-semibold flex items-center justify-center gap-2">
+                                <div className="bg-lime-400 relative w-3 h-3 rounded-full"></div>
+                                {user.name}
+                            </h2>
+
+                            <h3 className="text-sm mb-2">{user.position}</h3>
+
+                            <Button text="Send" variant="outline" />
+                        </div>
+                    </div>
+                </article>
+            )
+        }
+
+        function Chat() {
+            return (
+                <section className="bg-white min-w-[24rem] h-full rounded-lg md:min-w-[32rem] md:h-[36rem]">
+                    <header className="w-full flex justify-between gap-8">
+                        <h2 className="font-semibold text-lg px-4 py-2">Title</h2>
+
+                        <button className="bg-slate-400 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-500 duration-200">
+                            <HeroIcons.X/>
+                        </button>
+                    </header>
+
+                    <Conversation/>
+
+                    <ChatInput/>
+                </section>
+            )
+        }
+
+        function Conversation() {
+            return (
+                <section className="p-4">
+                    dd
+                </section>
+            )
+        }
+
+        function ChatInput() {
+            return (
+                <section className="bg-neutral-100 w-full p-4 mt-4">
+                    <input 
+                        type="text" 
+                        name="message" 
+                        id="message" 
+                        className="bg-neutral-400/30 w-full mb-2 px-4 py-2 border-none rounded-lg focus:outline-none focus:bg-neutral-400/60 transition-[background] duration-200" 
+                    />
+
+                    <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-4">
+                            <fieldset>
+                                <input type="file" name="photo" id="photo" className="peer hidden" />
+                                
+                                <label htmlFor="photo" className="cursor-pointer text-neutral-800 hover:text-slate-900 duration-200">
+                                    <HeroIcons.CameraOutline />
+                                </label>
+                            </fieldset>
+
+                            <fieldset>
+                                <input type="file" name="camera" id="camera" capture="user" accept="image/*" className="peer hidden" />
+                                
+                                <label htmlFor="camera" className="cursor-pointer text-neutral-800 hover:text-slate-900 duration-200">
+                                    <HeroIcons.VideoCameraOutline />
+                                </label>
+                            </fieldset>
+
+                            <fieldset>
+                                <input type="file" name="audio" id="audio" capture="environment" accept="video/*" className="peer hidden" />
+
+                                <label htmlFor="audio" className="cursor-pointer text-neutral-800 hover:text-slate-900 duration-200">
+                                    <HeroIcons.Microphone />
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <Button text="Send" variant="contained" className="ml-auto" />
+                    </div>
+                </section>
+            )
+        }
+
+        function Button({text, variant = "text", className}) {
+            className += " px-4 py-2 min-w-[8rem] rounded-full"
+
+            switch(variant) {
+                case "contained":
+                    className = `bg-primary-400 text-white ${className} border border-primary-400 hover:bg-primary-600 duration-200`
+                    break
+                case "outline":
+                    className = `bg-transparent ${className} border border-primary-400 hover:border-primary-600 duration-200`
+                    break
+                case "text":
+                default:
+                    className = `text-primary-400 ${className} hover:text-primary-600 duration-200`
+            }
+
+            return (
+                <button className={className}>
+                    {text}
+                </button>
+            )
+        }
+
+        let data = {
+            users: [
+                {
+                    id: 1,
+                    name: "Annie Jump",
+                    avatar: "https://i.pravatar.cc/150?img=35",
+                    position: "Interaction Designer",
+                },
+                {
+                    id: 2,
+                    name: "Hedy Lamarr",
+                    avatar: "https://i.pravatar.cc/150?img=51",
+                    position: "Art Director",
+                },
+                {
+                    id: 3,
+                    name: "Margaret Chase",
+                    avatar: "https://i.pravatar.cc/150?img=45",
+                    position: "UI Designer",
+                },
+                {
+                    id: 4,
+                    name: "Biddy Mason",
+                    avatar: "https://i.pravatar.cc/150?img=53",
+                    position: "Fullstack Developper",
+                },
+            ],
+            conversations: [
+                {
+                    id: 0,
+                    participants: [0, 2],
+                    messages: [
+                        {
+                            "id": 0,
+                            "author": 0,
+                            "content": "Hi, I'm the interaction designer. Nice to meet you!",
+                            "sendAt": "2023-07-01T12:12:12",
+                            "hasBeenRead": true,
+                        },
+                        {
+                            "id": 1,
+                            "author": 1,
+                            "content": "Hello, I'm the UI designer. Pleasure to meet you too!",
+                            "sendAt": "2023-07-01T12:15:30",
+                            "hasBeenRead": true,
+                        },
+                        {
+                            "id": 2,
+                            "author": 0,
+                            "content": "I wanted to discuss the user flow and interactions for our new app.",
+                            "sendAt": "2023-07-01T12:16:45",
+                            "hasBeenRead": true,
+                        },
+                        {
+                            "id": 3,
+                            "author": 1,
+                            "content": "Absolutely! I've already started sketching some initial ideas for the UI.",
+                            "sendAt": "2023-07-01T12:18:20",
+                            "hasBeenRead": true,
+                        },
+                        {
+                            "id": 4,
+                            "author": 0,
+                            "content": "Great! Let's collaborate and align our designs for a seamless user experience.",
+                            "sendAt": "2023-07-01T12:20:00",
+                            "hasBeenRead": true,
+                        },
+                        {
+                            "id": 5,
+                            "author": 1,
+                            "content": "Hey! Ready to start?",
+                            "sendAt": "2023-07-01T12:25:00",
+                            "hasBeenRead": false,
+                        },
+                        {
+                            "id": 6,
+                            "author": 1,
+                            "content": "What do you think about the attached files?",
+                            "sendAt": "2023-07-01T12:25:47",
+                            "hasBeenRead": false,
+                        },
+                    ]
+                }
+            ]
+        }
+
+    </script>
+</body>
+
+</html>
