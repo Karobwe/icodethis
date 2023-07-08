@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(41, 100%, 57%)",
+                            500: "hsl(37, 91%, 55%)",
+                            600: "hsl(37, 76%, 43%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [currentTrip, setCurrentTrip] = React.useState(data[0])
+
+            return (
+                <main className={"bg-slate-100 text-slate-900 w-full min-h-screen flex items-center justify-center"}>
+                    
+                    <div className={"bg-white max-w-6xl w-fit py-8 rounded flex flex-col items-center gap-2"}>
+                        <div className="w-12 h-12 p-2 border-2 rounded-full flex items-center justify-center">
+                            <AirplaneIcon/>
+                        </div>
+
+                        <h2 className="text-lg font-semibold flex gap-4">
+                            <span>
+                                {`${currentTrip.from.name} | ${currentTrip.from.code}`}
+                            </span>
+
+                            <HeroIcons.ArrowRight/>
+
+                            <span>
+                                {`${currentTrip.to.name} | ${currentTrip.to.code}`}
+                            </span>
+                        </h2>
+
+                        <div className="my-6 flex items-center justify-between gap-2">
+                            <button className="w-14 h-12 p-2 pl-4 border-y border-r rounded-r-full flex items-center justify-center hover:bg-primary-400/10 hover:text-primary-600 duration-200">
+                                <HeroIcons.ChevronLeft/>
+                            </button>
+
+                            <div className="grid grid-cols-6 gap-4">
+                                <TripCard trip={currentTrip}/>
+                                <TripCard trip={currentTrip}/>
+                                <TripCard trip={currentTrip}/>
+                                <TripCard trip={currentTrip}/>
+                                <TripCard trip={currentTrip}/>
+                                <TripCard trip={currentTrip}/>
+                            </div>
+
+                            <button className="w-14 h-12 p-2 pr-4 border-y border-l rounded-l-full flex items-center justify-center hover:bg-primary-400/10 hover:text-primary-600 duration-200">
+                                <HeroIcons.ChevronLeft/>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-8">
+                            <DetailedTripCard date={currentTrip.liftOff} place={currentTrip.from.name} price={currentTrip.price}/>
+
+                            <div class="flex items-center before:w-8 before:h-0.5 before:border after:w-8 after:h-0.5 after:border">
+                                <span class="px-4 py-1 border rounded-full flex items-center justify-center">
+                                    {currentTrip.duration}
+                                </span>
+                            </div>
+
+                            <DetailedTripCard date={currentTrip.landing} place={currentTrip.to.name} price={currentTrip.price}/>
+                        </div>
+
+                        <button className="bg-primary-400 text-white uppercase px-12 py-2 rounded hover:bg-primary-500 duration-200">
+                            Select bundle
+                        </button>
+                    </div>
+                </main>
+            );
+        }
+
+        function TripCard({trip}) {
+            let departure = (new Date(trip.liftOff)).toDateString()
+
+            return (
+                <button className="w-40 h-24 p-2 flex flex-col items-center justify-center border">
+                    <div className="text-lg font-light">
+                        {`${departure}`}
+                    </div>
+
+                    <div className="text-sm">From</div>
+
+                    <div className="text-sm font-semibold">
+                        ${trip.price}
+                    </div>
+                </button>
+            )
+        }
+
+        function DetailedTripCard({date, place}) {
+            let dateString = (new Date(date)).toDateString()
+            let hour = `${new Date(date).getHours()}:${new Date(date).getMinutes()}`
+
+            return (
+                <button className="w-fit h-24 p-2 flex flex-col items-center justify-center">
+                    <div className="text-sm font-semibold">
+                        {`${date}`}
+                    </div>
+
+                    <div className="text-xl font-bold">
+                        ${hour}
+                    </div>
+
+                    <div className="text-xs uppercase">
+                        {place}
+                    </div>
+                </button>
+            )
+        }
+
+        function AirplaneIcon() {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+                    <path d={`
+                        M186.62,464
+                        H160a16,16,0,0,1-14.57-22.6l64.46-142.25
+                        L113.1,297,77.8,339.77
+                        C71.07,348.23,65.7,352,52,352
+                        H34.08a17.66,17.66,0,0,1-14.7-7.06
+                        c-2.38-3.21-4.72-8.65-2.44-16.41l19.82-71
+                        c.15-.53.33-1.06.53-1.58
+                        a.38.38,0,0,0,0-.15,14.82,14.82,0,0,1-.53-1.59
+                        L16.92,182.76
+                        c-2.15-7.61.2-12.93,2.56-16.06
+                        a16.83,16.83,0,0,1,13.6-6.7
+                        H52
+                        c10.23,0,20.16,4.59,26,12
+                        l34.57,42.05,97.32-1.44-64.44-142
+                        A16,16,0,0,1,160,48
+                        h26.91a25,25,0,0,1,19.35,9.8
+                        l125.05,152,57.77-1.52
+                        c4.23-.23,15.95-.31,18.66-.31
+                        C463,208,496,225.94,496,256
+                        c0,9.46-3.78,27-29.07,38.16-14.93,6.6-34.85,9.94-59.21,9.94-2.68,0-14.37-.08-18.66-.31
+                        l-57.76-1.54-125.36,152
+                        A25,25,0,0,1,186.62,464Z
+                    `}/>
+                </svg>
+            )
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        let data = [
+            {
+                id: 0,
+                from: {
+                    name: "Bucharest",
+                    code: "OTP",
+                },
+                to: {
+                    name: "Tenerife (Canary Islands)",
+                    code: "TFS",
+                },
+                liftOff: "2023-07-01T13:40:00",
+                landing: "2023-07-01T17:55:00",
+                duration: "6h15min",
+                price: 264,
+
+            },
+        ]
+
+    </script>
+</body>
+
+</html>
