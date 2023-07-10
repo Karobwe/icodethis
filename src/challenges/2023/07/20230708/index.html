@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            300: "hsl(175, 99%, 65%)",
+                            400: "hsl(175, 66%, 55%)",
+                            500: "hsl(175, 53%, 42%)",
+                        },
+                        secondary: {
+                            400: "hsl(43, 100%, 50%)",
+                        },
+                        neutral: {
+                            100: "hsl(0, 0%, 79%)",
+                            200: "hsl(0, 0%, 73%)",
+                            400: "hsl(0, 0%, 37%)",
+                            600: "hsl(0, 0%, 16%)",
+                            800: "hsl(0, 0%, 10%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <main className={"bg-slate-100 text-white w-full min-h-screen flex items-center justify-center"}>
+                    <div className="max-w-7xl w-full">
+                        <header className="bg-neutral-800 text-bg-neutral-200 h-20 flex items-end">
+                            <nav className="w-full mx-8 flex justify-between gap-8">
+                                <ul className="uppercase flex gap-8">
+                                    <li className="pb-1 hover:border-b-4 border-neutral-100/30 duration-200">
+                                        <a href="#">Home</a>
+                                    </li>
+
+                                    <li data-active="true" className="pb-1 hover:border-b-4 border-neutral-100/30 data-[active=true]:border-b-4 data-[active=true]:border-primary-400 duration-200">
+                                        
+                                        <a href="#">Apps</a>
+                                    </li>
+
+                                    <li className="pb-1 hover:border-b-4 border-neutral-100/30 duration-200">
+                                        <a href="#">Account</a>
+                                    </li>
+
+                                    <li className="cursor-pointer">
+                                        <div className="flex items-center gap-2">
+                                            <span>Categories</span>
+                                            <HeroIcons.ChevronDown/>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <form action="#" className="pb-1 flex items-center">
+                                    <input type="checkbox" name="trigger-input" id="trigger-input" className="peer hidden"/>
+                                    <label htmlFor="trigger-input" className="w-6 h-6">
+                                        <HeroIcons.Search/>
+                                    </label>
+
+                                    <input type="search" name="search" id="search" className="hidden bg-neutral-200 border-none px-4 py-2 peer-checked:inline-block"/>
+                                </form>
+                            </nav>
+                        </header>
+
+                        <section className="bg-neutral-600 px-16 py-8">
+                            <h1 className="text-2xl">Recommended for you</h1>
+
+                            <h2>Based on your installs</h2>
+
+                            <ul className="mt-10 mb-16 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {data.map(item => {
+                                    return <AppCard key={item.id} app={item} />
+                                })}
+                            </ul>
+                        </section>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function AppCard({app}) {
+            return (
+                <li className="bg-neutral-600 min-w-[24rem] md:min-w-fit p-4 rounded shadow-[0px_0px_16px_4px_rgba(0,0,0,0.3)] flex gap-4">
+                    <div className="self-center min-w-max w-32 h-32 aspect-square rounded-lg overflow-hidden">
+                        <img src={app.icon} alt="" className="w-full h-full object-cover"/>
+                    </div>
+                    
+                    <div className="">
+                        <h3 className="text-semibold">
+                            {app.name}
+                        </h3>
+                        
+                        <h4 className="text-sm text-neutral-200">
+                            {app.developer}
+                        </h4>
+                        
+                        <Rating value={app.rating} />
+                        
+                        <button className="bg-neutral-800 text-neutral-200 text-xs uppercase px-4 py-2 border-b-4 border-primary-400 rounded hover:bg-neutral-800/70 hover:text-neutral-100 duration-200">
+                            Install app
+                        </button>
+                    </div>
+                </li>
+            )
+        }
+
+        function Rating({value}) {
+            return (
+                <div className="text-neutral-800 flex items-center gap-0 mb-2">
+                    <HeroIcons.Star className={value >= 1 ? "text-secondary-400" : undefined}/>
+                    <HeroIcons.Star className={value >= 2 ? "text-secondary-400" : undefined}/>
+                    <HeroIcons.Star className={value >= 3 ? "text-secondary-400" : undefined}/>
+                    <HeroIcons.Star className={value >= 4 ? "text-secondary-400" : undefined}/>
+                    <HeroIcons.Star className={value >= 5 ? "text-secondary-400" : undefined}/>
+                </div>
+            )
+        }
+
+        let data = [
+            {
+                id: 0,
+                name: "3D Day Fit Challenge Workout",
+                developer: "NorthPark Android",
+                icon: "https://play-lh.googleusercontent.com/9wYd_0QZjGRtHOn-ulbEur7PDfr8ANT6ioU8SmG5oWOP8PGVXnVUGoM2X_N8qLXrHFMA=w240-h480-rw",
+                rating: 3,
+            },
+            {
+                id: 1,
+                name: "S Healthy",
+                developer: "S HealthSamsung Electronc Co.",
+                icon: "https://play-lh.googleusercontent.com/EoiTA0z1LdQHV2huvNc2NxXVquqAlOrwweONKMYjTYNYPK2KMQMOBR253NC6WsFm-dZl=w240-h480-rw",
+                rating: 4,
+            },
+            {
+                id: 2,
+                name: "Crab War",
+                developer: "Appxplore Sdn Bhd",
+                icon: "https://play-lh.googleusercontent.com/TPw4ZGq2u988qgRtNMD5Keh3sAR31Oz0AlJOuEZas2IkIhm5VPv2E1JfIlRSKMxwdw=w526-h296-rw",
+                rating: 5,
+            },
+            {
+                id: 3,
+                name: "Sandstorm: Pirate War",
+                developer: "Ubisoft Entertainment",
+                icon: "https://scontent.fotp3-3.fna.fbcdn.net/v/t39.30808-6/352811051_790017789398319_8739933951797858409_n.png?_nc_cat=103&cb=99be929b-59f725be&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=p6LCClHI4SIAX8r-Pmd&_nc_ht=scontent.fotp3-3.fna&oh=00_AfDBdKEH4ABciBPSsY8P1edHvLJ-06r5DrPncnpabBeuVQ&oe=64ADA857",
+                rating: 4,
+            },
+            {
+                id: 4,
+                name: "Netflix",
+                developer: "Netflix Inc",
+                icon: "https://images.ctfassets.net/4cd45et68cgf/Rx83JoRDMkYNlMC9MKzcB/2b14d5a59fc3937afd3f03191e19502d/Netflix-Symbol.png",
+                rating: 5,
+            },
+            {
+                id: 5,
+                name: "Jellyfish Hola 3D Theme",
+                developer: "Holaverse",
+                icon: "https://image.winudf.com/v2/image/Y29tLmhvbGEuc2NlbmUzZC5zaHVpbXVfaWNvbl9wbTFjZXh1dQ/icon.png?w=&fakeurl=1",
+                rating: 3,
+            },
+            {
+                id: 6,
+                name: "Qatar Airways",
+                developer: "Qatar Airways",
+                icon: "https://e0.pxfuel.com/wallpapers/205/427/desktop-wallpaper-qatar-airways-logo-thumbnail.jpg",
+                rating: 4,
+            },
+            {
+                id: 7,
+                name: "Microsoft Word",
+                developer: "Microsoft Corporation",
+                icon: "https://cdn.imgbin.com/14/3/24/imgbin-microsoft-word-microsoft-office-2016-tutorial-computer-software-word-K88iV7KZdnRZspLQivAKtm5WR.jpg",
+                rating: 5,
+            },
+            {
+                id: 8,
+                name: "Fruit Ninja Free",
+                developer: "Halbrick Studios",
+                icon: "https://play-lh.googleusercontent.com/eJ9OJnbRer1jjg5ZeNAnTXKcGd2B_NEqxCp2UsefcCABeFBaj_pNl_WKYBjup2GVGGc",
+                rating: 5,
+            },
+        ]
+
+    </script>
+</body>
+
+</html>
