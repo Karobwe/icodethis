@@ -1,0 +1,146 @@
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trying React here</title>
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="module">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: {
+                                400: "hsl(228, 86%, 65%)",
+                            },
+                        },
+                    },
+                    fontFamily: {
+                        sans: ["Poppins, sans-serif"],
+                    },
+                }
+            };
+        </script>
+        <style>
+            main {
+                -ms-overflow-style: none;
+                /* Internet Explorer 10+ */
+                scrollbar-width: none;
+                /* Firefox */
+            }
+
+            main::-webkit-scrollbar {
+                display: none;
+                /* Safari and Chrome */
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="root"></div>
+        <script type="text/babel" data-type="module">
+            import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+            function App() {
+                return (
+                    <main className={"bg-slate-100 w-full min-h-screen flex items-center justify-center"}>
+                        <div class="bg-white w-[20rem] py-6 rounded">
+                            <div className={"flex items-start justify-center gap-4"}>
+                                <button className="flex justify-end">
+                                    <span>Change account</span>
+
+                                    <HeroIcons.ChevronDown/>
+                                </button>
+                            </div>
+
+                            <div className="text-center my-8 flex flex-col items-center justify-center gap-4">
+                                <div className="w-16 h-16 rounded-full overflow-hidden ring-8 ring-slate-400/10">
+                                    <img src="https://media.discordapp.net/attachments/1106990691688652961/1128194934005059644/karobwe_portrait_of_Maisie_Williams_as_Aria_Stark_from_Game_of__eb61c7c5-fea9-4752-b4f4-9d4b3dd75222.png?width=701&height=701" alt="" className="w-full h-full object-cover"/>
+                                </div>
+
+                                <p>
+                                    Welcome back,
+                                    <br/>
+                                    <span className="text-lg font-semibold">Arya</span>
+                                </p>
+                            </div>
+
+                            <fieldset className="flex flex-col items-center gap-4">
+                                <input type="email" name="password" id="password" placeholder="Enter your password" className="p-3 border border-neutral-400 rounded"/>
+
+                                <button className="flex-none bg-slate-700 text-slate-50 uppercase px-8 py-2 rounded">
+                                    Log in
+                                </button>
+                            </fieldset>
+
+                            <div class="mt-24 flex justify-center">
+                                <button className="text-primary-400">
+                                    Unable to log in?
+                                </button>
+                            </div>
+                        </div>
+                    </main>
+                );
+            }
+
+            const container = document.getElementById('root')
+            const root = ReactDOM.createRoot(container)
+            root.render(<App />)
+
+            let data = {
+                targets: [
+                    {
+                        id: 0,
+                        name: "Cersei Lannister",
+                        killed: false,
+                    },
+                    {
+                        id: 1,
+                        name: "The Mountain",
+                        killed: false,
+                    },
+                    {
+                        id: 2,
+                        name: "Beric Dondarrion",
+                        killed: false,
+                    },
+                    {
+                        id: 3,
+                        name: "Thoros of Myr",
+                        killed: false,
+                    },
+                    {
+                        id: 4,
+                        name: "Myn Payne",
+                        killed: false,
+                    },
+                    {
+                        id: 5,
+                        name: "The Hound",
+                        killed: false,
+                    },
+                    {
+                        id: 6,
+                        name: "Walder Frey",
+                        killed: true,
+                    },
+                    {
+                        id: 7,
+                        name: "Meryn Trant",
+                        killed: true,
+                    },
+                ]
+            }
+
+        </script>
+    </body>
+
+    </html>
