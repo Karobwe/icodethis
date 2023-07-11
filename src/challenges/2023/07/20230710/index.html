@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Noto+Serif:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(233, 91%, 68%)",
+                        },
+                        secondary: {
+                            400: "hsl(278, 83%, 77%)",
+                        },
+                        neutral: {
+                            400: "hsl(241, 40%, 31%)",
+                        }
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                    serif: ["Noto Serif", "serif"]
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <main className={"bg-slate-50 text-neutral-400 w-full min-h-screen flex items-center justify-center"}>
+                    <div className="max-w-7xl mx-2 my-8 flex flex-col gap-4">
+                        <div className={"max-w-7xl flex flex-col items-start justify-center gap-4 lg:flex-row lg:relative lg:left-8"}>
+                            <div className="min-w-[24rem] lg:self-end">
+                                <BlogPost post={data.blog[0]}/>
+                            </div>
+
+                            <div className="space-y-4">
+                                <BlogPost post={data.blog[1]}/>
+                                <BlogPost post={data.blog[2]}/>
+                                <BlogPost post={data.blog[3]}/>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-4 space-y-8 lg:relative lg:right-8">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-2xl font-semibold font-serif capitalize">
+                                    Top bloggers this week
+                                </h2>
+
+                                <LinkMore text="View all"/>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <BloggerProfile author={data.authors[0]}/>
+                                <BloggerProfile author={data.authors[1]}/>
+                                <BloggerProfile author={data.authors[2]}/>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function BlogPost({post = data.blog[1]}) {
+            const [isBookmarked, setIsBookmarked] = React.useState(post.bookmarked)
+
+            function toggleBookmarkHandler() {
+                setIsBookmarked(!isBookmarked)
+            }
+
+            return (
+                <div className={`bg-white relative ${post.featured ? "w-[30rem] lg:w-[24rem]" : "w-[30rem]"} p-4 flex items-center gap-4`}>
+                    {!post.featured && <BlogPostCover cover={post.cover}/>}
+
+                    {post.featured && <div className="bg-gradient-to-r from-primary-400 to-secondary-400 absolute bottom-full left-0 w-full h-1.5"></div>}
+
+                    <div className="space-y-6">
+                        <h2 className="text-2xl font-semibold font-serif capitalize">
+                            {post.title}
+                        </h2>
+
+                        <div className="text-sm">
+                            <h3>{post.author}</h3>
+
+                            <p className="text-slate-400">10:30 PM</p>
+                        </div>
+
+                        {/* Show excrept if the post is featured */}
+                        {
+                            post.featured && 
+
+                            <div className="space-y-2">
+                                <p>{post.excrept}</p>
+
+                                <LinkMore/>
+                            </div>
+                        }
+                    </div>
+
+                    <button className={`self-start ${isBookmarked && "text-primary-400"}`} onClick={toggleBookmarkHandler}>
+                        {isBookmarked && <HeroIcons.Bookmark className="w-7 h-7"/>}
+                        {!isBookmarked && <HeroIcons.BookmarkOutline/>}
+                    </button>
+                </div>
+            )
+        }
+
+        function BlogPostCover({cover}) {
+            return (
+                <div className="w-32 h-32 min-w-max aspect-square overflow-hidden">
+                    <img src={cover} alt="" className="w-full h-full object-cover" />
+                </div>
+            )
+        }
+
+        function LinkMore({text="Read More"}) {
+            return (
+                <button className="text-primary-400/90 uppercase flex itmes-center gap-1 hover:text-primary-400 duration-200">
+                    <span>{text}</span>
+
+                    <HeroIcons.ChevronDoubleRight className="w-5 h-5"/>
+                </button>
+            )
+        }
+
+        function BloggerProfile({author = data.authors[0]}) {
+            return (
+                <div className="flex gap-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden">
+                        <img src={author.avatar} alt="" className="w-full h-full object-cover"/>
+                    </div>
+
+                    <div className="relative">
+                        <h3 className="font-semibold">
+                            {author.name}
+                        </h3>
+
+                        <p className="text-xs text-slate-400">
+                            {`${author.followers} Followers`}
+                        </p>
+
+                        <div className="bg-white text-xs absolute top-0 -left-8 w-5 h-5 rounded-full shadow flex items-center justify-center">
+                            {author.rank}
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        let data = {
+            blog: [
+                {
+                    id: 0,
+                    title: "Always Look On the bright side of life",
+                    author: "Daniel A. Schmaltz",
+                    cover: "https://cdn.midjourney.com/84342afe-e0ac-4aa8-9dec-43be1446edb8/0_0.png",
+                    postedAt: "",
+                    bookmarked: false,
+                    featured: true,
+                    excrept: `
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                        Magnam fuga eaque dignissimos quae ut autem qui inventore 
+                        vero odit delectus, aliquam sed quidem. Fuga, obcaecati 
+                        ratione ad laudantium animi modi.
+                    `,
+                },
+                {
+                    id: 1,
+                    title: "A Brief History Of Creation",
+                    author: "Eugene Franklin",
+                    cover: "https://cdn.midjourney.com/cf73872c-18c5-43ca-86ff-e5c5ff13c727/0_0.png",
+                    postedAt: "",
+                    bookmarked: false,
+                    featured: false,
+                    excrept: `
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                        Magnam fuga eaque dignissimos quae ut autem qui inventore 
+                        vero odit delectus, aliquam sed quidem. Fuga, obcaecati 
+                        ratione ad laudantium animi modi.
+                    `,
+                },
+                {
+                    id: 2,
+                    title: "The Importance Of Human Life",
+                    author: "Cole Phillips",
+                    cover: "https://cdn.midjourney.com/cf73872c-18c5-43ca-86ff-e5c5ff13c727/0_3.png",
+                    postedAt: "",
+                    bookmarked: true,
+                    featured: false,
+                    excrept: `
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                        Magnam fuga eaque dignissimos quae ut autem qui inventore 
+                        vero odit delectus, aliquam sed quidem. Fuga, obcaecati 
+                        ratione ad laudantium animi modi.
+                    `,
+                },
+                {
+                    id: 3,
+                    title: "Always Look On the bright side of life",
+                    author: "Mark Greene",
+                    cover: "https://cdn.midjourney.com/84342afe-e0ac-4aa8-9dec-43be1446edb8/0_2.png",
+                    postedAt: "",
+                    bookmarked: false,
+                    featured: false,
+                    excrept: `
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                        Magnam fuga eaque dignissimos quae ut autem qui inventore 
+                        vero odit delectus, aliquam sed quidem. Fuga, obcaecati 
+                        ratione ad laudantium animi modi.
+                    `,
+                },
+            ],
+            authors: [
+                {
+                    id: 0,
+                    name: "Elva Malone",
+                    avatar: "https://cdn.midjourney.com/eab981e1-3e9b-4fc6-8b51-34e3106cf3cf/0_2.png",
+                    followers: 3455,
+                    rank: 1,
+                },
+                {
+                    id: 0,
+                    name: "Mina Rodgers",
+                    avatar: "https://cdn.midjourney.com/34b8686a-5ee1-477d-9550-91807b12052e/0_3.png",
+                    followers: 3119,
+                    rank: 2,
+                },
+                {
+                    id: 0,
+                    name: "Lucy Bush",
+                    avatar: "https://cdn.midjourney.com/670be197-990d-4b3b-8ce6-bfa68d9386e2/0_3_384_N.webp",
+                    followers: 2566,
+                    rank: 3,
+                },
+            ]
+        }
+
+    </script>
+</body>
+
+</html>
