@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(209, 92%, 29%)",
+                        },
+                        secondary: {
+                            400: "hsl(87, 53%, 55%)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <main className="bg-slate-50 text-primary-400 w-full min-h-screen flex items-center justify-center">
+                    <div className="grid grid-cols-2  min-w-[650px] max-w-5xl mx-2  bg-white">
+                        <div className="h-full overflow-hidden">
+                            <svg className="object-cover h-full" viewBox="0 0 900 600" width="900" height="600" version="1.1">
+                                <defs>
+                                    <filter id="blur1" x="-10%" y="-10%" width="120%" height="120%">
+                                        <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                                        <feGaussianBlur stdDeviation="161" result="effect1_foregroundBlur"></feGaussianBlur>
+                                    </filter>
+                                </defs>
+                                <rect width="900" height="600" fill="#6600FF"></rect>
+                                <g filter="url(#blur1)">
+                                    <circle cx="663" cy="421" fill="#FCAF3C" r="357"></circle>
+                                    <circle cx="296" cy="548" fill="#6600FF" r="357"></circle>
+                                    <circle cx="260" cy="239" fill="#FCAF3C" r="357"></circle>
+                                    <circle cx="580" cy="157" fill="#FCAF3C" r="357"></circle>
+                                    <circle cx="455" cy="5" fill="#6600FF" r="357"></circle>
+                                    <circle cx="4" cy="572" fill="#FCAF3C" r="357"></circle>
+                                </g>
+                            </svg>
+                            {/* <img className="object-cover h-full" src="https://images.pexels.com/photos/5022847/pexels-photo-5022847.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt=""/> */}
+                        </div>
+
+                        <form action="" className="p-8">
+                            <h1 className="text-2xl mb-1">Last step!</h1>
+
+                            <p className="text-xs mb-4">Enter your payment info below.</p>
+
+                            <fieldset className="flex flex-col gap-y-1 mb-3">
+                                <div>
+                                    <label htmlFor="card-type" className="text-gray-400">Credit Card</label>
+                                    <input type="radio" name="card-type" id="credit-card" className="px-4 py-2 border border-gray-400 rounded-xl focus:outline focus:outline-gray-500"/>
+                                </div>
+                            </fieldset>
+
+                            <fieldset className="flex flex-col gap-y-1 mb-3">
+                                <label htmlFor="card-number" className="text-gray-400">Card Number</label>
+                                <input type="text" name="card-number" id="card-number" placeholder="123 4567 8912 3456" className="px-4 py-2 border border-gray-400 rounded-xl focus:outline focus:outline-gray-500"/>
+                            </fieldset>
+
+                            <fieldset className="flex flex-col gap-y-1 mb-3">
+                                <label htmlFor="email" className="text-gray-400">Expiration Date</label>
+                                <input type="email" name="" id="email" className="px-4 py-2 border border-gray-400 rounded-xl focus:outline focus:outline-gray-500"/>
+                            </fieldset>
+
+                            <fieldset className="flex flex-col gap-y-1 mb-3">
+                                <label htmlFor="email" className="text-gray-400">CVC</label>
+                                <input type="email" name="" id="email" className="px-4 py-2 border border-gray-400 rounded-xl focus:outline focus:outline-gray-500"/>
+                            </fieldset>
+
+                            <p className="my-6 text-xs">
+                                By creating an account, you agree to Study.com's 
+                                <a className="font-semibold" href="#">Terms of use</a> and 
+                                <a className="font-semibold" href="#">Privacy Policy</a>.
+                            </p>
+
+                            <button className="px-8 py-2 mb-3 rounded bg-primary-400 text-neutral-50 hover:bg-neutral-500 focus:bg-neutral-500 duration-300">
+                                Join Now
+                            </button>
+                        </form>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
