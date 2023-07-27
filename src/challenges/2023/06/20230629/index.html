@@ -1,0 +1,90 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white text-[#181028] shadow-lg w-10/12 max-w-7xl">
+        <header class="bg-slate-200/70 pb-72">
+            <nav class="flex justify-between gap-16">
+                <div class="bg-slate-100 text-gray-400 uppercase mx-4 my-2 px-6 py-2">Logo</div>
+
+                <ul class="flex gap-4">
+                    <li class="bg-slate-900 text-gray-300 w-8 h-10 rounded-b-xl flex items-center justify-center">+</li>
+
+                    <li class="mr-4 flex items-center gap-2">
+                        <div class="bg-gray-300 w-8 h-8 rounded-full"></div>
+
+                        <div class="flex gap-1">
+                            <span>Lily James</span>
+
+                            <span class="rotate-90">></span>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="relative w-10/12 mx-auto space-y-8 -top-56">
+            <div class="flex gap-4">
+                <div class="bg-gray-400 w-10 h-10 rounded-xl"></div>
+
+                <div class="space-y-4">
+                    <div class="space-x-2">
+                        <span>...</span>
+
+                        <span>6 boards . 56 Tasks</span>
+                    </div>
+
+                    <div class="font-semibold">Ben's Method of Habit Formation</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-8">
+                <section class="shadow-2xl">
+                    <div class="bg-slate-400/80 text-white px-4 h-12 flex justify-between items-center">
+                        <span class="uppercase">To do</span>
+
+                        <span>...</span>
+                    </div>
+
+                    <div class="bg-white p-4 min-h-[24rem]"></div>
+                </section>
+
+                <section class="shadow-2xl">
+                    <div class="bg-blue-400/90 text-white px-4 h-12 flex justify-between items-center">
+                        <span class="uppercase">In progress</span>
+                
+                        <span>...</span>
+                    </div>
+                
+                    <div class="bg-white p-4 min-h-[24rem]"></div>
+                </section>
+
+                <section class="shadow-2xl">
+                    <div class="bg-green-500/70 text-white px-4 h-12 flex justify-between items-center">
+                        <span class="uppercase">Done</span>
+                
+                        <span>...</span>
+                    </div>
+                
+                    <div class="bg-white p-4 min-h-[24rem]"></div>
+                </section>
+
+                <section>
+                    <button class="bg-white w-10/12 h-auto mx-auto rounded flex items-center justify-center px-4 py-2 gap-2">
+                        <span class="text-xl">+</span>
+
+                        <span>Add New Column</span>
+                    </button>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
