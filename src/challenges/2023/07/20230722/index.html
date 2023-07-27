@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            100: "hsl(236, 70%, 96%)",
+                            400: "hsl(343, 92%, 67%)",
+                        },
+                        neutral: {
+                            200: "rgb(133, 136, 154)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <main className={"bg-primary-100 text-slate-800 w-full min-h-screen flex items-center justify-center"}>
+                    
+                    <div className={"max-w-5xl grid grid-cols-3 gap-4"}>
+                        {data.slice(0, 3).map((item, index) => {
+                            return (
+                                <article className="w-72 rounded overflow-hidden flex flex-col">
+                                    <div className="w-full aspect-video">
+                                        <img src={item.cover} alt="" className="w-full h-full object-cover"/>
+                                    </div>
+
+                                    <div className="bg-white h-full px-4 py-8 flex flex-col gap-y-4">
+                                        <h2 className="text-xl">
+                                            {item.title}
+                                        </h2>
+
+                                        <div className="h-full flex flex-col gap-y-2">
+                                            <p className="text-sm">
+                                                {item.excerpt}
+                                            </p>
+
+                                            <div className="mt-auto flex items-center justify-between">
+                                                <div className="flex gap-3">
+                                                    <div className="w-12 aspect-square rounded-full overflow-hidden">
+                                                        <img src={item.author.avatar} alt="" className="w-full h-full object-cover"/>
+                                                    </div>
+
+                                                    <div>
+                                                        <h2 className="text-sm font-semibold">
+                                                            {item.author.name}
+                                                        </h2>
+
+                                                        <h3 class="text-xs text-gray-400">
+                                                            {item.author.role}
+                                                        </h3>
+                                                    </div>
+                                                </div>
+
+                                                <p>21 Jul</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            )
+                        })}
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        let data = [
+                        {
+                            "id": 1,
+                            "title": "The Art of Responsive Web Design",
+                            "cover": "https://media.discordapp.net/attachments/1106990719450746931/1132732997758623894/karobwe_The_Art_of_Responsive_Web_Design_in_the_style_of_blog_p_f9fe2b2f-5b08-4a6e-8c51-95d040876550.png?width=1251&height=701",
+                            "excerpt": "Learn the principles and best practices of building responsive websites that adapt to various devices.",
+                            "content": "In this blog post, we delve into the world of responsive web design...",
+                            "createdAt": "2023-07-01",
+                            "author": {
+                            "name": "Emily Parker",
+                            "avatar": "https://media.discordapp.net/attachments/945077390839787570/1132686429831581766/karobwe_in_the_center_of_the_caldera_an_arrogant_female_warrior_e7ffc2b7-9d86-4881-bfdd-17e4b72dda56.png?width=528&height=701",
+                            "role": "Frontend Developer"
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "title": "Creating Engaging User Experiences",
+                            "cover": "https://media.discordapp.net/attachments/981832774157762570/1091453426140975104/up2u_electric_cyber_flower_d566ed84-e293-435b-b64a-ffeb7563d91e.png?width=1251&height=701",
+                            "excerpt": "Explore the techniques to design user experiences that keep visitors hooked and coming back.",
+                            "content": "User experience is a crucial aspect of any successful digital product...",
+                            "createdAt": "2023-07-05",
+                            "author": {
+                            "name": "John Miller",
+                            "avatar": "https://media.discordapp.net/attachments/933565701162168371/1133221611709935637/frspiderman_margot_robbies_live_action_barbie_in_a_pink_and_whi_26c5d8cd-927e-4eb7-877f-5bba11befc76.png?width=701&height=701",
+                            "role": "UX Designer"
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "title": "Introduction to CSS Grid Layout",
+                            "cover": "https://media.discordapp.net/attachments/989274745495240734/1091453406947852349/Cem_Bus_shelter_with_inclined_steel_framed_glass_roof._design_i_fde7b5ae-9806-4de5-b7f1-1f5e7e5201fd.png?width=1251&height=701",
+                            "excerpt": "Get started with CSS grid layout and revolutionize your website's layout possibilities.",
+                            "content": "CSS grid layout has quickly become an essential tool for web developers...",
+                            "createdAt": "2023-07-10",
+                            "author": {
+                            "name": "Michael Turner",
+                            "avatar": "https://media.discordapp.net/attachments/952712667498422272/1133226539958411284/kikiandmomo_18th_Century_Regency_Era_Portrait_painting_of_a_wom_e906b681-27e3-4cf4-83aa-3b12e8391369.png?width=467&height=700",
+                            "role": "Fullstack Developer"
+                            }
+                        },
+                        {
+                            "id": 4,
+                            "title": "Design Systems: Streamlining Your Workflow",
+                            "cover": "https://media.discordapp.net/attachments/995431274267279440/1103529982854180974/Bahadr_Bermek_people_walking_at_modern_open_space._Motion_blur_6335e98e-9307-4c7b-bf9d-e6efd0d3a753.png?width=1251&height=701",
+                            "excerpt": "Discover how design systems can enhance collaboration and consistency in your projects.",
+                            "content": "Design systems have gained popularity in the design community...",
+                            "createdAt": "2023-07-15",
+                            "author": {
+                            "name": "Emma Collins",
+                            "avatar": "https://media.discordapp.net/attachments/984632520471633920/1133274561304084510/thekuenziretort_Photography_by_Joseph_Szabo._Subject_portrait.__0882dc25-5c74-49a8-baf3-abef7c56fe68.png?width=496&height=701",
+                            "role": "UI Designer"
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "title": "JavaScript Best Practices in 2023",
+                            "cover": "https://media.discordapp.net/attachments/995431387333152778/1103529959504494624/Maxyboy_star_wars_theme_cyber_crystal_cve_amazing_luminous_ligh_4da955bf-6657-450b-8b86-6c43944da8e5.png?width=1251&height=701",
+                            "excerpt": "Stay updated with the latest JavaScript best practices for cleaner and more efficient code.",
+                            "content": "As JavaScript continues to evolve, new best practices have emerged...",
+                            "createdAt": "2023-07-20",
+                            "author": {
+                            "name": "Daniel Lee",
+                            "avatar": "https://media.discordapp.net/attachments/945077390839787570/1103529733599268935/MichaelDeSandoli_a_shirtless_tanned_abraham_lincoln_takes_a_wel_fe1dc80d-f5eb-4817-b478-1629d2275639.png?width=701&height=701",
+                            "role": "Frontend Developer"
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "title": "Improving Website Accessibility",
+                            "cover": "hhttps://media.discordapp.net/attachments/945077390839787570/1103529866906849300/Kerolith_a_unicorn_ramen_bowl_in_the_style_of_David_Loftus_phot_925e4082-b770-4207-9224-4b49c05d127b.png?width=1251&height=701",
+                            "excerpt": "Learn how to make your websites more accessible and inclusive to all users.",
+                            "content": "Web accessibility is a crucial aspect of web development...",
+                            "createdAt": "2023-07-25",
+                            "author": {
+                            "name": "Sophia Johnson",
+                            "avatar": "https://media.discordapp.net/attachments/1008571069797507102/1103529296242429992/Smokemideveryday_editorial-style_portrait_of_black_man_wearing__387f1a0c-27a9-42e1-9f33-c7293b7a7f83.png?width=701&height=701",
+                            "role": "UX Designer"
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "title": "Mastering CSS Transitions and Animations",
+                            "cover": "https://media.discordapp.net/attachments/1097439697279656027/1103525511445090384/afifnk76_Design_a_packaging_that_features_UV_hot_stamping_embos_236e28b3-091d-4279-b63f-4b4cd41461c6.png?width=701&height=701",
+                            "excerpt": "Unlock the power of CSS transitions and animations to add delightful interactions.",
+                            "content": "CSS transitions and animations can breathe life into your web designs...",
+                            "createdAt": "2023-07-30",
+                            "author": {
+                            "name": "Alex Ramirez",
+                            "avatar": "https://media.discordapp.net/attachments/995431233121161246/1133274567444529292/seucheneule_a_portrait_of_a_beautiful_teen_girl_with_brown_hair_fe86caaa-97c5-443b-beb1-e93230f0ae2e.png?width=701&height=701",
+                            "role": "Frontend Developer"
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "title": "The Role of UI Design in Branding",
+                            "cover": "https://media.discordapp.net/attachments/984632520471633920/1095276388954685520/FridaPus_depression_oilpainting_surrealist_ink_drawing_japanese_7b50c0f7-ccb3-4a2a-9c54-9e0dc470721d.png?width=1251&height=701",
+                            "excerpt": "Explore how UI design influences a brand's identity and perception.",
+                            "content": "In the digital age, a strong brand identity is vital for success...",
+                            "createdAt": "2023-08-05",
+                            "author": {
+                            "name": "Jessica Turner",
+                            "avatar": "https://media.discordapp.net/attachments/984632520471633920/1133274577116594268/thekuenziretort_Photography_by_Joseph_Szabo._Subject_portrait.__d81fa516-0986-426e-ab26-c4d9098dfeef.png?width=496&height=701",
+                            "role": "UI Designer"
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "title": "Optimizing Website Performance for Speed",
+                            "cover": "https://media.discordapp.net/attachments/995431305066065950/1095273117426925578/joben_programing_automation_f42dd661-0b15-4e3c-a752-0fd1634a83e6.png?width=1251&height=701",
+                            "excerpt": "Learn the techniques to optimize your website for faster loading times.",
+                            "content": "Website performance is a critical factor in user satisfaction...",
+                            "createdAt": "2023-08-10",
+                            "author": {
+                            "name": "Ryan Peterson",
+                            "avatar": "https://media.discordapp.net/attachments/933565701162168371/1133220893045297303/obscure.engineering_a_Female_Teen_Influencer_with_Blonde_hair_a_4748180e-3eba-49fb-be2e-77ecc1327fe5.png?width=701&height=701",
+                            "role": "Fullstack Developer"
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "title": "A Guide to Mobile App UI Design",
+                            "cover": "https://media.discordapp.net/attachments/995431305066065950/1095273110464377004/joben_programing_automation_e59c668e-eb56-40cd-a077-51245ed3934a.png?width=1251&height=701",
+                            "excerpt": "Get insights into designing intuitive and user-friendly mobile app interfaces.",
+                            "content": "Designing mobile app interfaces requires attention to specific details...",
+                            "createdAt": "2023-08-15",
+                            "author": {
+                            "name": "Olivia Mitchell",
+                            "avatar": "https://media.discordapp.net/attachments/1133310198912659517/1133316201917984799/conzcreative_Summer_outfits_atmospheric_avatars_illustrations_g_7cc628ff-cb5f-4a15-afcb-a4fdb243da5f.png?width=701&height=701",
+                            "role": "UI Designer"
+                            }
+                        }
+                    ]
+
+
+    </script>
+</body>
+
+</html>
