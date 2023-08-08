@@ -1,3 +1,3 @@
 # The design
 
-![icodethis.com's 18/06/2023 challenge](https://icodethis.com/images/projects/profile_card.png)
+![icodethis.com's DD/MM/YYYY challenge](https://karobwe.github.io/not-an-image-database/images/github-projects/icodethis/custom-template-screenshot.png)
