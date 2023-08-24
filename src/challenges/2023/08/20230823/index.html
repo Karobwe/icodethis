@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            200: "hsl(260, 33%, 27%)",
+                            400: "hsl(260, 35%, 25%)",
+                            600: "hsl(260, 37%, 22%)",
+                            800: "hsl(260, 43%, 20%)",
+                        },
+                        secondary: {
+                            400: "hsl(335, 57%, 44%))",
+                            550: "hsl(326, 49%, 35%)",
+                        },
+                        accent: {
+                            400: "hsl(216, 71%, 62%)",
+                        },
+                        neutral: {
+                            200: "rgb(133, 136, 154)",
+                        },
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        const useState = React.useState
+        const useEffect = React.useEffect
+
+        function App() {
+            const [isDarkMode, setIsDarkMode] = useState(false)
+            const [notificationsAreVisible, setNotificationsAreVidible] = React.useState(true)
+
+            useEffect(() => {
+                const onPageLoad = () => {
+                    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        document.documentElement.classList.add('dark')
+                        setIsDarkMode(true)
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark')
+                        setIsDarkMode(false)
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                }
+    
+                // Check if the page has already loaded
+                if (document.readyState === 'complete') {
+                    onPageLoad()
+                } else {
+                    window.addEventListener('load', onPageLoad)
+                    // Remove the event listener when component unmounts
+                    return () => window.removeEventListener('load', onPageLoad)
+                }
+            }, [])
+            
+            return (
+                <main className={"relative bg-primary-600 text-white w-full min-h-screen flex justify-center dark:bg-slate-800 dark:text-slate-100"}>
+                    <DarkModeSwitch isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+
+                    <header className="bg-primary-800 w-full h-32">
+                        <nav className="flex flex-col items-end gap-8 w-9/12 mx-auto mt-24 h-full">
+                            <button onClick={() => {setNotificationsAreVidible(!notificationsAreVisible)}} className="bg-primary-600 text-yellow-500 p-4 outline outline-secondary-400 rounded-full">
+                                <HeroIcons.Bell/>
+                            </button>
+
+                            {notificationsAreVisible && <NotificationWrapper/>}
+                        </nav>
+                    </header>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function NotificationWrapper() {
+            return (
+                <div className="bg-primary-400 shadow-xl max-w-md">
+                    <header className="text-lg uppercase flex items-center h-20 p-4">
+                        Notifications
+                    </header>
+
+                    <ul className="bg-primary-600 space-y-2">
+                        {/*
+                        <li className="flex gap-2">
+                            <div className="w-12 h-12 aspect-square rounded-full overflow-hidden">
+                                <img src="https://cdn.midjourney.com/21211acc-59fd-460b-bae7-8cddbc76cb0a/0_2.png" alt="" className="w-full h-full object-cover"/>
+                            </div>
+
+                            <div className="">
+                                <h3>Sandra Rose</h3>
+                                <p className="text-sm text-primary-600/70">Uploaded 4 new pictures into album <a href="#" className="text-bg-primary-400">Landscapes</a></p>
+                                <div className="text-sm">Just now</div>
+                            </div>
+
+                            <div className="bg-accent-400 text-xs uppercase h-min px-2 rounded-full">New</div>
+                        </li>
+                        */}
+                        {data.map(item => {
+                            return <Notification key={item.id} author={item.author.name} profilePicture={item.author.avatar} />
+                        })}
+                    </ul>
+
+                    <footer className="text-lg h-20 uppercase flex items-center justify-center p-4">
+                        <button className="text-secondary-400">View All</button>
+                    </footer>
+                </div>
+            )
+        }
+
+        function Notification({author, profilePicture, type, url, label, date = Date.now()}) {
+            return (
+                <li className="flex gap-2 px-4 py-2 hover:bg-primary-800/90 duration-200">
+                    <div className="w-12 h-12 aspect-square rounded-full overflow-hidden">
+                        <img src={profilePicture} alt="" className="w-full h-full object-cover"/>
+                    </div>
+                    
+                    <div className="flex flex-col">
+                        <h3>{author}</h3>
+                        <p className="text-sm text-primary-600/70">
+                            Uploaded 4 new pictures into album {" "}
+                            <a href="#" className="text-bg-primary-400">Landscapes</a>
+                        </p>
+                        <div className="text-sm">Just now</div>
+                    </div>
+                    
+                    <div className="bg-accent-400 text-xs uppercase self-center h-min px-2 rounded-full">New</div>
+                </li>
+            )
+        }
+
+        function DarkModeSwitch({isDarkMode, setIsDarkMode}) {
+            const switchDarkModeHandler = () => {
+                setIsDarkMode(!isDarkMode)
+
+                if(isDarkMode) {
+                    document.documentElement.classList.remove('dark')
+                } else {
+                    document.documentElement.classList.add('dark')
+                }
+            }
+
+            return (
+                <button onClick={switchDarkModeHandler} className="absolute z-10 top-8 right-8 bg-slate-300 text-gray-700 p-2 rounded-full dark:bg-white/10 dark:text-gray-300">
+                    {isDarkMode && <HeroIcons.Sun/>}
+                    {!isDarkMode && <HeroIcons.Moon/>}
+                </button>
+            )
+        }
+
+        let data = [
+            {
+                id: 0,
+                author: {
+                    name: "Annie Jump",
+                    avatar: "https://i.pravatar.cc/150?img=9",
+                },
+                action:{
+                    type: "upload", 
+                    target: {
+                        url: "#",
+                        label: "Landscape"
+                    }
+                }
+            },
+            {
+                id: 1,
+                author: {
+                    name: "Hedy Lamarr",
+                    avatar: "https://i.pravatar.cc/150?img=56",
+                },
+                action:{
+                    type: "upload", 
+                    target: {
+                        url: "#",
+                        label: "Landscape"
+                    }
+                }
+            },
+            {
+                id:2,
+                author: {
+                    name: "Margaret Chase",
+                    avatar: "https://i.pravatar.cc/150?img=10",
+                },
+                action:{
+                    type: "upload", 
+                    target: {
+                        url: "#",
+                        label: "Landscape"
+                    }
+                }
+            },
+            {
+                id: 3,
+                author: {
+                    name: "Biddy Mason",
+                    avatar: "https://i.pravatar.cc/150?img=7",
+                },
+                action:{
+                    type: "upload", 
+                    target: {
+                        url: "#",
+                        label: "Landscape"
+                    }
+                }
+            },
+        ]
+
+    </script>
+</body>
+
+</html>
