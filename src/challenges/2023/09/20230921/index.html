@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(176, 34%, 43%)",
+                            600: "hsl(198, 31%, 33%)",
+                        },
+                        secondary: {
+                            100: "hsl(60, 10%, 79%)",
+                            400: "hsl(35, 87%, 63%)",
+                        },
+                        black: "hsl(228, 12%, 8%)",
+                    },
+                    backgroundImage: {
+                        // lighter gradient stop: rgba(79,83,100,.4) 
+                        // darker gradient stop: rgba(28,33,39,.5)
+                        stripped: 'repeating-linear-gradient(rgba(79,83,100,.4), rgba(79,83,100,.4) 4px, rgba(28,33,39,.5) 4px, rgba(28,33,39,.5) 7px)',
+                    }
+                },
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                screen: {
+                    'tablet': '640px',
+                    'laptop': '1024px',
+                    'desktop': '1280px',
+                },
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [currentMenuItem, setCurrentMenuItem] = React.useState(DATA.settings.local.menuItems[2])
+
+            return (
+                <main className={"bg-black text-secondary-100 w-full h-screen flex items-center justify-center"}>
+                    <div className="bg-stripped p-3 w-full my-6 mx-4 flex sm:mx-8 md:max-w-5xl">
+                        <aside className="min-w-fit">
+                            <h1 className="bg-primary-400 text-2xl font-bold text-white p-4 pl-5">Settings</h1>
+
+                            <fieldset className="bg-primary-400  px-4 pl-8 py-6 space-y-3">
+                                {DATA.settings.global.map((item, index) => {
+                                    return <Toogle key={index} label={item} status={index % 2 != 0 ? true : false}/>
+                                })}
+                            </fieldset>
+
+                            <ul className="bg-primary-400  font-bold text-white pb-4 flex flex-col">
+                                {DATA.settings.local.menuItems.map((item, index) => {
+                                    return (
+                                        <MenuItem 
+                                            key={index} 
+                                            title={item} 
+                                            currentMenuItem={currentMenuItem}
+                                            setCurrentMenuItem = {setCurrentMenuItem}
+                                        />
+                                    )
+                                })}
+                            </ul>
+                        </aside>
+
+                        <section className="bg-white/0 w-full p-4">
+                            {currentMenuItem === DATA.settings.local.menuItems[0] && <SoftwareUpdateSetting/>}
+                            {currentMenuItem === DATA.settings.local.menuItems[1] && <GeneralSetting/>}
+                            {currentMenuItem === DATA.settings.local.menuItems[2] && <AppsSetting/>}
+                            {currentMenuItem === DATA.settings.local.menuItems[3] && <StorageSetting/>}
+                            {currentMenuItem === DATA.settings.local.menuItems[4] && <DataUsageSetting/>}
+                            {currentMenuItem === DATA.settings.local.menuItems[5] && <SecuritySetting/>}
+                            {currentMenuItem === DATA.settings.local.menuItems[6] && <OtherSetting/>}
+                        </section>
+                    </div>
+                </main>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function Toogle({label, status = false}) {
+            const [isChecked, setIsChecked] = React.useState(typeof status =='boolean' && status)
+            const id = React.useId()
+
+            return (
+                <div className="flex justify-between gap-4 cursor-pointer">
+                    <label htmlFor={id}>{label}</label>
+
+                    
+                    <div 
+                        className="bg-black w-10 px-1 rounded-full flex items-center relative"
+                        onClick={() => {
+                            setIsChecked(!isChecked)
+                        }}
+                    >
+                        <input className="peer hidden" type="checkbox" id={id} checked={isChecked} onChange={(event) => {
+                            setIsChecked(event.target.checked)
+                        }}/>
+
+                        <div className={`${isChecked ? "bg-secondary-400" : "bg-white"} w-4 aspect-square rounded-full absolute left-1 peer-checked:left-1/2 duration-300`}></div>
+                    </div>
+                </div>
+            )
+        }
+
+        function MenuItem({title, currentMenuItem, setCurrentMenuItem}) {
+            return (
+                <li 
+                    className={`${title === currentMenuItem ? "bg-white text-slate-700" : ""} pl-5 pr-4 py-4 cursor-pointer flex justify-between gap-8`} 
+                    onClick={() => {
+                        setCurrentMenuItem(title)
+                    }} 
+                >
+                    <span>{title}</span>
+                    <HeroIcons.ChevronRight/>
+                </li>
+            )
+        }
+
+        function GeneralSetting() {
+            return (
+                <div className="space-y-4">
+                    <SettingsContainer title="Display & Brightness">
+                        <div className="flex items-center gap-4">
+                            <label htmlFor="brightness">Brightness</label>
+
+                            <input 
+                                type="range" 
+                                name="brightness" 
+                                id="brightness" 
+                                min={0} max={100} step={1} 
+                                className="accent-primary-400"
+                            />
+                        </div>
+                    </SettingsContainer>
+
+                    <SettingsContainer title="Volume & Sound">
+                    </SettingsContainer>
+                </div>
+            )
+        }
+
+        function SoftwareUpdateSetting() {
+            return (
+                <div>
+                    <SettingsContainer title="Software Update">
+                        <button className="bg-primary-400 text-white text-lg font-semibold px-3 py-1 rounded">Check for new version</button>
+                    </SettingsContainer>
+                </div>
+            )
+        }
+        
+        function AppsSetting() {
+            return (
+                <div>
+                    <SettingsContainer title="Apps">
+                        <p className="mb-2">Connect your favorites apps and use them all in one place</p>
+                        <ul className="grid items-center justify-center sm:grid-cols-3 sm:gap-8">
+                            {DATA.apps.map((app, index) => {
+                                return (
+                                    <li key={index} className="cursor-pointer">
+                                        <div className="w-fit h-16">
+                                            <img src={app.logo} alt={app.name} className="w-full h-full object-contain"/>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </SettingsContainer>
+                </div>
+            )
+        }
+        
+        function StorageSetting() {
+            return (
+                <div>
+                    <SettingsContainer title="Storage">
+                        <p className="mb-2">Underwok functionality</p>
+                    </SettingsContainer>
+                </div>
+            )
+        }
+        
+        function DataUsageSetting() {
+            return (
+                <div>
+                    <SettingsContainer title="Data Usage">
+                        <p className="mb-2">Underwok functionality</p>
+                    </SettingsContainer>
+                </div>
+            )
+        }
+
+        function SecuritySetting() {
+            return (
+                <div>
+                    <SettingsContainer title="Security">
+                        <p className="mb-2">Underwok functionality</p>
+                    </SettingsContainer>
+                </div>
+            )
+        }
+
+        function OtherSetting() {
+            return (
+                <div>
+                    <SettingsContainer title="Other Settings">
+                        <p className="mb-2">Underwok functionality</p>
+                    </SettingsContainer>
+                </div>
+            )
+        }
+
+        function SettingsContainer({title, children}) {
+            return (
+                <div className="space-y-2">
+                    <h2 className="text-2xl text-white font-bold">{title}</h2>
+
+                    <fieldset className="ml-4">
+                        {children}
+                    </fieldset>
+                </div>
+            )
+        }
+
+        const DATA = {
+            settings: {
+                global: [
+                    "Airplane mode", 
+                    "WI-FI", 
+                    "Bluetooth", 
+                    "Notifications"
+                ],
+                local: {
+                    activeItem: 1,
+                    menuItems: [
+                        "Software Update",
+                        "General Settings",
+                        "Apps",
+                        "Storage",
+                        "Data Usage",
+                        "Security",
+                        "Other Settings"
+                    ]
+                }
+            },
+            apps: [
+                {
+                    name: "Figma",
+                    logo: "https://asset.brandfetch.io/idZHcZ_i7F/idcJ00e7RI.svg",
+                },
+                {
+                    name: "Gitlab",
+                    logo: "https://asset.brandfetch.io/idw382nG0m/idUCpm3axR.svg",
+                },
+                {
+                    name: "Netlify",
+                    logo: "https://asset.brandfetch.io/idoW6GB9ca/idn_ixaUI7.svg",
+                },
+                {
+                    name: "Trello",
+                    logo: "https://asset.brandfetch.io/idToc8bDY1/idYuk3XWkt.svg",
+                },
+                {
+                    name: "Sendgrid",
+                    logo: "https://asset.brandfetch.io/idHHcfw5Qu/idPAmLA60r.svg",
+                },
+                {
+                    name: "Stripe",
+                    logo: "https://asset.brandfetch.io/idxAg10C0L/idATb3amIw.svg",
+                },
+                {
+                    name: "Obsidian",
+                    logo: "https://asset.brandfetch.io/idGpyxH_Fa/idjJkC-FjU.svg",
+                },
+                {
+                    name: "Shopify",
+                    logo: "https://asset.brandfetch.io/idAgPm7IvG/id9jgh1uPF.svg",
+                }
+            ]
+        }
+
+    </script>
+</body>
+
+</html>
