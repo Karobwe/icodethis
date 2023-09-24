@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary:{
+                            200: "hsl(337, 100%, 78%)",
+                            300: "hsl(337, 47%, 63%)",
+                            400: "hsl(308, 39%, 46%)",
+                            500: "hsl(308, 43%, 42%)",
+                            600: "hsl(270, 34%, 55%)",
+                            700: "hsl(233, 40%, 62%)"
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main,
+        .scrollable {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar,
+        .scrollable::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        const useState = React.useState
+        const useEffect = React.useEffect
+
+        function App() {
+            const [menuIsOpened, setMenuIsOpened] = useState(false)
+            const [menuItems, setMenuItems] = useState([DATA.menu.POPULAR, DATA.menu.NEWS, DATA.menu.REVIEWS, DATA.menu.MULTIMEDIA, DATA.menu.TWITTER])
+            const [currentMenuItem, setCurrentMenuItem] = useState(DATA.menu.REVIEWS)
+
+            return (
+                <div className={"bg-primary-300 scrollable overflow-auto w-full h-screen flex items-center justify-center"}>
+                    <main className="w-full min-h-screen flex flex-col lg:max-w-6xl">
+                        <nav 
+                            className={`
+                                bg-gradient-to-r from-primary-400 to-primary-600 text-primary-200 
+                                relative w-full h-16 p-4 
+                                flex items-center justify-end
+                            `}
+                        >
+                            <button onClick={() => {setMenuIsOpened(!menuIsOpened)}} className={`${menuIsOpened ? "text-white" : ""} lg:hidden`}>
+                                {!menuIsOpened && <HeroIcons.Menu className="w-12 h-12"/>}
+                                {menuIsOpened && <HeroIcons.X className="w-12 h-12"/>}
+                            </button>
+
+                            <ul 
+                                className={`
+                                    bg-gradient-to-tr from-primary-600 to-primary-500 
+                                    absolute top-16 right-0 z-10
+                                    w-full h-[calc(100vh-4rem)] p-4
+                                    ${menuIsOpened ? "translate-x-0" : "translate-x-full lg:translate-x-0"} 
+                                    flex flex-col items-center gap-4
+                                    duration-200
+                                    lg:bg-gradient-to-r lg:from-primary-400 lg:to-primary-600
+                                    lg:inset-0 lg:px-10 lg:h-fit
+                                    lg:flex-row lg:justify-start
+                                `}
+                            >
+                                {menuItems.map((item,index) => {
+                                    return (
+                                        <li 
+                                            key={index} 
+                                            className={`
+                                                text-2xl px-6 py-2 rounded-full cursor-pointer 
+                                                ${currentMenuItem === item ? "bg-primary-500 text-white" : ""}
+                                                hover:bg-primary-500/50 hover:text-primary-200/80
+                                            `}
+                                            onClick={() => {
+                                                setCurrentMenuItem(item)
+                                                setMenuIsOpened(false)
+                                            }}
+                                        >
+                                            {item}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </nav>
+
+                        <section 
+                            // py-4 because before and after pseudo element are positioned absolute and both have a height of 2
+                            className={`
+                                bg-white py-4 z-0
+                                flex-1 overflow-auto scrollable
+                                lg:before:block lg:before:absolute lg:before:top-0 lg:before:bg-gradient-to-tr lg:before:from-primary-300 lg:before:to-primary-500 lg:before:w-full lg:before:h-2
+                                lg:after:block lg:after:absolute lg:after:bottom-0 lg:after:bg-gradient-to-tr lg:after:from-primary-400 lg:after:to-primary-200 lg:after:w-full lg:after:h-2
+                            `}
+                        >
+                            <div 
+                                // scrollbar related utility class bellow are magical spell I don't understand what they're doing, 
+                                // copied by inspecting Tailwind's doc
+                                className={`
+                                    px-4 
+                                    lg:overflow-auto 
+                                    scrollbar:!w-1.5 scrollbar:!h-1.5 
+                                    scrollbar:bg-transparent scrollbar-track:!bg-slate-100 
+                                    scrollbar-thumb:!rounded scrollbar-thumb:!bg-slate-300 
+                                    scrollbar-track:!rounded max-h-96 
+                                    lg:max-h-fit lg:supports-scrollbars:pr-2
+                                `}
+                            >
+                                {(currentMenuItem === DATA.menu.POPULAR) && <PopularPanel/>}
+                                {(currentMenuItem === DATA.menu.NEWS) && <NewsPanel/>}
+                                {(currentMenuItem === DATA.menu.REVIEWS) && <ReviewsPanel/>}
+                                {(currentMenuItem === DATA.menu.MULTIMEDIA) && <PopularPanel/>}
+                                {(currentMenuItem === DATA.menu.TWITTER) && <TwitterPanel/>}
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function PopularPanel() {
+            return (
+                <div>
+                    <h2>{DATA.menu.POPULAR}</h2>
+
+                    <p>I'm currently working on this panel, please come back later.</p>
+                </div>
+            )
+        }
+
+        function NewsPanel() {
+            return (
+                <div>
+                    <h2>{DATA.menu.NEWS}</h2>
+
+                    <p>I'm currently working on this panel, please come back later.</p>
+                </div>
+            )
+        }
+
+        function ReviewsPanel() {
+            return (
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-6">
+                    {DATA.reviews.map((reviewItem, index) => {
+                        return (
+                            <ReviewCard key={index} review={reviewItem}/>
+                        )
+                    })}
+                </div>
+            )
+        }
+
+        function MultimediaPanel() {
+            return (
+                <div>
+                    <h2>{DATA.menu.MULTIMEDIA}</h2>
+
+                    <p>I'm currently working on this panel, please come back later.</p>
+                </div>
+            )
+        }
+
+        function TwitterPanel() {
+            return (
+                <div>
+                    <h2>{DATA.menu.TWITTER}</h2>
+
+                    <p>I'm currently working on this panel, please come back later.</p>
+                </div>
+            )
+        }
+
+        function ReviewCard({review}) {
+            return (
+                <div className="border border-primary-600/80 p-6 hover:border-none hover:shadow-md lg:hover:shadow-xl duration-200">
+                    <div className="flex items-center justify-center gap-1">
+                        {range(review.rating).map(number => {
+                            // <img key={number} alt="" className="w-6 aspect-square" src="https://sandpack-bundler.vercel.app/img/gold-star.svg"/>
+                            return <HeroIcons.Star className="text-yellow-400"/>
+                        })}
+                    </div>
+
+                    <h3 className="text-2xl text-center text-primary-700 mt-3 mb-6">{review.title}</h3>
+
+                    <p className="[text-wrap:balance]">{review.description}</p>
+
+                    <div className="text-primary-700 mt-8 flex justify-end">
+                        <a href={review.link} target="_blank" className="flex gap-2">
+                            <span>See project</span>
+                            <HeroIcons.ChevronRight className="w-6 h-6 p-0 border rounded-full"/>
+                        </a>
+                    </div>
+                </div>
+            )
+        }
+
+        const range = (start, end, step = 1) => {
+            let output = [];
+
+            if (typeof end === 'undefined') {
+                end = start;
+                start = 0;
+            }
+
+            for (let i = start; i < end; i += step) {
+                output.push(i);
+            }
+
+            return output;
+        };
+
+        const DATA = {
+            menu: Object.freeze({
+                POPULAR: "Popular",
+                NEWS: "News",
+                REVIEWS: "Reviews",
+                MULTIMEDIA: "Multimedia",
+                TWITTER: "Twitter",
+            }),
+            reviews: [
+                {
+                    "title": "React: The King of Front-End",
+                    "description": "I've been using React for years, and it's simply the best. The component-based architecture makes it easy to build scalable and maintainable web apps. The vibrant ecosystem with libraries like Redux and React Router is a huge plus.",
+                    "link": "https://reactjs.org/",
+                    "rating": 5
+                },
+                {
+                    "title": "Tailwind CSS: A Game Changer",
+                    "description": "Tailwind CSS has revolutionized my styling workflow. It's utility-first approach and class-based styling are incredibly efficient. No more custom CSS files for every project – I'm more productive than ever.",
+                    "link": "https://tailwindcss.com/",
+                    "rating": 5
+                },
+                {
+                    "title": "Vue.js: Elegant and Intuitive",
+                    "description": "Vue.js is a breath of fresh air in the front-end world. Its simplicity and clear documentation make it a great choice for both beginners and experienced developers. The Vue community is friendly and active, providing great support.",
+                    "link": "https://vuejs.org/",
+                    "rating": 4
+                },
+                {
+                    "title": "Angular: A Robust Framework",
+                    "description": "Angular offers a comprehensive framework for building large-scale applications. The TypeScript integration ensures strong typing and helps catch errors early. While there's a steeper learning curve, the result is worth it.",
+                    "link": "https://angular.io/",
+                    "rating": 4
+                },
+                {
+                    "title": "Svelte: A Refreshing Approach",
+                    "description": "Svelte's compiler-based approach feels like a breath of fresh air. It compiles components to highly optimized JavaScript, resulting in smaller bundles and faster performance. It's a promising choice for the future.",
+                    "link": "https://svelte.dev/",
+                    "rating": 5
+                },
+                {
+                    "title": "Bootstrap: A Classic Choice",
+                    "description": "Bootstrap has been a classic front-end framework for a long time. Its responsive grid system and pre-designed UI components save time and effort. It's a reliable choice for quick and responsive web development.",
+                    "link": "https://getbootstrap.com/",
+                    "rating": 4
+                }
+            ]
+        }
+
+    </script>
+</body>
+
+</html>
