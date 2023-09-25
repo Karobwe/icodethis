@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary:{
+                            200: "hsl(337, 100%, 78%)",
+                            300: "hsl(337, 47%, 63%)",
+                            400: "hsl(308, 39%, 46%)",
+                            500: "hsl(308, 43%, 42%)",
+                            600: "hsl(270, 34%, 55%)",
+                            700: "hsl(233, 40%, 62%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+               <div className={"bg-gradient-to-tr bg-gradient-to-r from-indigo-700 via-rose-500 to-amber-300 flex items-center justify-center w-full h-screen"}>
+                    <main className="bg-white flex items-center justify-center min-w-[300px] min-h-[300px] m-4 p-6 rounded-lg">
+                        <p className="bg-clip-text flex items-center gap-2 text-transparent bg-gradient-to-r from-amber-300 via-rose-500 to-indigo-700 text-2xl font-bold [text-wrap:balance]">
+                            {"Let's make cool"} 
+                            <HeroIcons.Code className="w-8 h-8 p-1 text-primary-700 outline outline-primary-200 rounded-full"/> 
+                            {"!"}
+                        </p>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
