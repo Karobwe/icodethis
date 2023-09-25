@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+
+        .wave {
+            --s: 52px;
+            --mask:
+                radial-gradient(4.46em at 50% calc(100% - 6.30em),#000 99%,#0000 101%) calc(50% - 6em) 0/12em 100%,
+                radial-gradient(4.46em at 50% calc(100% + 3.30em),#0000 99%,#000 101%) 50% calc(100% - 3em)/12em 100% repeat-x;
+            -webkit-mask: var(--mask);
+            mask: var(--mask);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        const useState = React.useState
+        const useEffect = React.useEffect
+
+        function App() {
+            const [currentView, setCurrentView] = useState("pending")
+            const [menuIsOpened, setMenuIsOpened] = useState(false)
+
+            return (
+                <div className={"bg-gray-100 text-gray-400 w-full min-h-screen flex items-center justify-center sm:items-start sm:pt-8"}>
+                    <main className="bg-white rounded-lg relative w-[30rem]">
+                        {false && <Toast>Hello world !</Toast>}
+                        <header className="bg-gradient-to-tr from-sky-400/70 via-indigo-400/70 to-purple-400/70 text-white rounded-t-lg wave-disabled p-6 pb-32">
+                            <nav>
+                                <ul className="flex items-center gap-3">
+                                    <li className="cursor-pointer" onClick={() => setMenuIsOpened(true)}>
+                                        <HeroIcons.Menu className="w-6 h-6"/>
+                                    </li>
+
+                                    {["Summary", "Activity", "Send/Request"].map(item => {
+                                        return (
+                                            <li key={item} className="cursor-pointer">
+                                                {item}
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+
+                                <div className={`
+                                    bg-indigo-700/90 text-3xl rounded-lg 
+                                    z-10 absolute left-0 top-0 w-full h-full pt-20 
+                                    flex flex-col items-center gap-6
+                                    ${menuIsOpened ? "scale-1 opacity-100" : "scale-0 opacity-0"}
+                                    origin-top-left duration-200
+                                `}>
+                                    <button className="absolute top-8 left-8" onClick={() => setMenuIsOpened(false)}>
+                                        <HeroIcons.X className="w-8 h-8"/>
+                                    </button>
+
+                                    <button>
+                                        Pending transactions
+                                    </button>
+
+                                    <button>
+                                        Completed transactions
+                                    </button>
+
+                                    <button>
+                                        All transactions
+                                    </button>
+                                </div>
+                            </nav>
+
+                            <h2 className="text-center uppercase mt-10">
+                                <span className="text-2xl font-slim">Your balance</span>
+                                <br/>
+                                <span className="text-5xl font-semibold">255.42 USD</span>
+                            </h2>
+                        </header>
+
+                        <section className="relative border-t">
+                            <div className="absolute -top-10 right-0 w-full h-10 grid grid-cols-2 items-center">
+                                <h2 
+                                    className={`
+                                        text-xl text-center uppercase cursor-pointer h-full
+                                        ${currentView === "pending" ? "bg-white text-purple-400 rounded-tr-lg" : "text-white rounded-br-lg"}
+                                        duration-200
+                                        flex items-center justify-center
+                                    `} 
+                                    onClick={() => setCurrentView("pending")}
+                                >
+                                    Pending
+                                </h2>
+
+                                <h2 
+                                    className={`
+                                        text-xl text-center uppercase cursor-pointer h-full
+                                        ${currentView === "completed" ? "bg-white text-indigo-400 rounded-tl-lg" : "text-white rounded-bl-lg"}
+                                        duration-200
+                                        flex items-center justify-center
+                                    `} 
+                                    onClick={() => setCurrentView("completed")}
+                                >
+                                    Completed
+                                </h2>
+                            </div>
+
+                            <ul>
+                                {currentView === "pending" && DATA.transactions.pending.map(transaction => {
+                                    return <TransactionCard key={transaction.id} transaction={transaction}/>
+                                })}
+
+                                {currentView === "completed" && DATA.transactions.completed.map(transaction => {
+                                    return <TransactionCard key={transaction.id} transaction={transaction}/>
+                                })}
+                            </ul>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        const range = (start, end, step = 1) => {
+            let output = [];
+
+            if (typeof end === 'undefined') {
+                end = start;
+                start = 0;
+            }
+
+            for (let i = start; i < end; i += step) {
+                output.push(i);
+            }
+
+            return output;
+        };
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function TransactionCard({transaction}) {
+            return (
+                <li className="p-4 rounded hover:bg-indigo-50/20 duration-200">
+                    <h3 className="font-semibold">{transaction.company}</h3>
+
+                    {transaction.paid && (<>
+                        <p>Payment of {transaction.paymentRequest} CAD completed</p>
+                        <p className="text-xs mt-3 mb-2">Summary of the transaction with {transaction.company}</p>
+                        <table className="text-sm border-collapse w-full">
+                            <tr>
+                                <th className="w-32">Status:</th>
+                                <td className="w-full">{transaction.paid ? "Paid" : "Not paid"}</td>
+                            </tr>
+                            <tr>
+                                <th>Paid date:</th>
+                                <td>{transaction.paidDate}</td>
+                            </tr>
+                            <tr>
+                                <th className="pr-2">Category:</th>
+                                <td>{transaction.description}</td>
+                            </tr>
+                        </table>
+                    </>)}
+                    
+                    {!transaction.paid && (<>
+                        <p>Payment request for {transaction.paymentRequest} CAD sent</p>
+                        <p className="text-sm mt-3 mb-2">{transaction.company} hasn't paid yet</p>
+                        
+                        <div className="text-sm grid grid-cols-3">
+                            <button className={`
+                                px-3 py-1 
+                                border-l-2 border-y-2 rounded-l-full border-indigo-400/70 
+                                hover:bg-indigo-400/80 hover:border-indigo-400/80
+                                hover:text-white
+                                duration-200
+                            `}>
+                                Send a reminder
+                            </button>
+                            
+                            <button className={`
+                                px-3 py-1 border-2 border-2 border-indigo-400/70
+                                hover:bg-indigo-400/80 hover:border-indigo-400/80
+                                hover:text-white
+                                duration-200
+                            `}>
+                                Edit amount
+                            </button>
+                            
+                            <button className={`
+                                px-3 py-1 border-r-2 border-y-2 rounded-r-full border-indigo-400/70
+                                hover:bg-indigo-400/80 hover:border-indigo-400/80
+                                hover:text-white
+                                duration-200
+                            `}>
+                                Cancel
+                            </button>
+                        </div>
+                    </>)}
+                </li>
+            )
+        }
+
+        function Toast({children}) {
+            const [isVisible, setIsVisible] = useState(false)
+
+            return (
+                <div className={`
+                    bg-gradient-to-tr from-sky-400 to-purple-400 text-white 
+                    rounded-full space-y-1 absolute top-4 
+                    w-full h-12 px-4 py-2 mx-auto 
+                    flex items-center justify-between
+                `}>
+                    <p>{children}</p>
+                    <div className="flex justify-end">
+                        <button className="bg-white/10 text-white p-1 rounded-full hover:bg-white/20 duration-200">
+                            <HeroIcons.X/>
+                        </button>
+                    </div>
+                </div>
+            )
+        }
+
+        const DATA = {
+            "transactions": {
+                "pending": [
+                {
+                    "id": 1,
+                    "company": "TechCorp Services",
+                    "paymentRequest": 280.00,
+                    "paid": false,
+                    "dueDate": "2023-10-15",
+                    "description": "Web development services"
+                },
+                {
+                    "id": 2,
+                    "company": "Fashion Boutique",
+                    "paymentRequest": 150.50,
+                    "paid": false,
+                    "dueDate": "2023-09-30",
+                    "description": "Clothing and accessories"
+                },
+                {
+                    "id": 3,
+                    "company": "Grocery Mart",
+                    "paymentRequest": 500.75,
+                    "paid": false,
+                    "dueDate": "2023-10-10",
+                    "description": "Grocery shopping"
+                },
+                {
+                    "id": 4,
+                    "company": "Gas Station",
+                    "paymentRequest": 75.25,
+                    "paid": false,
+                    "dueDate": "2023-09-25",
+                    "description": "Fuel refill"
+                }
+                ],
+                "completed": [
+                {
+                    "id": 5,
+                    "company": "Electricity Provider",
+                    "paymentRequest": 120.00,
+                    "paid": true,
+                    "paidDate": "2023-09-20",
+                    "description": "Monthly electricity bill"
+                },
+                {
+                    "id": 6,
+                    "company": "Water Utility",
+                    "paymentRequest": 60.50,
+                    "paid": true,
+                    "paidDate": "2023-09-15",
+                    "description": "Monthly water bill"
+                },
+                {
+                    "id": 7,
+                    "company": "Internet Service",
+                    "paymentRequest": 45.75,
+                    "paid": true,
+                    "paidDate": "2023-09-10",
+                    "description": "Monthly internet subscription"
+                }
+                ]
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
