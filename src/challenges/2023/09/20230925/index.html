@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary:{
+                            200: "hsl(337, 100%, 78%)",
+                            300: "hsl(337, 47%, 63%)",
+                            400: "hsl(308, 39%, 46%)",
+                            500: "hsl(308, 43%, 42%)",
+                            600: "hsl(270, 34%, 55%)",
+                            700: "hsl(233, 40%, 62%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [currentDate, setCurrentDate] = React.useState(new Date())
+            const [weekDays, setWeekDays] = React.useState([])
+            const [unit, setUnit] = React.useState(DATA.units.CELCIUS)
+            
+            const getFormatedDate = () => {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+                const getWeekday = () => {return currentDate.toLocaleDateString("en-US", {weekday: "long"})}
+                const getHours = () => {
+                    let ampm = currentDate.getHours() >= 12 ? "PM" : "AM"
+                    return `${currentDate.getHours()}:${currentDate.getMinutes()} ${ampm}`
+                }
+
+                return `${getWeekday()} ${getHours()}`
+            }
+
+
+            return (
+               <div className={"bg-gradient-to-tr bg-gradient-to-r from-indigo-700 via-rose-500 to-amber-300 w-full h-screen"}>
+                    <div className="bg-black/40 flex items-center justify-center w-full h-full">
+                        <main className="bg-white w-full m-4 sm:max-w-2xl lg:max-w-3xl">
+                            <header className="bg-slate-400/40 flex flex-col items-center justify-center h-36">
+                                <h2 className="text-2xl">{getFormatedDate()}</h2>
+                                <h1 className="text-4xl font-semibold">Timisoara</h1>
+                            </header>
+
+                            <section className="p-6">
+                                <div className="space-y-3">
+                                    <div className="grid grid-cols-2 grid-cols-[1fr_1fr] gap-3 outline outline-blue-400 p-2">
+                                        <div className="col-span-2 flex gap-3 md:col-span-1 md:col-start-2 outline outline-green-400">
+                                            <div className="text-[8rem] font-bold leading-[8rem]">9</div>
+                                            <div className="">
+                                                <div>
+                                                    <div className="grid grid-cols-2 gap-3 divide-x-4 divide-black text-5xl font-semibold">
+                                                        <button 
+                                                            className={`${unit == DATA.units.CELCIUS ? "text-sky-500" : ""}`} 
+                                                            onClick={() => setUnit(DATA.units.CELCIUS)}
+                                                        >
+                                                            °C
+                                                        </button>
+                                                        <button 
+                                                            className={`${unit == DATA.units.FARENHEIT ? "text-sky-500" : ""}`} 
+                                                            onClick={() => setUnit(DATA.units.FARENHEIT)}
+                                                        >
+                                                            °F
+                                                        </button>
+                                                    </div>
+
+                                                    <div>Min 3°C</div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-400/40 col-span-2 flex items-center justify-between gap-2 w-full px-6 py-2 outline outline-red-400 md:col-span-1 md:col-start-2">
+                                            <div>
+                                                <HeroIcons.Cloud/>
+                                                {`${Math.floor(Math.random() * (100 - 10 + 1)) + 10}%`}
+                                            </div>
+                                            <div>
+                                                <HeroIcons.Cloud/>
+                                                {`${Math.floor(Math.random() * (10 - 1 + 1)) + 1} km/h`}
+                                            </div>
+                                            <div>
+                                                <HeroIcons.Cloud/>
+                                                {`${Math.floor(Math.random() * (10 - 1))}%`}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between gap-2 outline outline-orange-400 p-2">
+                                        {["Fri", "Sat", "Sun", "Mon", "Tue", "Wed"].map(day => {
+                                            let min = 12
+                                            let max = 18
+                                            let temperature1 = Math.floor(Math.random() * (max - min + 1)) + min
+                                            let temperature2 = Math.floor(Math.random() * (max - min + 1)) + min
+
+                                            return (
+                                                <div className="bg-slate-400/40 flex-1 flex flex-col items-center gap-2">
+                                                    {day}
+                                                    <HeroIcons.Cloud/>
+                                                    {`${Math.min(temperature1, temperature2)}°/${Math.max(temperature1, temperature2)}`}
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+
+                                <div></div>
+                            </section>
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        const DATA = Object.freeze({
+            units: {
+                CELCIUS: "C",
+                FARENHEIT: "F",
+            }
+        })
+
+    </script>
+</body>
+
+</html>
