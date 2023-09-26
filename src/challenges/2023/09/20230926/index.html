@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        pink: {
+                            200: "hsl(330, 87%, 67%)",
+                            400: "hsl(342, 97%, 61%)",
+                            600: "hsl(333, 57%, 48%)"
+                        },
+                        turquoise: {
+                            400: "hsl(189, 68%, 38%)",
+                            600: "hsl(190, 94%, 28%)",
+                        }
+                    },
+                    keyframes: {
+                        donut: {
+                            "from": {
+                                strokeDashoffset: 440, // crcumferance of a circle in pixel
+                            }
+                        }
+                    },
+                    animation: {
+                        donut: 'donut 2s ease-in-out',
+                    },
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        function App() {
+            const [currentDate, setCurrentDate] = React.useState(new Date())
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+
+            return (
+               <div className={"bg-turquoise-600 flex items-center justify-center w-full h-screen"}>
+                    <main className="bg-white flex flex-col w-full max-w-md m-4 rounded-lg overflow-hidden">
+                        <header className="bg-turquoise-400 text-white text-center p-4">
+                            <p className="uppercase text-2xl font-semibold">
+                                {currentDate.toLocaleDateString(undefined, {weekday: "long"})}
+                            </p>
+
+                            <p className="capitalize text-xl">
+                                {`${currentDate.toLocaleDateString(undefined, {day: "numeric", month: "long", year: "numeric"})}, ${currentDate.getHours()}:${currentDate.getMinutes()}`}
+                            </p>
+                        </header>
+
+                        <section className="pt-8">
+                            <Dashboard/>
+                        </section>
+
+                        <footer className="flex items-center justify-between text-turquoise-400 px-8 py-4">
+                            <button>
+                                <HouseIcon/>
+                            </button>
+
+                            <button className="bg-gradient-to-r from-pink-400 to-pink-600 text-white text-lg font-bold w-24 p-2 rounded-full sm:text-2xl sm:w-32 hover:from-pink-400/90 hover:to-pink-600/90 duration-200">
+                                GO
+                            </button>
+                            
+                            <button>
+                                <ListIcon/>
+                            </button>
+                        </footer>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function Dashboard() {
+            return (
+                <div className="p-y-8">
+                    <div className="flex items-center justify-center relative">
+                        <DonutChart percentage={85}/>
+                        <p className="absolute flex flex-col items-center uppercase">
+                            <span className="text-3xl font-bold">{4.8}</span>
+                            <span className="text-2xl">{"km"}</span>
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-gray-500 mb-8">
+                        <div className="grid grid-cols-2 grid-cols-[1fr_1fr] gap-4 w-full text-3xl text-center">
+                            <div>
+                                <p className="text-2xl font-thin">Time</p>
+                                <p className="font-bold">23:40</p>
+                            </div>
+                            <div>
+                                <p className="text-2xl font-thin">Calories</p>
+                                <p className="font-bold">510</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <LatestActivities/>
+                </div>
+            )
+        }
+
+        function DonutChart({ percentage }) {
+            const colors = ["#f461ab", "#fc3c77", "#bf3572"]
+
+            let circumference = 440
+            let arcWidth = circumference * percentage / 100
+
+            const gradientStops = [
+                { offset: '0%', color: colors[0] },
+                { offset: '100%', color: colors[1] },
+            ];
+
+            return (
+                <svg width={160} height={160} xmlns="http://www.w3.org/2000/svg" className="-rotate-90">
+                    <defs>
+                        {/* Define a linear gradient */}
+                        <linearGradient id="donutGradient" gradientUnits="userSpaceOnUse">
+                            {gradientStops.map((stop, index) => (
+                                <stop key={index} offset={stop.offset} stopColor={stop.color} />
+                            ))}
+                        </linearGradient>
+                    </defs>
+                    <g>
+                        <circle 
+                            r="69.85699" cy="81" cx="81" 
+                            strokeWidth="8" stroke="url(#donutGradient)" fill="none" 
+                            className={`[stroke-dasharray:${arcWidth}] animate-donut`} 
+                            style={{}}
+                        />
+                    </g>
+                </svg>
+            )
+        }
+
+        function LatestActivities() {
+            return (
+                <div className="bg-turquoise-400 text-white p-8 space-y-8">
+                    <h2 className="text-2xl text-center font-thin">Latest activities</h2>
+
+                    <table className="w-full space-y-3">
+                        <tbody>
+                            <tr className="grid grid-cols-[1fr_2fr_2fr_auto] gap-4 sm:text-lg md:text-xl">
+                                <th>
+                                    <PersonRunningIcon/>
+                                </th>
+                                <td>11km</td>
+                                <td>1h20min</td>
+                                <td>478 calories</td>
+                            </tr>
+    
+                            <tr className="grid grid-cols-[1fr_2fr_2fr_auto] gap-4 sm:text-lg md:text-xl">
+                                <th>
+                                    <BicycleIcon/>
+                                </th>
+                                <td>45km</td>
+                                <td>2h37</td>
+                                <td>865 calories</td>
+                            </tr>
+    
+                            <tr className="grid grid-cols-[1fr_2fr_2fr_auto] gap-4 sm:text-lg md:text-xl">
+                                <th>
+                                    <PersonRunningIcon/>
+                                </th>
+                                <td>8km</td>
+                                <td>55min</td>
+                                <td>322 calories</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            )
+        }
+
+        function HouseIcon({className}) {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className={`w-10 h-10 fill-current ${className}`}>
+                    {/*! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. */}
+                    <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
+                </svg>
+            )
+        }
+
+        function ListIcon({className}) {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className={`w-10 h-10 fill-current ${className}`}>
+                    {/*! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. */}
+                    <path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z" />
+                </svg>
+            )
+        }
+
+        function PersonRunningIcon({className}) {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className={`w-10 h-10 fill-current ${className}`}>
+                    {/*! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. */}
+                    <path d="M320 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM125.7 175.5c9.9-9.9 23.4-15.5 37.5-15.5c1.9 0 3.8 .1 5.6 .3L137.6 254c-9.3 28 1.7 58.8 26.8 74.5l86.2 53.9-25.4 88.8c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l28.7-100.4c5.9-20.6-2.6-42.6-20.7-53.9L238 299l30.9-82.4 5.1 12.3C289 264.7 323.9 288 362.7 288H384c17.7 0 32-14.3 32-32s-14.3-32-32-32H362.7c-12.9 0-24.6-7.8-29.5-19.7l-6.3-15c-14.6-35.1-44.1-61.9-80.5-73.1l-48.7-15c-11.1-3.4-22.7-5.2-34.4-5.2c-31 0-60.8 12.3-82.7 34.3L57.4 153.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l23.1-23.1zM91.2 352H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h69.6c19 0 36.2-11.2 43.9-28.5L157 361.6l-9.5-6c-17.5-10.9-30.5-26.8-37.9-44.9L91.2 352z" />
+                </svg>
+            )
+        }
+
+        function BicycleIcon({className}) {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" className={`w-10 h-10 fill-current ${className}`}>
+                    {/*! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. */}
+                    <path d="M312 32c-13.3 0-24 10.7-24 24s10.7 24 24 24h25.7l34.6 64H222.9l-27.4-38C191 99.7 183.7 96 176 96H120c-13.3 0-24 10.7-24 24s10.7 24 24 24h43.7l22.1 30.7-26.6 53.1c-10-2.5-20.5-3.8-31.2-3.8C57.3 224 0 281.3 0 352s57.3 128 128 128c65.3 0 119.1-48.9 127-112h49c8.5 0 16.3-4.5 20.7-11.8l84.8-143.5 21.7 40.1C402.4 276.3 384 312 384 352c0 70.7 57.3 128 128 128s128-57.3 128-128s-57.3-128-128-128c-13.5 0-26.5 2.1-38.7 6L375.4 48.8C369.8 38.4 359 32 347.2 32H312zM458.6 303.7l32.3 59.7c6.3 11.7 20.9 16 32.5 9.7s16-20.9 9.7-32.5l-32.3-59.7c3.6-.6 7.4-.9 11.2-.9c39.8 0 72 32.2 72 72s-32.2 72-72 72s-72-32.2-72-72c0-18.6 7-35.5 18.6-48.3zM133.2 368h65c-7.3 32.1-36 56-70.2 56c-39.8 0-72-32.2-72-72s32.2-72 72-72c1.7 0 3.4 .1 5.1 .2l-24.2 48.5c-9 18.1 4.1 39.4 24.3 39.4zm33.7-48l50.7-101.3 72.9 101.2-.1 .1H166.8zm90.6-128H365.9L317 274.8 257.4 192z" />
+                </svg>
+            )
+        }
+
+    </script>
+</body>
+
+</html>
