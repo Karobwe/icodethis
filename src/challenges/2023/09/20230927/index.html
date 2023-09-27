@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        dark: {
+                            600: "hsl(234, 16%, 25%)",
+                            800: "hsl(234, 18%, 21%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [currentScreen, setCurrentScreen] = React.useState(DATA.screens.SPLASH)
+
+            return (
+               <div className={`
+                    bg-dark-800 flex items-center justify-center min-h-screen
+                `}>
+                    <main className="bg-dark-600 text-[hsl(0deg,0%,96%)] flex items-center w-[36rem] m-4 p-6 rounded-lg">
+                        {currentScreen === DATA.screens.SPLASH && <SplashView setCurrentScreen={setCurrentScreen}/>}
+
+                        {currentScreen === DATA.screens.ONGOING_CHALLENGES && <OngoingChallengesScreen setCurrentScreen={setCurrentScreen}/>}
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function SplashView({setCurrentScreen}) {
+            return (
+                <Wrapper>
+                    <div className="text-center">
+                        <div className="mx-auto w-16 aspect-square rounded-full overflow-hidden outline outline-4 outline-white/10 hover:scale-110 duration-100">
+                            <img 
+                                src="https://cdn.midjourney.com/8be1c753-de56-4f18-994b-2879049f01f1/0_3.png" alt="" 
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        <h1 className="mt-8 mb-6 text-white">
+                            Music app challenge
+                        </h1>
+
+                        <p>Vote for your favorite community uploads created for the latest challenge</p>
+
+                        <Button label="Vote Now!" className="w-44 hover:w-48 hover:font-semibold duration-200" onClick = {() => (setCurrentScreen(DATA.screens.ONGOING_CHALLENGES))}/>
+                    </div>
+                </Wrapper>
+            )
+        }
+
+        function OngoingChallengesScreen({setCurrentScreen}) {
+            return (
+                <Wrapper className="w-full">
+                    <div className="space-y-6">
+                        <header className="flex items-center justify-between gap-8">
+                            <h2 className="text-xl text-white">Ongoing challenges</h2>
+
+                            <button>View all</button>
+                        </header>
+
+                        <ul className="space-y-3">
+                            {DATA.challenges.map(challenge => {
+                                return (
+                                    <Challenge 
+                                        key={challenge.id} 
+                                        title={challenge.title} 
+                                        currentStatus={challenge.status} 
+                                        submissions={challenge.submissions} 
+                                    />
+                                )
+                            })}
+                        </ul>
+
+                        <button className="bg-dark-800 w-24 p-2 rounded flex items-center gap-1" onClick={() => (setCurrentScreen(DATA.screens.SPLASH))}>
+                            <HeroIcons.ChevronLeft/>
+                            
+                            {"Back"}
+                        </button>
+                    </div>
+                </Wrapper>
+            )
+        }
+
+        function Challenge({title, submissions, currentStatus}) {
+            const [status, setStatus] = React.useState(["new", "closed"].includes(currentStatus) ? currentStatus : "new")
+            let [mouseOver,setMouseOver]=React.useState(false);
+
+            return (
+                <li onMouseOver={()=>setMouseOver(true)} onMouseOut={()=>setMouseOver(false)} className="grid grid-cols-[1fr_4.5rem] gap-3">
+                    <div>
+                        <div className="flex items-center gap-3">
+                            <h3 className="flex-none">{title}</h3>
+
+                            <Badge 
+                                label={currentStatus == "new" ? "New" : "Closed"} 
+                                status={status} 
+                                className={`${mouseOver ? "opacity-30" /*opacity-0 scale-0 but I think it too much with vote button animation*/ : ""} duration-100`}
+                            />
+                        </div>
+
+                        <p className="text-sm text-gray-400">{submissions} submissions</p>
+                    </div>
+
+                    <Button 
+                        label="Vote" 
+                        className={`text-sm font-semibold ${mouseOver ? "opacity-100 scale-100" : "opacity-0 scale-0"} duration-100`} 
+                    />
+                </li>
+            )
+        }
+
+        function Wrapper({className, children}) {
+            return <div className={`p-6 ${className}`}>{children}</div>
+        }
+
+        function Button({label, className, onClick}) {
+            return (
+                <button 
+                        className={`
+                            bg-gradient-to-r from-indigo-400/90 to-purple-400 text-white
+                            mt-4 p-2 rounded-lg
+                            ${className}
+                        `}
+                        onClick={onClick}
+                    >
+                        {label}
+                </button>
+            )
+        }
+
+        function Badge({label, status, className}) {
+            return (
+                <div className={`
+                    ${status === "new" ? "bg-teal-400" : "bg-orange-500/80"} text-gray-900 text-xs
+                    px-3 py-1 rounded-full
+                    ${className}
+                `}>
+                    {label}
+                </div>
+            )
+        }
+
+        const DATA = Object.freeze({
+            screens: {
+                SPLASH: "splash",
+                ONGOING_CHALLENGES: "ongoing"
+            },
+            challenges: [
+                {
+                    id: 0,
+                    title: "Dashboard Challenge",
+                    status: "new",
+                    submissions: 36,
+                },
+                {
+                    id: 1,
+                    title: "Facebook Redesign Challenge",
+                    status: "new",
+                    submissions: 84,
+                },
+                {
+                    id: 2,
+                    title: "Dating App Challenge",
+                    status: "closed",
+                    submissions: 158,
+                },
+                {
+                    id: 3,
+                    title: "Slack Rebranding Challenge",
+                    status: "closed",
+                    submissions: 247,
+                },
+            ]
+        })
+
+    </script>
+</body>
+
+</html>
