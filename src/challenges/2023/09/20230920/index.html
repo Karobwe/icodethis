@@ -1,0 +1,54 @@
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressbar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet"> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./script.js" defer></script>
+    <script type="module">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        progress: {
+                            "from": {
+                                width: 0,
+                            }
+                        }
+                    },
+                    animation: {
+                        progress: 'progress 2s ease-out',
+                    },
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-[hsl(222,29%,15%)] flex justify-center items-center min-h-screen">
+    <div class="bg-[hsl(222,37%,11%)] text-[#181028] relative w-96 p-8 space-y-4 shadow-lg rounded-xl flex flex-col gap-4 max-w-md md:max-w-lg">
+        <p for="completion" class="text-purple-400">You have completed <span class="text-xl font-semibold text-purple-300"><output class="">79</output>%</span> of this course</p>
+
+        <!-- Default HTML progress -->
+        <progress class="hidden bg-slate-700 color-green-400 rounded-full" max="100" value="79"></progress>
+
+        <!-- Custom HTML progress -->
+        <div class="bg-slate-700 w-full h-4 rounded-full overflow-hidden">
+            <div id="visual-progress" class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 h-full w-[79%] animate-progress"></div>
+        </div>
+
+        <!-- Control above progress -->
+        <input type="range" name="completion" id="completion" value="79" min="0" max="100" step="1" class="accent-slate-700 hidden">
+        <label for="completion" class="hidden">Move the slider to control the progressbar</label>
+
+        <button class="text-white px-4 py-2 rounded-full border border-pink-700">Continue</button>
+
+        <p class="hidden bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 via-rose-500 to-amber-300 text-center font-bold font-[Kalam] w-full absolute -bottom-12 left-0 animate-bounce">Move the slider</p>
+    </div>
+</body>
+
+</html>
