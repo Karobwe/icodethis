@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        indigo:{
+                            900: "hsl(232, 46%, 9%)",
+                        }
+                    }
+                },
+                backgroundImage: {
+                    pumpkin: "url('https://images.unsplash.com/photo-1573306533578-12e23afbf2c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1935&q=80')",
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        const useState = React.useState
+        const useEffect = React.useEffect
+
+        function App() {
+            const today = new Date()
+            const halloweenOfThisYear = new Date(`${today.getFullYear()}/10/31`) 
+            const halloweenOfNextYear = new Date(`${today.getFullYear() + 1}/10/31`)
+
+            const nextHalloween =  today.getTime() < halloweenOfThisYear.getTime() ? halloweenOfThisYear : halloweenOfNextYear
+
+            return (
+               <div className={"bg-indigo-900 text-white grid place-content-center w-full min-h-screen"}>
+                    <main className="bg-pumpkin bg-cover bg-center min-w-[90vw] h-[90vh]">
+                        <div className="bg-black/60 p-4 w-full h-full grid place-content-center gap-28">
+                            <h1 className="flex flex-col items-center gap-4">
+                                <div className="text-xl sm:text-2xl">— contdown to —</div>
+                                <div className="text-5xl sm:text-7xl font-black">Halloween</div>
+                            </h1>
+    
+                            <Countdown targetDate={nextHalloween}/>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function Countdown({targetDate}) {
+            const calculateTimeRemaining = () => {
+                const now = new Date().getTime()
+                const timeRemaining = new Date(targetDate).getTime() - now
+                const millisecondsMinute = 1000 * 60;
+                const millisecondsInHour = 1000 * 60 * 60;
+                const millisecondsInDay = 1000 * 60 * 60 * 24;
+                const millisecondsInMonth = millisecondsInDay * 30.44; // Average number of days in a month
+
+                if (timeRemaining <= 0) {
+                    return {
+                        years: 0,
+                        months: 0,
+                        days: 0,
+                        hours: 0,
+                        minutes: 0,
+                        seconds: 0,
+                    }
+                }
+
+                const days = Math.floor(timeRemaining / (millisecondsInDay))
+                const hours = Math.floor((timeRemaining % (millisecondsInDay)) / (millisecondsInHour))
+                const minutes = Math.floor((timeRemaining % (millisecondsInHour)) / (millisecondsMinute))
+                const seconds = Math.floor((timeRemaining % (millisecondsMinute)) / 1000)
+                const months = Math.floor(timeRemaining / millisecondsInMonth);
+                const years = Math.floor(months / 12);
+
+                return {
+                    years,
+                    months,
+                    days,
+                    hours,
+                    minutes,
+                    seconds,
+                }
+            }
+
+            const [time, setTime] = useState(calculateTimeRemaining());
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setTime(calculateTimeRemaining());
+                }, 1000);
+
+                return () => {
+                    clearInterval(interval);
+                };
+            }, [targetDate]);
+
+            return (
+                <section className="grid grid-cols-4 gap-4">
+                    <TimerCard label="days" time={time.days} />
+                    <TimerCard label="hours" time={time.hours} />
+                    <TimerCard label="minutes" time={time.minutes} />
+                    <TimerCard label="seconds" time={time.seconds} />
+                </section>
+            )
+        }
+
+        function TimerCard({time, label}) {
+            return (
+                <div className="bg-white/10 text-center font-light p-4 aspect-square rounded flex flex-col place-content-center">
+                    <div className="text-4xl lg:text-7xl">{time}</div>
+                    <div className="text-sm sm:text-2xl lg:text-4xl">{label}</div>
+                </div>
+            )
+        }
+
+    </script>
+</body>
+
+</html>
