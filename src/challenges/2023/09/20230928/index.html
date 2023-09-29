@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {},
+                    backgroundImage: {
+                        cake: "url(https://images.unsplash.com/photo-1512484457149-266d165a4eca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2105&q=80)",
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        .scrollable,
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .scrollable::-webkit-scrollbar,
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+                <div className={"bg-slate-800 relative flex items-center justify-center w-full min-h-screen"}>
+                    <div className="absolute inset-0">
+                        <BackgroundGradientSVG/>
+                    </div>
+
+                    <main className="bg-cake bg-cover bg-center m-4 py-4 z-10 w-full max-w-lg">
+                        <header className="text-gray-500 px-4 flex items-center justify-between">
+                            <button>
+                                <HeroIcons.Menu className="w-10 h-10"/>
+                            </button>
+
+                            <button className="p-2 bg-black/30 text-white rounded"> {/*className can be removed, addet here just because of chosen background*/}
+                                <HeroIcons.Search className="w-10 h-10"/>
+                            </button>
+                        </header>
+
+                        <section className="grid grid-rows-2">
+                            <div className="row-start-2 overflow-scroll scrollable">
+                                <ul className={`p-4 grid grid-cols-[repeat(${DATA.menus.length},1fr)] gap-4`}>
+                                    {DATA.menus.map(item => {
+                                        return <MenuCard menu={item} />
+                                    })}
+                                </ul>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function MenuCard({menu}) {
+            return (
+                <li className="bg-white text-center w-72 p-4 rounded-xl shadow-lg">
+                    <div className="text-gray-500 relative flex flex-col items-center">
+                        <Rating rating={menu.rating}/>
+                        <div className="relative -top-4">
+                            <div className="font-semibold text-xl text-red-400">{menu.rating}</div>
+                            <div className="text-sm">{menu.reviews} Reviews</div>
+                        </div>
+                    </div>
+
+                    <h2 className="text-xl font-semibold mt-4 mb-2">
+                        {menu.name}
+                    </h2>
+
+                    <p>
+                        {menu.description}
+                    </p>
+
+                    <button className="bg-red-600/90 text-white mt-8 px-4 py-2 rounded-xl">
+                        Read more
+                    </button>
+                </li>
+            )
+        }
+
+        function Rating({rating}) {
+            const epsilon = 1.2
+            const shiftTight = `[margin-block-start:${epsilon * 1}rem]`
+            const shiftWide = `[margin-block-start:${epsilon * 3}rem]`
+
+            return (
+                <div className="text-red-400 flex items-center gap-2">
+                    {rating >= 1 ? <HeroIcons.Star className={shiftWide}/> : <HeroIcons.StarOutline className={shiftWide}/>}
+                    {rating >= 2 ? <HeroIcons.Star className={shiftTight}/> : <HeroIcons.StarOutline className={shiftTight}/>}
+                    {rating >= 3 ? <HeroIcons.Star/> : <HeroIcons.StarOutline/>}
+                    {rating >= 4 ? <HeroIcons.Star className={shiftTight}/> : <HeroIcons.StarOutline className={shiftTight}/>}
+                    {rating >= 5 ? <HeroIcons.Star className={shiftWide}/> : <HeroIcons.StarOutline className={shiftWide}/>}
+                </div>
+            )
+        }
+
+        function BackgroundGradientSVG() {
+            return (
+                <svg height="100%" width="100%">
+                    <defs>
+                        <linearGradient id="0" x1="0" y1="0.5" x2="1" y2="0.5">
+                        <stop offset="0%" stop-color="#3182ce"/>
+                        <stop offset="14.29%" stop-color="#348fc5"/>
+                        <stop offset="28.57%" stop-color="#389ac2"/>
+                        <stop offset="42.86%" stop-color="#3ca5c1"/>
+                        <stop offset="57.14%" stop-color="#41b0c2"/>
+                        <stop offset="71.43%" stop-color="#45bbc3"/>
+                        <stop offset="100%" stop-color="#4fd1c5"/>
+                        </linearGradient>
+                        <radialGradient id="1" gradientTransform="translate(-0.5 0) scale(2, 2)">
+                        <stop offset="0%" stop-color="#feb2b2"/>
+                        <stop offset="25%" stop-color="rgba(252, 184, 219, 0.75)"/>
+                        <stop offset="50%" stop-color="rgba(239, 194, 250, 0.5)"/>
+                        <stop offset="100%" stop-color="rgba(190, 227, 248, 0)"/>
+                        </radialGradient>
+                    </defs>
+                    <rect fill="url(#0)" height="100%" width="100%"/>
+                    <rect fill="url(#1)" height="100%" width="100%"/>
+                </svg>
+            )
+        }
+
+        const DATA = Object.freeze({
+            menus: [
+                {
+                    id: 0,
+                    name: "Forest Fruit Pie",
+                    description: "A delightful combination of seasonal forest fruits baked to perfection.",
+                    rating: 3,
+                    price: 12.99,
+                    reviews: 47,
+                    ingredients: ["Mixed berries", "Pie crust", "Sugar", "Lemon juice"],
+                    isVegetarian: true,
+                    isGlutenFree: false,
+                },
+                {
+                    id: 1,
+                    name: "Classic Pepperoni Pizza",
+                    description: "A mouthwatering pizza topped with pepperoni and melted cheese.",
+                    rating: 4.5,
+                    price: 14.99,
+                    reviews: 25,
+                    ingredients: ["Pizza dough", "Tomato sauce", "Pepperoni", "Mozzarella cheese"],
+                    isVegetarian: false,
+                    isGlutenFree: false,
+                },
+                {
+                    id: 2,
+                    name: "Caesar Salad",
+                    description: "A fresh and crisp salad with Caesar dressing and croutons.",
+                    rating: 4,
+                    price: 8.99,
+                    reviews: 33,
+                    ingredients: ["Romaine lettuce", "Caesar dressing", "Croutons", "Parmesan cheese"],
+                    isVegetarian: true,
+                    isGlutenFree: false,
+                },
+                {
+                    id: 3,
+                    name: "Spaghetti Carbonara",
+                    description: "Classic Italian pasta dish with eggs, cheese, pancetta, and pepper.",
+                    rating: 4.2,
+                    price: 16.99,
+                    reviews: 20,
+                    ingredients: ["Spaghetti", "Eggs", "Pancetta", "Parmesan cheese"],
+                    isVegetarian: false,
+                    isGlutenFree: false,
+                },
+                {
+                    id: 4,
+                    name: "Vegetable Stir-Fry",
+                    description: "A colorful stir-fry with assorted vegetables in a savory sauce.",
+                    rating: 4.1,
+                    price: 10.99,
+                    reviews: 41,
+                    ingredients: ["Broccoli", "Bell peppers", "Carrots", "Soy sauce"],
+                    isVegetarian: true,
+                    isGlutenFree: true,
+                },
+                {
+                    id: 5,
+                    name: "Grilled Salmon",
+                    description: "Fresh salmon fillet grilled to perfection with a lemon herb seasoning.",
+                    rating: 4.6,
+                    price: 18.99,
+                    reviews: 11,
+                    ingredients: ["Salmon fillet", "Lemon", "Herbs", "Olive oil"],
+                    isVegetarian: false,
+                    isGlutenFree: true,
+                },
+                {
+                    id: 6,
+                    name: "Mushroom Risotto",
+                    description: "Creamy and flavorful risotto with sautéed mushrooms and Parmesan cheese.",
+                    rating: 4.3,
+                    price: 15.99,
+                    reviews: 31,
+                    ingredients: ["Arborio rice", "Mushrooms", "Chicken broth", "White wine"],
+                    isVegetarian: false,
+                    isGlutenFree: false,
+                },
+                {
+                    id: 7,
+                    name: "Chocolate Brownie Sundae",
+                    description: "Warm chocolate brownie topped with vanilla ice cream and chocolate sauce.",
+                    rating: 4.8,
+                    price: 7.99,
+                    reviews: 19,
+                    ingredients: ["Chocolate brownie", "Vanilla ice cream", "Chocolate sauce"],
+                    isVegetarian: true,
+                    isGlutenFree: false,
+                },
+                {
+                    id: 8,
+                    name: "Green Tea Smoothie",
+                    description: "A refreshing and healthy smoothie made with green tea and fruit.",
+                    rating: 4.0,
+                    price: 6.99,
+                    reviews: 42,
+                    ingredients: ["Green tea", "Banana", "Spinach", "Honey"],
+                    isVegetarian: true,
+                    isGlutenFree: true,
+                },
+                {
+                    id: 9,
+                    name: "BBQ Pulled Pork Sandwich",
+                    description: "Tender pulled pork smothered in BBQ sauce served on a toasted bun.",
+                    rating: 4.4,
+                    price: 11.99,
+                    reviews: 26,
+                    ingredients: ["Pulled pork", "BBQ sauce", "Burger bun", "Coleslaw"],
+                    isVegetarian: false,
+                    isGlutenFree: false,
+                }
+            ]
+        })
+
+    </script>
+</body>
+
+</html>
