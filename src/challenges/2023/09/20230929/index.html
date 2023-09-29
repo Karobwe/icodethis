@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary:{
+                            400: "hsl(187, 70%, 55%)",
+                            800: "hsl(208, 69%, 34%)"
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+
+        .debug { 
+            outline: dashed 4px lawngreen;
+        }
+
+        .debug2 {
+            border: dashed 4px fuchsia;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [movie, setMovie] = React.useState(DATA.movies[0])
+
+            return (
+               <div className={`bg-gray-50 bg-[url('${movie.cover}')] bg-cover bg-right-bottom text-slate-800`}>
+                    <main className="w-full min-h-screen grid place-content-center bg-white/80">
+                        <Screen>
+                            <div className="h-full grid grid-rows-[3.5fr_5fr_2fr]">
+                                <header className={`
+                                    bg-gray-100
+                                    bg-[url('${movie.poster}')] bg-cover bg-center
+                                    relative
+                                    after:block after:absolute 
+                                    after:origin-bottom-left 
+                                    after:top-[100%] 
+                                    after:w-[110%] after:h-28 
+                                    after:-rotate-[6deg]
+                                    after:bg-white 
+                                `}>
+                                    <TopNavbar movie={movie}/>
+                                </header>
+
+                                <section className={`
+                                    bg-white
+                                    relative
+                                    after:block after:absolute after:z-10 ${{/*z-index because absolute position on footer's Wrapper component*/}}
+                                    after:origin-top-left 
+                                    after:bottom-[0%] 
+                                    after:w-[110%] after:h-20 
+                                    after:rotate-[5deg]
+                                    after:bg-white 
+                                `}>
+                                    <Wrapper className="grid grid-row-2">
+                                        <div>
+                                            <h2 className="text-2xl text-primary-800 font-black uppercase">{movie.title}</h2>
+
+                                            <p className="text-sm [text-wrap:pretty]">
+                                                Animation, Adventure, Comedy | 25 November 2015 (USA)
+                                                {movie.genres.join(",")}
+                                                {" | "}
+                                                {new Date(movie.releaseDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                {`(${movie.origin})`}
+                                            </p>
+
+                                            <p className="my-3">{movie.description}</p>
+                                        </div>
+
+                                        <div className="text-center z-20">
+                                            <h3 className="text-xl font-semibold mb-2">
+                                                Actors
+                                            </h3>
+
+                                            <SwipableProfile profiles={movie.cast} currentProfileIndex={1}/>
+                                        </div>
+                                    </Wrapper>
+                                </section>
+
+                                <footer className="bg-primary-400 relative">
+                                    <BottomNavbarActions movie={movie}/>
+                                </footer>
+                            </div>
+                        </Screen>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function TopNavbar({movie}) {
+            return (
+                <nav className="text-white h-full">
+                    <Wrapper className="h-full flex flex-col justify-between">
+                        <div className="flex justify-between">
+                            <button className="text-slate-100 hover:text-white hover:scale-110 duration-500">
+                                <HeroIcons.ArrowLeft className="w-8 h-8"/>
+                            </button>
+                            
+                            <button className="text-slate-100 hover:text-white hover:scale-110 duration-500">
+                                <HeroIcons.Share className="w-8 h-8"/>
+                            </button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                            <div className="text-2xl flex items-center gap-2">
+                                <HeroIcons.Star className="w-12 h-12 text-yellow-400"/>
+                                <div>
+                                    <span className="font-semibold">{movie.rating}</span>
+                                    <span> / 10</span>
+                                </div>
+                            </div>
+                            
+                            <button className="bg-red-500/70 z-10 aspect-square p-3 rounded-full hover:bg-red-500 hover:scale-105 duration-500 ease-out">
+                                <PlayIcon className="w-10 h-10 "/>
+                            </button>
+                        </div>
+                    </Wrapper>
+                </nav>
+            )
+        }
+
+        function BottomNavbarActions({movie}) {
+            return (
+                <Wrapper className="absolute bottom-0 grid grid-cols-2 gap-2">
+                    <button className="text-cyan-100 text-center font-semibold uppercase flex flex-col items-center group hover:text-white duration-500">
+                        <HeroIcons.Bookmark className="w-8 h-8 group-hover:scale-125 duration-500"/>
+                        
+                        {"Add to watchlist"}
+                    </button>
+                    
+                    <button className="text-cyan-100 text-center font-semibold uppercase flex flex-col items-center group hover:text-white duration-500">
+                        <HeroIcons.UserGroup className="w-8 h-8 group-hover:scale-125 duration-500"/>
+                        
+                        {"See fullcast & crew"}
+                    </button>
+                </Wrapper>
+            )
+        }
+
+        function SwipableProfile({profiles, currentProfileIndex}) {
+            const [currentProfile, setCurrentProfile] = React.useState(profiles[currentProfileIndex])
+            const [visibleProfiles, setVisibleProfiles] = React.useState([profiles[0], profiles[1], profiles[2]])
+
+            const shift = -1.6
+
+            /*
+             * @return a portion of an array with numberOfSurroundingElements before and numberOfSurroundingElements after current element
+             * e.g: array = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+             * currentElement = 1   => returned array: [8, 9, 1, 2, 3]
+             * currentElement = 5   => [3, 4, 5, 6, 7]
+             * currentElement = 8   => [6, 7, 8, 9, 1]
+            */
+            function getSurroundingElements(arr, currentElement, numberOfSurroundingElements = 1) {
+                const currentIndex = arr.indexOf(currentElement)
+                const numElements = arr.length
+                
+                if (currentIndex === -1) {
+                    // Current element not found in the array
+                    return []
+                }
+                
+                const result = [];
+                for (let i = -numberOfSurroundingElements; i <= numberOfSurroundingElements; i++) {
+                    // Calculate the index for the surrounding elements, considering wrapping around
+                    const index = (currentIndex + i + numElements) % numElements
+                    result.push(arr[index])
+                }
+                
+                return result
+            }
+
+            function nextProfile() {
+                switch (currentProfile) {
+                    case visibleProfiles[0]:
+                        setCurrentProfile(visibleProfiles[1])
+                        break;
+                
+                    case visibleProfiles[1]:
+                        setCurrentProfile(visibleProfiles[2])
+                        break;
+                
+                    case visibleProfiles[2]:
+                        setCurrentProfile(visibleProfiles[0])
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+
+            function previousProfile() {
+                switch (currentProfile) {
+                    case visibleProfiles[0]:
+                        setCurrentProfile(visibleProfiles[2])
+                        break;
+                
+                    case visibleProfiles[1]:
+                        setCurrentProfile(visibleProfiles[0])
+                        break;
+                
+                    case visibleProfiles[2]:
+                        setCurrentProfile(visibleProfiles[1])
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+
+            React.useEffect(() => {
+                setVisibleProfiles(getSurroundingElements(profiles, currentProfile, 1))
+            }, [currentProfile]);
+
+            return (
+                <div>
+                <div className="flex items-center">
+                    <button className="text-gray-300 hover:text-gray-400 hover:scale-110 duration-500" onClick={() => previousProfile()}>
+                        <HeroIcons.ChevronLeft className="w-12 h-12"/>
+                    </button>
+
+                    <button onClick={() => previousProfile()}>
+                        <div className={`bg-slate-200 w-[4rem] aspect-square rounded-full overflow-hidden hover:scale-105 duration-500`}></div>
+                    </button>
+
+                    <button className="z-10" onClick={() => setCurrentProfile(visibleProfiles[0])}>
+                        <div className={`w-[5rem] [margin-inline-start:${shift * 1.6}rem] aspect-square rounded-full overflow-hidden hover:scale-105 duration-500`}>
+                            <img src={visibleProfiles[0].actor.picture} alt="" className="w-full h-full object-cover"/>
+                        </div>
+                    </button>
+
+                    <button className="z-20">
+                        <div className={`w-[6rem] [margin-inline-start:${shift}rem] aspect-square rounded-full outline outline-4 outline-black/40 overflow-hidden hover:scale-105 duration-500`}>
+                            <img src={visibleProfiles[1].actor.picture} alt="" className="w-full h-full object-cover"/>
+                        </div>
+                    </button>
+
+                    <button className="z-10" onClick={() => setCurrentProfile(visibleProfiles[2])}>
+                        <div className={`w-[5rem] [margin-inline-start:${shift}rem] aspect-square rounded-full overflow-hidden hover:scale-105 duration-500`}>
+                            <img src={visibleProfiles[2].actor.picture} alt="" className="w-full h-full object-cover"/>
+                        </div>
+                    </button>
+
+                    <button onClick={() => nextProfile()}>
+                        <div className={`bg-slate-200 w-[4rem] [margin-inline-start:${shift * 1.6}rem] aspect-square rounded-full overflow-hidden hover:scale-105 duration-500`}></div>
+                    </button>
+
+                    <button className="text-gray-300 hover:text-gray-400 hover:scale-110 duration-500" onClick={() => nextProfile()}>
+                        <HeroIcons.ChevronRight className="w-12 h-12"/>
+                    </button>
+                </div>
+
+                <div>
+                    <h4 className="font-semibold text-lg">{currentProfile.character}</h4>
+                    <h4 className="text-sm">{currentProfile.actor.name}</h4>
+                </div>
+                </div>
+            )
+        }
+
+        function Screen({children}) {
+            return (
+                <div className="w-[360px] aspect-[9/20] rounded-lg overflow-hidden bg-white overflow-y-scroll hide-scrollbar sm:w-[412px] sm:aspect-[9/16]">
+                    {children}
+                </div>
+            )
+        }
+
+        function Wrapper({children, className}) {
+            return (
+                <div className={`p-4 ${className}`}>
+                    {children}
+                </div>
+            )
+        }
+
+        function PlayIcon({className}) {
+            return (
+                <svg 
+                    fill="currentColor" 
+                    stroke="currentColor" 
+                    strokeWidth={1.5} 
+                    viewBox="0 0 24 24" 
+                    className={className}
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" 
+                    />
+                </svg>
+            )
+        }
+
+        const DATA = Object.freeze({
+            movies: [
+                {
+                    id: 0,
+                    title: "The good dinausaur",
+                    description: "In a world where dinosaurs and humans live side-by-side, an Apatosaurus named Ario makes an unlikely human friend.",
+                    poster: "https://jonnegroni.com/wp-content/uploads/2015/12/the_good_dinosaur_2015_movie-wide.jpg",
+                    cover: "https://cdn.wallpapersafari.com/43/89/JE8dXp.jpg",
+                    rating: 6.8,
+                    genres: ["Animation", "Adventure", "Comedy"],
+                    releaseDate: "25/11/2015",
+                    origin: "USA",
+                    cast: [
+                        {
+                            character: "Momma",
+                            actor: {
+                                name: "Frances McDormand",
+                                picture: "https://m.media-amazon.com/images/M/MV5BMjI3NzgxNjYzOF5BMl5BanBnXkFtZTgwNTIxMjExNzE@._V1_.jpg",
+                            }
+                        },
+                        {
+                            character: "Young Arlo",
+                            actor: {
+                                name: "Jack McGraw",
+                                picture: "https://m.media-amazon.com/images/M/MV5BNjE3MGY4ODYtMjA4Yy00YjNmLWJlMTQtMDExZDUwODMxODI1XkEyXkFqcGdeQXVyMjQwMDg0Ng@@._V1_.jpg",
+                            }
+                        },
+                        {
+                            character: "Young Libby",
+                            actor: {
+                                name: "Maleah Nipay-Padilla",
+                                picture: "https://celebritypictures.org/thumbs/5558187/5558187_3.jpeg",
+                            }
+                        },
+                        {
+                            character: "Poppa",
+                            actor: {
+                                name: "Jeffrey Wright",
+                                picture: "https://m.media-amazon.com/images/M/MV5BYzA5NTQyZTQtNDNmZC00MTNlLWJhMDMtYWQyZTFhZDkwODhiXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg",
+                            }
+                        },
+                        {
+                            character: "Ramsey",
+                            actor: {
+                                name: "Anna Paquin",
+                                picture: "https://m.media-amazon.com/images/M/MV5BMjIxMzc0MDQ4NF5BMl5BanBnXkFtZTgwMDYxMTUzMjE@._V1_.jpg",
+                            }
+                        },
+                        {
+                            character: "Spot",
+                            actor: {
+                                name: "Jack Bright",
+                                picture: "https://m.media-amazon.com/images/M/MV5BMjE1OTYwNTE1M15BMl5BanBnXkFtZTgwMDc4NzkyNzE@._V1_.jpg",
+                            }
+                        },
+                    ]
+                }
+            ]
+        })
+
+    </script>
+</body>
+
+</html>
