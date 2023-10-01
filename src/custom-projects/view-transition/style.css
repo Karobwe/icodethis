@@ -1,0 +1,36 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  background-color: hsl(245deg 35% 63%)
+}
+
+.gallery {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: hsl(245deg 55% 63%);
+}
+
+.main-image {
+  width: 600px;
+  height: auto;
+}
+
+.thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 140px);
+  justify-content: center;
+  gap: .8rem;
+}
+
+.thumbnails img {
+  width: 100%;
+}
