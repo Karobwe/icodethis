@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {}
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+        
+        function App() {
+            return (
+            <div
+            className={
+                "bg-gradient-to-tr bg-gradient-to-r from-indigo-700 via-rose-500 to-amber-300 flex items-center justify-center w-full h-screen"
+            }
+            >
+            <main className="bg-slate-800 flex items-center justify-center m-4 p-6 rounded-lg">
+                <ImageGallery/>
+            </main>
+        </div>
+        );
+    }
+    
+    const container = document.getElementById("root");
+    const root = ReactDOM.createRoot(container);
+    root.render(<App />);
+    
+    function ImageGallery() {
+        const [currentImage, setCurrentImage] = React.useState(gallery[0]);
+        const [viewTransitionReady, setViewTransitionReady] = React.useState(false);
+        
+        return (
+        <div className="grid gap-2 lg:max-w-3xl">
+            <div className="w-full h-96 rounded-lg overflow-hidden">
+                <img src={currentImage} alt="main image" className="w-full h-full object-cover" />
+            </div>
+            
+            <div className="flex gap-2 justify-center">
+                <button>
+                    <HeroIcons.ChevronLeft className="w-8 h-8 p-1 text-yellow-500" />
+                </button>
+                
+                {gallery.map(item => {
+                    return (
+                    <img 
+                    src={item} alt="" 
+                    className={`w-1/4 h-auto rounded ${item === currentImage ? "outline outline-purple-500" : ""}`} 
+                    onClick={() => {
+                        document.startViewTransition(() => {
+                            ReactDOM.flushSync(() => {
+                                setCurrentImage(item)
+                            });
+                        });
+                    }}
+                    />
+                    )
+                })}
+                
+                <button>
+                    <HeroIcons.ChevronRight className="w-8 h-8 p-1 text-yellow-500" />
+                </button>
+            </div>
+        </div>
+        );
+    }
+    
+    const gallery = [
+        "https://cdn.midjourney.com/73e6c2a8-be98-4817-bc86-c70bffc98c79/0_3.png",
+        "https://cdn.midjourney.com/6a4a1e34-6a48-4da5-9a3e-9603dadb1cc4/0_0.png",
+        "https://cdn.midjourney.com/d6154c93-6f2d-4952-8bda-d5df7ccc60a5/0_1.png",
+    ]  
+</script>
+</body>
+
+</html>
