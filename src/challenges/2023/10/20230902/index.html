@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        white: "hsl(0, 0%, 100%)",
+                        blue:{
+                            100: "hsl(218, 65%, 97%)",
+                            400: "hsl(224, 45%, 53%)",
+                            600: "hsl(224, 57%, 29%)",
+                            650: "hsl(224, 57%, 35%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [user, setUser] = React.useState()
+
+            return (
+               <div className={"bg-blue-100 flex items-center justify-center w-full min-h-screen"}>
+                    <main className="bg-white  m-4 w-full max-w-xl rounded-b-xl flex flex-col items-center justify-center">
+                        <header className="bg-blue-600 text-white w-full rounded-t-xl">
+                            <Wrapper className="flex justify-between gap-8">
+                                <h1 className="text-xl font-semibold">
+                                    Book a training
+                                </h1>
+
+                                <button>
+                                    <HeroIcons.X className="w-8 h-8"/>
+                                </button>
+                            </Wrapper>
+                        </header>
+
+                        <section>
+                            <Wrapper className="space-y-12">
+                                <DateSwipper/>
+
+                                <ul className="space-y-6">
+                                    {MOCK_DATA.trainings.map(training => <TrainingCard training={training} key={training.id} />)}
+                                </ul>
+                            </Wrapper>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function DateSwipper({training}) {
+            return (
+                <div className="flex items-center justify-center gap-8">
+                    <button className="text-gray-500 hover:text-black duration-300">
+                        <HeroIcons.ChevronLeft className="w-8 h-8"/>
+                    </button>
+                    
+                    <p className="flex flex-col items-center gap-2">
+                        <span className="text-black text-2xl font-bold">Oct. 02</span>
+                        
+                        <span className="font-semibold">Today</span>
+                    </p>
+                    
+                    <button className="text-gray-500 hover:text-black duration-300">
+                        <HeroIcons.ChevronRight className="w-8 h-8"/>
+                    </button>
+                </div>
+            )
+        }
+
+        function TrainingCard({training}) {
+            return (
+                <li className="bg-blue-600 text-blue-100 rounded-lg cursor-pointer hover:bg-blue-650 hover:text-white duration-300">
+                    <Wrapper className="grid grid-cols-[2fr_1fr] gap-x-4 gap-y-10">
+                        <div>
+                            <h2 className="text-xl font-black">{training.title}</h2>
+
+                            <p className="flex gap-x-2">
+                                {`${new Date(training.startDate).getHours()}:${new Date(training.startDate).getMinutes()}`}
+
+                                <span className="text-xl leading-none">&#67871;</span>
+
+                                {`${training.duration.minutes} min`}
+                            </p>
+                        </div>
+
+                        <button className="bg-white text-slate-800 font-semibold px-4 py-2 rounded duration-300">
+                            Book a spot
+                        </button>
+
+                        <div className="span-2-cols">
+                            <div className="text-xs">Trained by</div>
+
+                            <div className="flex items-center gap-2">
+                                <div className="w-12 aspect-square border-2 border-blue-400 rounded-full overflow-hidden">
+                                    <img src={training.instructor.avatar} alt="" className="w-full h-full object-cover"/>
+                                </div>
+
+                                <h3>{training.instructor.name}</h3>
+                            </div>
+                        </div>
+                    </Wrapper>
+                </li>
+            )
+        }
+
+        function Wrapper({className, children}) {
+            return (
+                <div className={`p-4 sm:p-8 ${className}`}>
+                    {children}
+                </div>
+            )
+        }
+
+        const MOCK_DATA = Object.freeze({
+            trainings: [
+                {
+                    id: 1,
+                    title: "Bodypump",
+                    startDate: "02/10/2023 09:30",
+                    duration: {hour: 0, minutes: 30},
+                    instructor: {
+                        name: "Emily Stark",
+                        avatar: "https://cdn.midjourney.com/ca046c21-0702-447f-96f3-cf2252444d91/0_0.png"
+                    }
+                },
+                {
+                    id: 2,
+                    title: "Pilates",
+                    startDate: "02/10/2023 10:30",
+                    duration: {hour: 0, minutes: 60},
+                    instructor: {
+                        name: "Erik Nest",
+                        avatar: "https://cdn.midjourney.com/00ac9024-61ae-4813-80c7-4234cba2144a/0_2.png"
+                    }
+                }
+            ]
+        })
+
+    </script>
+</body>
+
+</html>
