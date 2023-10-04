@@ -54,8 +54,20 @@
     <script type="text/babel" data-type="module">
         import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
 
+        const keynameOfStoredDataInLocalStorage = "icodethis"
+
         function App() {
-            const [user, setUser] = React.useState()
+            const [user, setUser] = React.useState(
+                JSON.parse(localStorage.getItem(keynameOfStoredDataInLocalStorage))?.users[1]
+            )
+
+            React.useEffect(() => {
+                initializeMockData()
+
+                return () => {
+                    localStorage.removeItem(keynameOfStoredDataInLocalStorage)
+                }
+            }, [user])
 
             return (
                <div className={"bg-blue-100 flex items-center justify-center w-full min-h-screen"}>
@@ -77,7 +89,7 @@
                                 <DateSwipper/>
 
                                 <ul className="space-y-6">
-                                    {MOCK_DATA.trainings.map(training => <TrainingCard training={training} key={training.id} />)}
+                                    {getTrainingsForUser(user.id).map(training => <TrainingCard training={training} key={training.id} />)}
                                 </ul>
                             </Wrapper>
                         </section>
@@ -111,6 +123,8 @@
         }
 
         function TrainingCard({training}) {
+            const instructor = getInstructorForTraining(training.id)
+
             return (
                 <li className="bg-blue-600 text-blue-100 rounded-lg cursor-pointer hover:bg-blue-650 hover:text-white duration-300">
                     <Wrapper className="grid grid-cols-[2fr_1fr] gap-x-4 gap-y-10">
@@ -126,7 +140,12 @@
                             </p>
                         </div>
 
-                        <button className="bg-white text-slate-800 font-semibold px-4 py-2 rounded duration-300">
+                        <button 
+                            className="bg-white text-slate-800 font-semibold px-4 py-2 rounded duration-300"
+                            onClick={() => {
+                                console.log("User try to book a spot");
+                            }}
+                        >
                             Book a spot
                         </button>
 
@@ -135,10 +154,10 @@
 
                             <div className="flex items-center gap-2">
                                 <div className="w-12 aspect-square border-2 border-blue-400 rounded-full overflow-hidden">
-                                    <img src={training.instructor.avatar} alt="" className="w-full h-full object-cover"/>
+                                    <img src={instructor.avatar} alt="" className="w-full h-full object-cover"/>
                                 </div>
 
-                                <h3>{training.instructor.name}</h3>
+                                <h3>{instructor.name}</h3>
                             </div>
                         </div>
                     </Wrapper>
@@ -152,6 +171,33 @@
                     {children}
                 </div>
             )
+        }
+
+        const initializeMockData = () => {
+            // const localData = localStorage.getItem('icodethis')
+            // if (!localData) {
+            //     const mockData = MOCK_DATA
+            //     localStorage.setItem('icodethis', JSON.stringify(mockData))
+            // }
+
+            localStorage.setItem('icodethis', JSON.stringify(MOCK_DATA)) // During dev stage only because performance issues
+        }
+
+        const getTrainingsForUser = (userId) => {
+            const data = JSON.parse(localStorage.getItem(keynameOfStoredDataInLocalStorage))
+            return data.trainings.filter(training => training.registeredUsers.includes(userId))
+        }
+
+        const getInstructorForTraining = (trainingId) => {
+            const data = JSON.parse(localStorage.getItem(keynameOfStoredDataInLocalStorage))
+            const training = data.trainings.find(t => t.id === trainingId)
+            return data.instructors.find(inst => inst.id === training.instructorId)
+        }
+
+        const getTrainingsForCategory = (categoryId) => {
+            const data = JSON.parse(localStorage.getItem(keynameOfStoredDataInLocalStorage))
+            const category = data.categories.find(cat => cat.id === categoryId)
+            return data.trainings.filter(training => category.trainings.includes(training.id))
         }
 
         const MOCK_DATA = Object.freeze({
@@ -175,6 +221,175 @@
                         name: "Erik Nest",
                         avatar: "https://cdn.midjourney.com/00ac9024-61ae-4813-80c7-4234cba2144a/0_2.png"
                     }
+                }
+            ],
+            users: [
+                {
+                    id: 1,
+                    name: "John Doe",
+                    profilePic: "https://cdn.midjourney.com/68a93632-67b4-4726-8dd1-ae87ee543262/0_1.png",
+                    upcomingSessions: [1],
+                    completedSessions: [3]
+                },
+                {
+                    id: 2,
+                    name: "Alice Smith",
+                    profilePic: "https://cdn.midjourney.com/136ef871-a32b-48a0-9cf0-9578c50d66cf/0_1.png",
+                    upcomingSessions: [4],
+                    completedSessions: [1, 2]
+                },
+                {
+                    id: 3,
+                    name: "Bob Martin",
+                    profilePic: "https://cdn.midjourney.com/c3c3cabd-5ede-4258-aa72-9f0dfb4a06ae/0_0.png",
+                    upcomingSessions: [],
+                    completedSessions: [2]
+                },
+                {
+                    id: 4,
+                    name: "Clara Oswald",
+                    profilePic: "https://cdn.midjourney.com/83173682-178c-4aee-b4ca-1b852db7fdac/0_3.png",
+                    upcomingSessions: [3],
+                    completedSessions: []
+                }
+            ],
+            instructors: [
+                {
+                    id: 1,
+                    name: "Emily Stark",
+                    avatar: "https://cdn.midjourney.com/ca046c21-0702-447f-96f3-cf2252444d91/0_0.png",
+                    bio: "Emily is passionate about yoga.",
+                    qualifications: ["Certified Yoga Instructor"],
+                    classesTaught: [1, 3],
+                    userReviews: []
+                },
+                {
+                    id: 2,
+                    name: "Erik Nest",
+                    avatar: "https://cdn.midjourney.com/00ac9024-61ae-4813-80c7-4234cba2144a/0_2.png",
+                    bio: "Mike specializes in high-intensity interval training.",
+                    qualifications: ["Certified HIIT Coach"],
+                    classesTaught: [2, 4],
+                    userReviews: []
+                },
+                {
+                    id: 3,
+                    name: "Lucy Gray",
+                    avatar: "https://cdn.midjourney.com/0d9ca1c9-ff5d-4a8a-9c51-76fa941433d1/0_2.png",
+                    bio: "Lucy is a dance enthusiast.",
+                    qualifications: ["Professional Dance Trainer"],
+                    classesTaught: [5, 6],
+                    userReviews: []
+                }
+            ],
+            trainings: [
+                {
+                    id: 1,
+                    title: "Morning Yoga",
+                    description: "A calming morning yoga session.",
+                    startDate: "10/10/2023 08:00",
+                    duration: {
+                        hour: 1,
+                        minutes: 0
+                    },
+                    instructorId: 1,
+                    registeredUsers: [1, 2],
+                    bookingInstructions: "Bring your yoga mat."
+                },
+                {
+                    id: 2,
+                    title: "HIIT Blast",
+                    description: "High intensity workout.",
+                    startDate: "11/10/2023 10:00",
+                    duration: {
+                        hour: 0,
+                        minutes: 45
+                    },
+                    instructorId: 2,
+                    registeredUsers: [2, 3],
+                    bookingInstructions: "Bring a water bottle."
+                },
+                {
+                    id: 3,
+                    title: "Evening Yoga",
+                    description: "Unwind with evening yoga.",
+                    startDate: "12/10/2023 18:00",
+                    duration: {
+                        hour: 1,
+                        minutes: 15
+                    },
+                    instructorId: 1,
+                    registeredUsers: [1, 4],
+                    bookingInstructions: "Wear comfortable clothes."
+                },
+                {
+                    id: 4,
+                    title: "HIIT Intense",
+                    description: "Push your limits.",
+                    startDate: "13/10/2023 09:00",
+                    duration: {
+                        hour: 0,
+                        minutes: 50
+                    },
+                    instructorId: 2,
+                    registeredUsers: [4],
+                    bookingInstructions: "Come prepared to sweat."
+                },
+                {
+                    id: 5,
+                    title: "Dance Fit",
+                    description: "Blend of dance and fitness.",
+                    startDate: "14/10/2023 16:00",
+                    duration: {
+                        hour: 1,
+                        minutes: 0
+                    },
+                    instructorId: 3,
+                    registeredUsers: [],
+                    bookingInstructions: "Wear dance shoes."
+                },
+                {
+                    id: 6,
+                    title: "Dance Aerobics",
+                    description: "Cardio-focused dance class.",
+                    startDate: "15/10/2023 14:30",
+                    duration: {
+                        hour: 1,
+                        minutes: 30
+                    },
+                    instructorId: 3,
+                    registeredUsers: [],
+                    bookingInstructions: "Bring a towel."
+                }
+            ],
+            categories: [
+                {
+                    id: 1,
+                    name: "Yoga",
+                    description: "Relaxing and stretching sessions.",
+                    icon: "https://cdn.someurl.com/yoga_icon.png",
+                    trainings: [1, 3]
+                },
+                {
+                    id: 1,
+                    name: "HIIT",
+                    description: "Intense and fast-paced workouts.",
+                    icon: "https://cdn.someurl.com/hiit_icon.png",
+                    trainings: [2, 4]
+                },
+                {
+                    id: 1,
+                    name: "Dance",
+                    description: "Fun and rhythmic dance sessions.",
+                    icon: "https://cdn.someurl.com/dance_icon.png",
+                    trainings: [5, 6]
+                },
+                {
+                    id: 1,
+                    name: "Strength",
+                    description: "Build and tone muscles.",
+                    icon: "https://cdn.someurl.com/strength_icon.png",
+                    trainings: []
                 }
             ]
         })
