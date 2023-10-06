@@ -1,0 +1,42 @@
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Icodethis project</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="module">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    fontFamily: {
+                        sans: ["Poppins", "sans-serif"],
+                    },
+                    extend: {
+                        colors: {
+                            primary:{
+                                200: "hsl(337, 100%, 78%)",
+                                300: "hsl(337, 47%, 63%)",
+                                400: "hsl(308, 39%, 46%)",
+                                500: "hsl(308, 43%, 42%)",
+                                600: "hsl(270, 34%, 55%)",
+                                700: "hsl(233, 40%, 62%)",
+                            }
+                        }
+                    }
+                }
+            };
+        </script>
+        <script src="script.js" type="text/babel" data-type="module" defer></script>
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+</html>
