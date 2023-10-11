@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary:{
+                            200: "hsl(337, 100%, 78%)",
+                            300: "hsl(337, 47%, 63%)",
+                            400: "hsl(308, 39%, 46%)",
+                            500: "hsl(308, 43%, 42%)",
+                            600: "hsl(270, 34%, 55%)",
+                            700: "hsl(233, 40%, 62%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* How to hide scrollbar */
+        main {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        main::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+
+        .afif13-underline {
+            --cos45:0.7071;
+            padding-bottom:10px;
+            background: 
+            linear-gradient( 135deg, #0000 calc(5px * var(--cos45)),currentColor 0 calc(10px * var(--cos45)),#0000 0), 
+            conic-gradient(from 135deg at top,currentColor 90deg, #0000 0),
+            linear-gradient(-135deg, #0000 calc(5px * var(--cos45)),currentColor 0 calc(10px * var(--cos45)),#0000 0);
+            background-size: 15px 10px,15px calc(4px * var(--cos45));
+            background-position: 0 100%, 0 calc(100% - 10px);
+            background-repeat: repeat-x;
+            -webkit-mask:
+            linear-gradient(#fff 0 0) top   /100% calc(100% - 15px),
+            linear-gradient(#fff 0 0) bottom/var(--d,0) 15px;
+            -webkit-mask-repeat:no-repeat;
+            mask-repeat: no-repeat;
+            transition: 0.5s;
+        }
+
+        .afif13-underline:hover {
+            --d:100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+        import { faker } from 'https://cdn.skypack.dev/@faker-js/faker';
+
+        function App() {
+            return (
+                <div className="min-h-screen overflow-hidden">
+                    <header>
+                        <Navbar/>
+
+                        <div className="bg-stone-100 flex flex-col items-center justify-center h-[calc(100vh/2)]">
+                            <div className="m-4 space-y-6 text-center lg:max-w-lg">
+                                <h2 className="text-3xl font-bold lg:text-5xl">A modern way to build websites.</h2>
+    
+                                <p className="font-semibold">Empower designers to build profeesional, custom websites in a completely visual canvas with no code.</p>
+    
+                                <Button type="secondary" size="lg" className="w-52 font-semibold text-lg">Start free trial</Button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="p-4 pt-8">
+                        <section className="space-y-4">
+                            <h3 className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 max-w-lg mx-auto text-lg text-center">
+                                <div className="w-full h-0.5 bg-slate-700"></div>
+                                <span>We share our thoughts design</span>
+                                <div className="w-full h-0.5 bg-slate-700"></div>
+                            </h3>
+                            
+                            <div className="grid gap-4 md:grid-cols-2 mx-auto max-w-5xl md:gap-y-8 lg:grid-cols-4">
+                                {MOCK_DATA.articles.map(article => {
+                                    return <ArticleCard key={article.id} article={article}/>
+                                })}
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function Navbar() {
+            const [isOpen, setIsOpen] = React.useState(true)
+
+            return (
+                <nav className="relative isolate flex flex-wrap justify-between shadow lg:flex-nowrap lg:grid lg:grid-cols-3">
+                    <h1 className="flex-none">
+                        <a className="flex items-center gap-1 text-lg p-2 font-semibold lg:p-4" onClick={event => event.preventDefault()}>
+                            <HeroIcons.Heart className="w-8 h-8"/>
+                            <span>Heart Company</span>
+                        </a>
+                    </h1>
+                    
+                    <button className="p-2 lg:hidden" onClick={() => setIsOpen(!isOpen)}>
+                        <HeroIcons.Menu className="w-10 h-10"/>
+                    </button>
+                    
+                    <div 
+                        className={`
+                            bg-white
+                            absolute p-2 
+                            flex-none basis-full 
+                            top-12 ${isOpen ? "left-full" : "left-0"} 
+                            w-full min-h-[calc(100vh-4rem)] 
+                            duration-300 
+                            lg:relative
+                            lg:left-auto lg:top-0 
+                            lg:w- lg:min-h-fit lg:p-4
+                            lg:basis-full lg:flex lg:items-center lg:justify-between 
+                            lg:col-start-2 lg:col-end-5
+                        `}
+                    >
+                        <ul className="flex flex-col items-center gap-2 lg:flex-row lg:gap-4">
+                            {MOCK_DATA.menu.map((item, index) => {
+                                return <li key={index} className="afif13-underline">{item}</li>
+                            })}
+                        </ul>
+                        
+                        <div className="flex flex-col gap-2 items-center lg:flex-row">
+                            <Button className="flex-none w-full sm:max-w-sm lg:w-auto">Log In</Button>
+                            <Button type="secondary" className="flex-none w-full sm:max-w-sm lg:w-auto">Start Free Trial</Button>
+                        </div>
+                    </div>
+                </nav>
+            )
+        }
+
+        function Button({type = "primary", size = "md", className, children}) {
+            return (
+                <button 
+                    className={`
+                        ${type === "primary" ? "bg-neutral-200 text-slate-700 hover:bg-neutral-300 text-slate-900" : ""}
+                        ${type === "secondary" ? "bg-slate-700 text-slate-100 hover:bg-slate-900 text-white" : ""}
+                        ${size === "md" ? "px-4 py-2" : ""}
+                        ${size === "lg" ? "px-8 py-4" : ""}
+                        rounded
+                        duration-300
+                        ${className}
+                    `}
+                >
+                    {children}
+                </button>
+            )
+        }
+
+        function ArticleCard({article}) {
+            return (
+                <article className="space-y-2">
+                    <div className="w-full aspect-square overflow-hidden">
+                        <img src={article.image} alt="" className="w-full h-full object-cover"/>
+                    </div>
+
+                    <div className="space-y-2">
+                        <h4 className="text-lg font-semibold">
+                            {article.title}
+                        </h4>
+
+                        <div className="text-sm">
+                            {article.publicationDate}
+                        </div>
+                    </div>
+                </article>
+            )
+        }
+
+        const MOCK_DATA = Object.freeze({
+            menu: ["Home", "Articles", "Pricing", "About", "Contact"],
+            articles: [generateArticle(), generateArticle(), generateArticle(), generateArticle()]
+        })
+
+        function generateArticle() {
+            return {
+                id: faker.string.uuid(),
+                title: faker.lorem.sentence(),
+                publicationDate: faker.date.past().toISOString(),
+                image: faker.image.urlLoremFlickr({ category: 'business' }),
+            }
+        }
+
+    </script>
+</body>
+
+</html>
