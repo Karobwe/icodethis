@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Location</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main>
+        <div class="wrapper">
+            <h2>Closest stores</h2>
+
+            <fieldset>
+                <label for="postal-code">Postal code</label>
+
+                <input type="text" id="postal-code" placeholder="6007">
+                
+                <button>
+                    <span class="material-symbols-outlined">
+                        location_on
+                    </span>
+
+                    <span>Use my location</span>
+                </button>
+            </fieldset>
+
+            <section>
+                <article data-open="true">
+                    <div>
+                        <h3>POINT Bergen Sentrum</h3>
+
+                        <div>Closed</div>
+                    </div>
+
+                    <p>Strandagaten 55-57, 6007 Bergen</p>
+
+                    <div>
+                        <span class="material-symbols-outlined">
+                            schedule
+                        </span>
+
+                        <span>9:00 - 19:00</span>
+                    </div>
+                </article>
+
+                <article data-open="false">
+                    <div>
+                        <h3>POINT Bergen Sentrum</h3>
+
+                        <div>Closed</div>
+                    </div>
+
+                    <p>Strandagaten 55-57, 6007 Bergen</p>
+
+                    <div>
+                        <span class="material-symbols-outlined">
+                            schedule
+                        </span>
+
+                        <span>9:00 - 19:00</span>
+                    </div>
+                </article>
+            </section>
+
+            <button>View all</button>
+        </div>
+    </main>
+</body>
+</html>

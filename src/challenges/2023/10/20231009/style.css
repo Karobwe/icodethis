@@ -1,0 +1,186 @@
+:root {
+    --purple-200: hsl(244, 100%, 88%);
+    --purple-400: hsl(244, 88%, 68%);
+    --purple-500: hsl(244, 100%, 71%);
+    --purple-800: hsl(244, 37%, 16%);
+    --purple-900: hsl(242, 41%, 11%);
+    --pink-400: hsl(331, 100%, 68%);
+    --green-400: hsl(169, 100%, 37%);
+
+    --purple-200-alpha: hsl(244, 100%, 88%, .4);
+    --purple-500-alpha: hsla(244, 100%, 71%, .4);
+}
+
+@layer reset {
+    *,
+    *::before,
+    *::after {
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+@layer base {
+    body {
+        display: grid;
+        place-content: center;
+        min-height: 100vh;
+        font-family: 'Onest', 'Roboto', sans-serif;
+    }
+
+    main {
+        border-radius: .6em;
+    }
+
+    .wrapper {
+        padding: 1.6em;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+    }
+}
+
+@layer component {
+
+    main {
+        position: relative;
+    }
+
+    main::after {
+        --pos: -2em;
+
+        content: "";
+        display: block;
+        z-index: -1;
+        position: absolute;
+        top: var(--pos);
+        left: var(--pos);
+        width: 100%;
+        height: 70%;
+        background: linear-gradient(-45deg, var(--purple-200), var(--pink-400));
+        border-radius: 0 2em 0 2em;
+    }
+
+    h2 {
+        margin-bottom: 1.2em;
+    }
+    
+    fieldset {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: .2em;
+        column-gap: .8em;
+        border: none;
+    }
+
+    fieldset label {
+        width: 100%;
+        font-size: .8em;
+        margin-bottom: .4em;
+    }
+
+    fieldset input {
+        width: 6em;
+        padding: .6em;
+        background-color: transparent;
+        font-size: 1.2em;
+        border-radius: .3em;
+    }
+
+    input + button {
+        display: flex;
+        align-items: center;
+        gap: .3em;
+        font-size: 1.2em;
+        border: none;
+    }
+
+    section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6em;
+        margin-block: 1.6em;
+    }
+
+    article > div:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    h3 {
+        font-size: 1.2em;
+    }
+
+    h3 + div {
+        padding: .1em .6em;
+        font-size: .8em;
+        border-radius: 10em;
+    }
+
+    article p {
+        margin-block: .6em;
+    }
+
+    article p + div {
+        display: flex;
+        align-items: center;
+        gap: .3em;
+    }
+
+    section + button {
+        width: 100%;
+        padding: 1em 2em;
+        background-color: var(--purple-400);
+        color: var(--purple-200);
+        font-size: 1.2em;
+        font-weight: 500;
+        border: none;
+        border-radius: .3em;
+    }
+}
+
+@layer theme {
+    body {
+        background-color: var(--purple-800);
+        color: var(--purple-200);
+    }
+
+    main {
+        background-color: var(--purple-900);
+    }
+
+    fieldset input {
+        color: var(--purple-200);
+        border: solid .150em var(--purple-500-alpha);
+    }
+
+    input::placeholder {
+        color: var(--purple-200-alpha);
+    }
+
+    input + button {
+        background-color: transparent;
+        color: var(--purple-500);
+    }
+
+    h3 + div {
+        --bg: var(--purple-400);
+        background-color: var(--bg);
+        color: white;
+    }
+
+    [data-open="true"] h3 + div {
+        --bg: var(--green-400);
+    }
+
+    [data-open="false"] h3 + div {
+        --bg: var(--pink-400);
+    }
+}
