@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Onest", "sans-serif"],
+                },
+                extend: {
+                    colors: {}
+                }
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="root"></div>
+<script type="text/babel" data-type="module">
+    import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react'
+    import { Motion, spring } from 'https://cdn.skypack.dev/react-motion'
+
+    const useContext = React.useContext
+
+    function App() {
+        return (
+            <div className={"bg-slate-100 text-slate-700 flex items-start justify-center w-full min-h-screen"}>
+                <main className="">
+                    <Navbar navitems={DATA.menuItems} />
+                </main>
+            </div>
+        );
+    }
+
+    const container = document.getElementById('root')
+    const root = ReactDOM.createRoot(container)
+    root.render(<App />)
+
+    const Navbar = ({navitems}) => {
+        const [activeItem, setActiveItem] = React.useState(DATA.menuItems[2].title)
+
+        const handleNavItemClick = (item) => {
+            setActiveItem(item)
+        }
+        
+        return (
+            <nav className="mt-[30vh]">
+                <ul className="flex gap-4">
+                    {navitems.map((navItem, index) => {
+                        return (
+                            <NavbarItem key={index} navItem={navItem} activeItem={activeItem} onNavItemClick={handleNavItemClick} />
+                        )
+                    })}
+                </ul>
+            </nav>
+        );
+    };
+
+    const NavbarItem = ({navItem, activeItem, onNavItemClick}) => {
+        return (
+            <li
+                onClick={() => {
+                    if(activeItem !== navItem.title) {
+                        onNavItemClick(navItem.title)
+                    } else {
+                        onNavItemClick(undefined)
+                    }
+                }
+                }
+                className={`
+                    ${activeItem === navItem.title ? "bg-white/90": ""}
+                    relative
+                    flex items-center gap-1 p-2
+                    rounded
+                    hover:bg-white/90 duration:300
+                `}
+            >
+                <span className="cursor-pointer">{navItem.title}</span>
+
+                <HeroIcons.ChevronRight className="w-6 h-6"/>
+
+                {
+                    <div 
+                        className={`
+                            absolute top-[130%] w-[32em] 
+                            ${activeItem === navItem.title ? "translate-y-100 opacity-100" : "translate-y-0 opacity-0 -z-10"} 
+                            duration-500
+                        `} 
+                    > 
+                        <SubNavbarItem submenu={navItem.submenu}/>
+                    </div>
+                }
+            </li>
+        );
+    };
+
+    const SubNavbarItem = ({submenu}) => {
+        return (
+            <div className="bg-white/90 grid gap-4 absolute top-[130%] p-8 rounded lg:grid-cols-2">
+                {submenu?.map((submenuItem, index) => {
+                    return (
+                        <div key={index} className="space-y-2">
+                            <h4>{submenuItem.title}</h4>
+
+                            <div className="space-y-1">
+
+                                {submenuItem.items.map((menuItem, index) => {
+                                    return (
+                                        <div key={index} className="group grid grid-cols-[2em_auto] items-start gap-4 p-2 pl-0 cursor-pointer rounded overflow-hidden">
+                                            <div
+                                                className={`
+                                                    relative isolate flex items-center justify-center w-10 h-10 p-2
+                                                    before:absolute before:block before:-z-10 before:inset-0
+                                                    before:bg-${menuItem.color}-200/50 before:rounded-full
+                                                    group-hover:before:scale-[2200%]
+                                                    before:duration-1000
+                                                `}
+                                            >
+                                                {menuItem.icon}
+                                            </div>
+
+                                            <div className="z-10 space-y-2">
+                                                <h5 className="text-sm">{menuItem.label}</h5>
+                                                <p className="text-xs">{menuItem.description}</p>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    }
+
+    const DATA = Object.freeze({
+        menuItems: [
+    {
+        title: "Products",
+        submenu: [
+            {
+                title: "Electronics",
+                items: [
+                    {label: "Laptops", description: "High-performance laptops for your needs", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "indigo"},
+                    {label: "Phones", description: "Latest smartphones with cutting-edge technology", icon: <HeroIcons.Folder className="w-6 h-6"/> , color: "amber"}
+                ]
+            },
+            {
+                title: "Apparel",
+                items: [
+                    {label: "T-Shirts", description: "Comfortable and stylish t-shirts", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "emerald"},
+                    {label: "Shoes", description: "Durable shoes for all occasions", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "fuchsia"}
+                ]
+            }
+        ]
+    },
+    {
+        title: "Solutions",
+        submenu: [
+            {
+                title: "Business",
+                items: [
+                    {label: "Analytics", description: "Get insights into your business data", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "pink"},
+                    {label: "CRM", description: "Manage your customer relationships effectively", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "violet"}
+                ]
+            },
+            {
+                title: "Personal",
+                items: [
+                    {label: "Productivity", description: "Tools to enhance your daily productivity", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "teal"},
+                    {label: "Entertainment", description: "Enjoy your leisure time with our solutions", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "orange"}
+                ]
+            }
+        ]
+    },
+    {
+        title: "Resources",
+        submenu: [
+            {
+                title: "Help",
+                items: [
+                    {label: "Help Center", description: "Learn how to sign up, install and use our product", icon: <HeroIcons.BookOpen className="w-6 h-6"/>, color: "red"},
+                    {label: "Community Forum", description: "Learn, share and connect with other users.", icon: <HeroIcons.Users className="w-6 h-6"/>, color: "blue"}
+                ]
+            },
+            {
+                title: "Learn",
+                items: [
+                    {label: "Podcast", description: "Learn how to sign up, install and use our product", icon: <HeroIcons.Flag className="w-6 h-6"/>, color: "green"},
+                    {label: "Blog", description: "Learn, share and connect with other users.", icon: <HeroIcons.Chat className="w-6 h-6"/>, color: "yellow"}
+                ]
+            }
+        ]
+    },
+    {
+        title: "Pricing",
+        submenu: [
+            {
+                title: "Standard",
+                items: [
+                    {label: "Monthly Plan", description: "Affordable plan for small businesses", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "purple"},
+                    {label: "Annual Plan", description: "Save more with our annual subscription", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "teal"}
+                ]
+            },
+            {
+                title: "Premium",
+                items: [
+                    {label: "Monthly Plan", description: "Advanced features for large enterprises", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "orange"},
+                    {label: "Annual Plan", description: "Get the best value with our premium package", icon: <HeroIcons.Folder className="w-6 h-6"/>, color: "zinc"}
+                ]
+            }
+        ]
+    }
+]
+
+    })
+
+</script>
+</body>
+
+</html>
