@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=Merriweather:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                    serif: ["Merriweather", "serif"],
+                },
+                extend: {
+                    colors: {
+                        purple:{
+                            400: "hsl(261, 89%, 59%)",
+                            500: "hsl(261, 89%, 55%)",
+                            800: "hsl(225, 40%, 22%)",
+                            900: "hsl(225, 43%, 17%)",
+                        },
+                        light: "hsl(0, 0%, 100%)",
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* From https://css-generators.com/ribbon-shapes/ */
+        /* HTML: <div class="ribbon">Your content</div> */
+        .ribbon {
+            --f: 15px; /* control the folded part */
+            
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: .1em 1.8em;
+            background: #BD1550; /* the main color  */
+            border-bottom :var(--f) solid #0007;
+            clip-path: polygon(
+            100% calc(100% - var(--f)),100% 100%,calc(100% - var(--f)) calc(100% - var(--f)),var(--f) calc(100% - var(--f)), 0 100%,0 calc(100% - var(--f)),999px calc(100% - var(--f) - 999px),calc(100% - 999px) calc(100% - var(--f) - 999px));
+            transform: translate(calc((1 - cos(45deg))*100%), -100%) rotate(45deg);
+            transform-origin: 0% 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [selectedCard, setSelectedCard] = React.useState(PRICINGS[1])
+
+            return (
+               <div className={"bg-purple-900 text-light flex items-center justify-center w-full min-h-screen"}>
+                    <main className="flex flex-col items-center justify-centerm-4 gap-12 md:gap-8 md:flex-row">
+                        {PRICINGS.map(pricing => {
+                            return <PricingCard key={pricing.name} features={pricing} selectedCard={selectedCard} onCardClick={setSelectedCard}/>
+                        })}
+                    </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function PricingCard({features, selectedCard, onCardClick}) {
+            const currentCardIsSelected = selectedCard === features
+
+            return (
+                <div 
+                    className={`
+                        relative
+                        grid grid-rows-[1fr_auto] divide-y-2 divide-purple-800 
+                        border border-[1em] rounded-xl 
+                        ${currentCardIsSelected ? "border-purple-400 scale-110 text-white" : "border-purple-800"}
+                        text-center hover:border-purple-400/50
+                        duration-500
+                    `}
+                    onClick={() => {
+                        onCardClick(features)
+                    }}
+                >
+                    {features === PRICINGS[1] && <div className="ribbon">Best offer</div>}
+
+                    <Wrapper>
+                        <div className="relative flex flex-col justify-center gap-4 h-full">
+                            <h2 className="uppercase text-lg font-semibold">
+                                {features.name}
+                            </h2>
+
+                            <p className="font-serif font-semibold">
+                                <span className="text-[2.7rem]">{features.dataAmount}</span>
+                                <span className="text-5xl">{features.dataUnit}</span>
+                            </p>
+
+                            <p className="text-md">
+                                One month offered, then ${features.price}/month
+                            </p>
+
+                            <button 
+                                className={`
+                                    px-8 py-4 text-lg font-semibold 
+                                    border border-purple-400 rounded-lg 
+                                    ${currentCardIsSelected ? "bg-purple-400 hover:bg-purple-500 hover:scale-105" : "hover:bg-purple-400"} 
+                                    duration-500
+                                `}
+                            >
+                                Purchase
+                            </button>
+                        </div>
+                    </Wrapper>
+
+                    <Wrapper>
+                        <ul className="grid items-center gap-3 text-left text-sm">
+                            <FeatureListItem item={`${features.dataAmount} ${features.dataUnit} storage`} cardIsSelected={currentCardIsSelected}/>
+                            <FeatureListItem item={"Option to add members"} cardIsSelected={currentCardIsSelected}/>
+                            <FeatureListItem item={"Extra member benefits"} cardIsSelected={currentCardIsSelected}/>
+                            <FeatureListItem 
+                                item={"Priority customer support"} 
+                                cardIsSelected={currentCardIsSelected} 
+                                featureIsAvailable={features.features.supportPriority}
+                            />
+                            <FeatureListItem 
+                                item={`File version history${features.features.filesVersionning ? `: ${features.features.versionningPeriod} days` : ""}`} 
+                                cardIsSelected={currentCardIsSelected} 
+                                featureIsAvailable={features.features.filesVersionning}
+                            />
+                            <FeatureListItem item={"Data encryption"} cardIsSelected={currentCardIsSelected} featureIsAvailable={features.features.dataEncryption}/>
+                            <FeatureListItem item={"Collaboration tools"} cardIsSelected={currentCardIsSelected} featureIsAvailable={features.features.collaboration}/>
+                            <FeatureListItem item={"Backup and restore"} cardIsSelected={currentCardIsSelected} featureIsAvailable={features.features.backup}/>
+                            <FeatureListItem item={"Multi-device access"} cardIsSelected={currentCardIsSelected} featureIsAvailable={features.features.multiDevice}/>
+                        </ul>
+                    </Wrapper>
+                </div>
+            )
+        }
+
+        function FeatureListItem({item, featureIsAvailable = true, cardIsSelected}) {
+            return (
+                <li className="flex items-center justify-start gap-1">
+                    {featureIsAvailable && <HeroIcons.Check className={`w-6 h-6 p-1 ${cardIsSelected ? "text-white bg-purple-400 rounded-full" : ""} duration-500`}/>}
+                    {!featureIsAvailable && <HeroIcons.X className={`w-6 h-6 p-1 ${cardIsSelected ? "text-white bg-purple-800 rounded-full" : ""} duration-500`}/>}
+                    {item}
+                </li>
+            )
+        }
+
+        function Wrapper({className, children}) {
+            return <div className={`p-4 sm:p-6 ${className}`}>{children}</div>
+        }
+
+        const PRICINGS = [
+            {
+                name: "Basic",
+                dataAmount: "100",
+                dataUnit: "GB",
+                price: 5.99,
+                features: {
+                    addMembers: true,
+                    extraBenefits: true,
+                    supportPriority: false,
+                    filesVersionning: false,
+                    versionningPeriod: 0,
+                    dataEncryption: false,
+                    collaboration: false,
+                    backup: false,
+                    multiDevice: false,
+                }
+            },
+            {
+                name: "Standard",
+                dataAmount: "200",
+                dataUnit: "GB",
+                price: 9.99,
+                features: {
+                    addMembers: true,
+                    extraBenefits: true,
+                    supportPriority: true,
+                    filesVersionning: true,
+                    versionningPeriod: 30,
+                    dataEncryption: true,
+                    collaboration: false,
+                    backup: false,
+                    multiDevice: false,
+                }
+            },
+            {
+                name: "Premium",
+                dataAmount: "2",
+                dataUnit: "TB",
+                price: 15.99,
+                features: {
+                    addMembers: true,
+                    extraBenefits: true,
+                    supportPriority: true,
+                    filesVersionning: true,
+                    versionningPeriod: 60,
+                    dataEncryption: true,
+                    collaboration: true,
+                    backup: true,
+                    multiDevice: true,
+                }
+            },
+        ]
+
+    </script>
+</body>
+
+</html>
