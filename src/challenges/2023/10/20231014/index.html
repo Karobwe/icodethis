@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Onest", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        dark: "hsl(222, 37%, 12%)",
+                        light: "hsl(30, 36%, 96%)",
+                        primary:{
+                            400: "hsl(28, 89%, 56%)",
+                            500: "hsl(12, 99%, 66%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        input[type="range"] {
+            --thumb-size: 1.8em;
+            --bg-color: hsl(30, 36%, 96%);
+            --outline-color: hsla(0, 0%, 92%, 0.336);
+            --outline: solid .2em var(--outline-color);
+        }
+
+        /* For WebKit-based browsers */
+        input[type="range"]::-webkit-slider-thumb {
+            width: var(--thumb-size, 20px); 
+            height: var(--thumb-size, 20px);
+            appearance: none;
+            background-color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* For Firefox */
+        input[type="range"]::-moz-range-thumb {
+            width: var(--thumb-size, 20px); 
+            height: var(--thumb-size, 20px);
+            background-color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]:focus::-webkit-slider-thumb {
+            outline: var(--outline);
+        }
+
+        input[type="range"]:focus::-moz-range-thumb {
+            outline: var(--outline);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const cardDescription = "Get a free plan with up to 5,000 active users and unlimited logins. No credit card required"
+
+            return (
+                <div 
+                    className={`
+                        flex items-center justify-center 
+                        w-full min-h-screen
+                        bg-dark text-light
+                    `}
+                >
+                    <main className="flex flex-col items-center gap-12 lg:grid lg:grid-cols-2 lg:gap-y-20">
+                        <SimpleCardWithCTA title="Free plan" description={cardDescription} ctaText="Start for free" />
+
+                        <SelectableButtonGroup title="What is your use case?" name="usecase" values={["B2C", "B2B", "B2E"]} />
+                        
+                        <RangeSlider label="How many active users?" min={1000} max={10000} step={10} className="col-span-2 justify-self-center" />
+                        
+                        <SelectableButtonGroup title="Choose a plan:" name="plan" values={["Free", "Basic", "Pro", "Expert", "Custom"]} />
+                        <SelectableButtonGroup title="Work as pagination" name="pagination" values={["1", "2", "...", "5", "...", "9", "10"]} />
+                        </main>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function SimpleCardWithCTA({title, description, ctaText, className}) {
+            return (
+                <div 
+                    className={`
+                        w-96 p-12
+                        bg-gradient-to-br from-primary-500 to-primary-400
+                        rounded-xl
+                        ${className}
+                    `}
+                >
+                    <h3 className="text-2xl font-serif font-semibold">
+                        {title}
+                    </h3>
+
+                    <p className="mt-6 mb-4 [text-wrap:balance]">{description}</p>
+
+                    <button 
+                        className={`
+                            px-8 py-4
+                            bg-white text-dark
+                            rounded-lg
+                            hover:scale-105
+                            duration-500
+                        `}
+                    >
+                        {ctaText}
+                    </button>
+                </div>
+            )
+        }
+
+        function SelectableButtonGroup({title, name, values, className}) {
+            const [selectedItem, setSelectedItem] = React.useState(values[0])
+
+            const itemClickHandler = (newValue) => {
+                setSelectedItem(newValue)
+            }
+
+            return (
+                <fieldset className={`space-y-4 ${className}`}>
+                    <h3 className="text-xl font-serif font-semibold">
+                        {title}
+                    </h3>
+
+                    <div
+                        className={`
+                            grid grid-cols-[repeat(${values.length <= 12 ? values.length : "auto"},4em)]
+                            max-w-min divide-x
+                            border border-light rounded-lg
+                        `}
+                    >
+                        {range(values.length).map((index) => {
+                            return <SelectItem key={index} name={name} value={values[index]} selectedItem={selectedItem} onItemClick={itemClickHandler} />
+                        })}
+                    </div>
+                </fieldset>
+            )
+        }
+
+        function RangeSlider({label, min=0, max=10, step=1, className}) {
+            const [value, setValue] = React.useState(5500)
+            const rangeInputRef = React.useRef(0);
+            const outputRef = React.useRef(1);
+
+            const handleChange = (event) => {
+                const newValue = parseInt(event.target.value, 10);
+                setValue(newValue);
+                
+            }
+            
+            const updateOutputPosition = (newValue) => {
+                const rangeInput = rangeInputRef.current
+                const output = outputRef.current
+
+                // If the slider is at its minimum, the percentage is 0. If it's at its maximum, the percentage is 1.
+                const percentage = (newValue - min) / (max - min)
+
+                // Get the position of the thumb relative to the left edge of the range input.
+                const thumbPosition = percentage * rangeInput.clientWidth
+
+                // Adjust the position to align based on the center of the output
+                const newPosition = thumbPosition - (output.clientWidth / 2)
+
+                console.log(percentage, thumbPosition, newPosition);
+                
+                output.style.left = `${newPosition}px`
+            }
+
+            React.useEffect(() => {
+                updateOutputPosition(value);
+            }, [value]);
+
+            return (
+                <fieldset className={`space-y-4 ${className}`}>
+                    <h3 className="text-xl font-serif font-semibold">
+                        {label}
+                    </h3>
+
+                    <div 
+                        className="relative flex flex-col gap-4 w-80"
+                    >
+                        <input 
+                            ref={rangeInputRef}
+                            type="range"
+                            min={min}
+                            max={max}
+                            step={step}
+                            value={value}
+                            onChange={handleChange}
+                            className={`
+                                appearance-none w-full h-3 
+                                bg-gradient-to-r from-primary-500 to-primary-400 accent-white
+                                rounded-full 
+                                cursor-pointer
+                                focus:outline-none
+                            `}
+                        />
+
+                        <div className="flex justify-between gap-4">
+                            <div>{addCommasToNumber(min)}</div>
+                            <div>{addCommasToNumber(max)}</div>
+                        </div>
+
+                        <output 
+                            ref={outputRef}
+                            className={`
+                                absolute isolate top-[70%]
+                                flex items-center justify-center
+                                w-fit min-w-[6em] p-3
+                                bg-light text-dark text-xs font-semibold
+                                rounded-lg
+                                before:block before:absolute before:-z-10
+                                before:w-6 before:h-6
+                                before:bg-light
+                                before:rotate-45 before:-translate-y-4
+                            `}
+                        >
+                            {addCommasToNumber(value)}
+                        </output>
+                    </div>
+                </fieldset>
+            )
+        }
+
+        function SelectItem({name, value, selectedItem, onItemClick}) {
+            const [isChecked, setIsChecked] = React.useState(selectedItem === value)
+            const id = React.useId()
+
+            return (
+                <div className="first:rounded-l-lg last:rounded-r-lg overflow-hidden">
+                    <input 
+                        type="radio" 
+                        id={id} 
+                        name={name} 
+                        value={value} 
+                        checked={selectedItem === value} 
+                        onChange={(event) => {
+                            onItemClick(event.target.value)
+                        }}
+                        className="hidden peer" 
+                    />
+
+                    <label 
+                        htmlFor={id} 
+                        className={`
+                            flex items-center justify-center
+                            w-full h-full px-6 py-3
+                            hover:bg-white/10
+                            peer-checked:bg-light peer-checked:text-dark
+                            duration-500
+                        `}
+                    >
+                        {value}
+                    </label>
+                </div>
+            )
+        }
+
+        const range = (start, end, step = 1) => {
+            let output = []
+            
+            if (typeof end === 'undefined') {
+                end = start
+                start = 0
+            }
+            
+            for (let i = start; i < end; i += step) {
+                output.push(i)
+            }
+            
+            return output
+        }
+
+        function addCommasToNumber(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+    </script>
+</body>
+
+</html>
