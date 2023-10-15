@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Onest", "sans-serif"],
+                    serif: ["Lora", "Merriweather", "serif"]
+                },
+                extend: {
+                    colors: {
+                        white: "hsl(0, 0%, 100%)",
+                        blue:{
+                            400: "hsl(216, 100%, 66%)",
+                            500: "hsl(234, 59%, 33%)",
+                            600: "hsl(234, 73%, 26%)",
+                        },
+                        yellow: {
+                            400: "hsl(43, 94%, 58%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar {
+            /* Firefox */
+            scrollbar-width: none;
+        }
+
+        /* Safari and Chrome */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        function App() {
+            return (
+               <div 
+                className={`
+                    min-h-screen
+                    flex items-center justify-center 
+                    bg-yellow-400 text-white
+                `}
+               >
+                    <main className="grid justify-center gap-4 max-w-2xl m-4 lg:grid-cols-6 lg:grid-rows-[2fr_0.5fr_2fr] lg:max-w-4xl">
+                        <Card title="Contributors" className="lg:col-span-3">
+                            <AvatarStack 
+                                avatars={[
+                                    "https://cdn.midjourney.com/442ab4de-c1f2-49dc-9c3a-5d2c120698aa/0_2.png",
+                                    "https://cdn.midjourney.com/d76fcfde-d3d8-434b-a951-98e1e83a50dd/0_1.png",
+                                    "https://cdn.midjourney.com/b3d976bd-b38b-4df7-9fb0-4a1407c605a8/0_2_384_N.webp",
+                                    "https://cdn.midjourney.com/a9963bfa-40fb-41b0-99eb-def10849a1f9/0_3.png",
+                                    "https://cdn.midjourney.com/7e3207b8-0255-4a76-ab1c-535007007eca/0_2_384_N.webp",
+                                    "https://cdn.midjourney.com/2c361753-75a4-433a-823a-1abd6cb075c1/0_1_384_N.webp",
+                                    "https://cdn.midjourney.com/d1ece602-34c9-41fe-942a-8accb4f2bdce/0_2_384_N.webp",
+                                ]} 
+                            />
+                        </Card>
+
+                        <Card title="About" className="lg:row-span-2 lg:col-start-5 lg:col-span-2">
+                            <div className="space-y-3">
+                                <p>Blender addon for reshaping UV selection into grid.</p>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-rounded -rotate-45">link</span>
+
+                                    <a onClick={(event) => event.preventDefault()} className="underline">
+                                        www.example.com
+                                    </a>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-rounded">star</span>
+
+                                    <p>1.1k stars</p>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-rounded">visibility</span>
+
+                                    <p>80 watching</p>
+                                </div>
+                            </div>
+                        </Card>
+
+                        <Card title="Languages" className="lg:row-start-3 lg:col-start-2 lg:col-span-3">
+                            <InlineGraph 
+                                values={[
+                                    {language: "Python", mastery: 30, color: "bg-blue-400"},
+                                    {language: "Typescript", mastery: 70, color: "bg-yellow-400"},
+                                    {language: "English", mastery: 10, color: "bg-emerald-300"}
+                                ]} 
+                            />
+                        </Card>
+                    </main>
+                </div>
+            );
+        }
+
+        function Card({title, className, children}) {
+            return (
+                <div 
+                    className={`px-4 py-6 bg-blue-500 rounded-xl md:p-8 py-10 ${className}`} >
+                    <div className="flex flex-col justify-center gap-y-4 h-full">
+                        <h3 className="text-2xl font-serif font-semibold tracking-wider">
+                            {title}
+                        </h3>
+    
+                        <div>
+                            {children}
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        function AvatarStack({ avatars, maxVisible = 4 }) {
+            const overflowCount = avatars.length - maxVisible
+
+            const size = 10
+
+            return (
+                <div className="flex">
+                    {avatars.slice(0, maxVisible).map((avatar, index) => (
+                        <img
+                            key={index}
+                            src={avatar}
+                            alt={`User ${index + 1}`}
+                            className={`
+                                w-${size} h-${size} 
+                                [margin-inline-start:-.5rem] 
+                                rounded-full border-2 border-blue-500
+                            `}
+                        />
+                    ))}
+                    {overflowCount > 0 && (
+                        <span 
+                            className={`
+                                w-${size} h-${size} 
+                                [margin-inline-start:-.5rem] 
+                                rounded-full bg-white 
+                                text-slate-700 text-sm text-center font-semibold leading-10 
+                            `}
+                        >
+                            +{overflowCount}
+                        </span>
+                    )}
+                </div>
+            )
+        }
+
+        function InlineGraph({values}) {
+            function concatenateMasteryPercentages(data) {
+                let totalMastery = 0;
+                for (let i = 0; i < data.length; i++) {
+                    totalMastery += data[i].mastery;
+                }
+                
+                const percentages = [];
+                for (let i = 0; i < data.length; i++) {
+                    const percentage = (data[i].mastery / totalMastery) * 100;
+                    percentages.push(percentage.toFixed(2) + '%');
+                }
+                
+                return percentages.join('_');
+            }
+
+            return (
+                <div className="space-y-3">
+                    <div 
+                        className={`
+                            w-full h-4 
+                            grid grid-cols-[${concatenateMasteryPercentages(values)}] overflow-hidden
+                            bg-white rounded-full
+                        `}
+                    >
+                        {values.map((value, index) => {
+                            return <div className={value.color} key={index}></div>
+                        })}
+                    </div>
+
+                    <div className="flex gap-4">
+                        {values.map((value, index) => {
+                            return (
+                                <div className="flex items-center gap-1" key={index}>
+                                    <div className={`w-3 h-3 ${value.color} rounded-full`}></div>
+
+                                    <div>{value.language}</div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            )
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
