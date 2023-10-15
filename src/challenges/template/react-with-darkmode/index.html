@@ -37,17 +37,14 @@
         };
     </script>
     <style>
-        /* How to hide scrollbar */
-        main {
-            -ms-overflow-style: none;
-            /* Internet Explorer 10+ */
-            scrollbar-width: none;
+        .hide-scrollbar {
             /* Firefox */
+            scrollbar-width: none;
         }
 
-        main::-webkit-scrollbar {
+        /* Safari and Chrome */
+        .hide-scrollbar::-webkit-scrollbar {
             display: none;
-            /* Safari and Chrome */
         }
     </style>
 </head>
