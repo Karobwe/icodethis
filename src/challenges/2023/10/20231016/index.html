@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {},
+                },
+                fontFamily: {
+                    sans: ["Onest", "Poppins, sans-serif"],
+                    serif: ["Lora", "Merriweather", "serif"],
+                },
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root" className=""></div>
+
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [city, setCity] = React.useState("Bergen")
+            const [currentConferenceList, setCurrentConferenceList] = React.useState(getConferencesByCity(city))
+            const [activeMenuItem, setActiveMenuItem] = React.useState(MOCK_DATA.navigationLinks[3])
+            const [activeCategory, setActiveCategory] = React.useState(MOCK_DATA.categories[1])
+
+            const menuItemCLickHandler = (clickedMenuItem) => {
+                setActiveMenuItem(clickedMenuItem)
+            }
+
+            const filterByDateHandler = (period) => {
+                let currentConferenceListFilteredByDate = []
+
+                switch (period) {
+                    case 0:
+                        currentConferenceListFilteredByDate = MOCK_DATA.conferences
+                        break
+                    case MOCK_DATA.periods[1]:
+                        currentConferenceListFilteredByDate = getConferencesOfToday()
+                        break
+                    case MOCK_DATA.periods[2]:
+                        currentConferenceListFilteredByDate = getConferencesOfThisWeek()
+                        break
+                    case MOCK_DATA.periods[3]:
+                        currentConferenceListFilteredByDate = getConferencesByMonth(10, 2023)
+                        break
+                    case MOCK_DATA.periods[4]:
+                        currentConferenceListFilteredByDate = getConferencesByMonth(9, 2023)
+                        break
+                    default:
+                        currentConferenceListFilteredByDate = MOCK_DATA.conferences
+                        break
+                }
+                
+                setCurrentConferenceList(currentConferenceListFilteredByDate)
+            }
+
+            return (
+                <div className="bg-slate-100 text-slate-700 w-full min-h-screen flex items-center justify-center">
+                    <div className="hide-scrollbar overflow-hidden w-full h-[90vh] overflow-y-auto max-w-7xl m-4 mt-8 sm:mt-16 bg-white">
+                        <Navbar activeMenuItem={activeMenuItem} onMenuItemClick={menuItemCLickHandler} />
+
+                        <main className="m-4 space-y-6 lg:m-8 lg:mt-6">
+                            <Breadcumb elements={["Conferences", "Bergen"]}/>
+
+                            <div className="grid gap-16 lg:grid-cols-[1fr_auto] lg:gap-x-36">
+                                <section className="space-y-8">
+        
+                                    <h1 className="text-3xl font-semibold">
+                                        Conferences
+                                    </h1>
+    
+                                    <SelectableButtonGroup name="period" values={MOCK_DATA.periods} onSelection={filterByDateHandler} />
+    
+                                    <ConferenceList currentConferenceList={currentConferenceList} />
+                                </section>
+    
+                                <CategoryFilter 
+                                    activeCategory={activeCategory} 
+                                    setActiveCategory={setActiveCategory} 
+                                    setCurrentConferenceList={setCurrentConferenceList} 
+                                />
+                            </div>
+                        </main>
+                    </div>
+
+                </div>
+            );
+        }
+
+        function Navbar({activeMenuItem, onMenuItemClick}) {
+            const [open, setOpen] = React.useState(false)
+
+            return (
+                <nav className={`relative flex flex-col bg-white p-4 border-b lg:p-0 lg:pl-8 ${open ? "sticky top-0 z-10" : ""}`}>
+                    <button 
+                        className={`z-20 flex-none self-end w-8 h-6 flex flex-col justify-between lg:hidden`}
+                        onClick={() => {
+                            setOpen(!open)
+                        }}
+                    >
+                        <span className="sr-only">Menu</span>
+                        
+                        <span className="w-full h-1 bg-slate-800"></span>
+                        <span className="w-full h-1 bg-slate-800"></span>
+                        <span className="w-full h-1 bg-slate-800"></span>
+                    </button>
+                    
+                    <div 
+                        className={`
+                            absolute top-[3.5em] left-0 w-full h-[calc(100vh-3.5rem-2rem)] 
+                            bg-white p-4 origin-top-right
+                            lg:relative lg:top-auto lg:left-auto lg:h-auto lg:p-0
+                            lg:flex lg:justify-between 
+                            ${!open ? "translate-x-full opacity-0 lg:translate-x-0 lg:opacity-100" : "translate-x-auto opacity-100"} 
+                            duration-300
+                        `}
+                    >
+                        <ul className="flex flex-col items-start gap-4 lg:flex-row lg:items-center">
+                            {MOCK_DATA.navigationLinks.map((navlink, index) => {
+                                return (
+                                <li 
+                                    key={index} 
+                                    className={`
+                                        relative
+                                        font-semibold cursor-pointer 
+                                        ${activeMenuItem === navlink ? "text-slate-900" : "text-slate-400 hover:text-700 duration-300"}
+                                        after:block after:absolute after:-bottom-1 after:w-full after:h-0.5 
+                                        hover:after:bg-slate-700 after:duration-300
+                                    `}
+                                    onClick={() => {
+                                        onMenuItemClick(navlink)
+                                        setOpen(false)
+                                    }}
+                                > 
+                                    {navlink}
+                                </li>
+                                )
+                            })}
+                        </ul>
+                        
+                        <div className="flex flex-col lg:flex-row">
+                            <ButtonLink text="Log In" type="TODO" />
+                            <ButtonLink text="Get started"/>
+                        </div>
+                    </div>
+                </nav>
+            )
+        }
+
+        function ButtonLink({text, type = "default", className}) {
+            return (
+                <button 
+                    className={`
+                        p-4 duration-300
+                        ${
+                            type === "default" 
+                            ? "bg-black text-slate-100 hover:bg-slate-800 hover:text-white" 
+                            : "text-black hover:text-slate-700"
+                        }
+                        ${className}
+                    `}
+                >
+                    {text}
+                </button>
+            )
+        }
+
+        function Breadcumb({elements}) {
+            return (
+                <ul className="flex text-sm">
+                    {elements.map((element, index) => {
+                        return (
+                            <li key={index} className="flex items-center cursor-pointer hover:underline">
+                                <div className="px-3 py-1 bg-neutral-100 text-slate-700 rounded-full">
+                                    {element}
+                                </div>
+
+                                {index !== (elements.length - 1) && <span className="w-6 h-0.5 bg-neutral-400 -rotate-[60deg]"></span>}
+                            </li>
+                        )
+                    })}
+                </ul>
+            )
+        }
+
+        function SelectableButtonGroup({name, values, onSelection, className}) {
+            const [selectedItem, setSelectedItem] = React.useState(values[0])
+
+            const itemClickHandler = (newValue) => {
+                setSelectedItem(newValue)
+                transitionViewIfSupported(() => {
+                    onSelection(newValue)
+                })
+            }
+
+            return (
+                <fieldset className={`space-y-4 ${className}`}>
+                    <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap">
+                        {range(values.length).map((index) => {
+                            return <SelectItem key={index} name={name} value={values[index]} selectedItem={selectedItem} onItemClick={itemClickHandler} />
+                        })}
+                    </div>
+                </fieldset>
+            )
+        }
+
+        function SelectItem({name, value, selectedItem, onItemClick}) {
+            const [isChecked, setIsChecked] = React.useState(selectedItem === value)
+            const id = React.useId()
+
+            return (
+                <div className="flex-none">
+                    <input 
+                        type="radio" 
+                        id={id} 
+                        name={name} 
+                        value={value} 
+                        checked={selectedItem === value} 
+                        onChange={(event) => {
+                            onItemClick(event.target.value)
+                        }}
+                        className="hidden peer" 
+                    />
+
+                    <label 
+                        htmlFor={id} 
+                        className={`
+                            px-3 py-1 border border-slate-100 rounded cursor-pointer
+                            hover:bg-slate-100 
+                            peer-checked:bg-slate-700 peer-checked:text-white
+                            duration-300
+                        `}
+                    >
+                        {value}
+                    </label>
+                </div>
+            )
+        }
+
+        function ConferenceList({currentConferenceList}) {
+            return (
+                <div className="grid divide-y">
+                    {currentConferenceList.map(conference => {
+                        return (
+                            <article key={conference.id} className="py-4 first:mt-0 hover:bg-slate-50/30 duration-300">
+                                <p>
+                                    {
+                                        conference.isPostponed 
+                                        ? <span className="text-sm text-red-400">Postponed</span> 
+                                        : formatDateRange(conference.startDate, conference.endDate)
+                                    }
+                                    {" • "}
+                                    {conference.location}
+                                </p>
+                                
+                                <h3 className="text-xl font-semibold">
+                                    {conference.title}
+                                </h3>
+                            </article>
+                        )
+                    })}
+                </div>
+            )
+        }
+
+        function CategoryFilter({activeCategory, setActiveCategory, setCurrentConferenceList}) {
+            const categoryClickHandler = (category) => {
+                setActiveCategory(category)
+                setCurrentConferenceList(getConferencesByCategory(category));
+            }
+
+            return (
+                <aside className="w-full h-fit p-4 rounded-lg border border-slate-300 lg:w-96">
+                    <h2 className="text-2xl font-semibold">Discover</h2>
+                    
+                    <ul className="space-y-4">
+                        {MOCK_DATA.categories.map(category => {
+                            return (
+                            <li 
+                            key={category.name}
+                            className={`
+                                p-4 rounded-lg cursor-pointer 
+                                hover:bg-slate-100 hover:text-slate-800
+                                ${activeCategory === category ? "bg-slate-700 text-white hover:bg-slate-700 hover:text-white" : ""}
+                                duration-300
+                                `}
+                                onClick={() => {
+                                    transitionViewIfSupported(() => {
+                                        categoryClickHandler(category)
+                                    })
+                                }}
+                                >
+                                <div className="flex itemss-center gap-1 font-semibold">
+                                    <span className="material-symbols-outlined">
+                                        {category === MOCK_DATA.categories[0] && "deployed_code"}
+                                        {category === MOCK_DATA.categories[1] && "shopping_cart"}
+                                        {category === MOCK_DATA.categories[2] && "group"}
+                                        {category === MOCK_DATA.categories[3] && "inventory_2"}
+                                    </span>
+                                    
+                                    {category.name}
+                                </div>
+                                
+                                <p className="text-sm">{category.description}</p>
+                            </li>
+                            )
+                        })}
+                    </ul>
+                </aside>
+            )
+        }
+
+        const range = (start, end, step = 1) => {
+            let output = []
+            
+            if (typeof end === 'undefined') {
+                end = start
+                start = 0
+            }
+            
+            for (let i = start; i < end; i += step) {
+                output.push(i)
+            }
+            
+            return output
+        }
+
+        const getConferencesByCity = (city) => {
+            return MOCK_DATA.conferences.filter(conference => {
+                return conference.location.toLowerCase() === city.toLowerCase()
+            })
+        }
+
+        const getConferencesByCategory = (category) => {
+            return MOCK_DATA.conferences.filter(conference => {
+                return conference.category === category.name
+            })
+        }
+
+        const getConferencesOfToday = () => {
+            const today = new Date().getTime().setHours(0, 0, 0, 0) // Start at 00h00min:00:00
+            return MOCK_DATA.conferences.filter(conference => {
+                return new Date(conference.startDate).getTime() <= today && today <= new Date(conference.endDate).getTime()
+            })
+        }
+
+        const getConferencesOfThisWeek = () => {
+            const today = new Date()
+            const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()))
+            const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6))
+            return MOCK_DATA.conferences.filter(conference => {
+                return conference.startDate <= endOfWeek.toISOString().split('T')[0] && conference.endDate >= startOfWeek.toISOString().split('T')[0]
+            })
+        }
+
+        const getConferencesByMonth = (month, year) => {
+            const startDate = new Date(year, month - 1, 1).toISOString().split('T')[0]
+            const endDate = new Date(year, month, 0).toISOString().split('T')[0] // Using '0' as the day gives the last day of the previous month
+            return MOCK_DATA.conferences.filter(conference => {
+                return conference.startDate <= endDate && conference.endDate >= startDate
+            })
+        }
+
+        function formatDateRange(startDate, endDate) {
+            const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }
+            
+            const start = new Date(startDate)
+            const end = new Date(endDate)
+            
+            // Used to extract day and month names
+            // Format: "Fri, Nov 3, 2023"
+            const startString = start.toLocaleDateString('en-US', options)
+            const endString = end.toLocaleDateString('en-US', options)
+            
+            // Wed, 1 - Fri, 3 Nov 2023
+            return `
+                ${startString.split(' ')[0]} ${start.getDate()} 
+                - 
+                ${endString.split(' ')[0]} ${end.getDate()} 
+                ${endString.split(' ')[1]} 
+                ${end.getFullYear()}
+            `
+        }
+
+        const transitionViewIfSupported = (updateCallback) => {
+            if (document.startViewTransition) {
+                document.startViewTransition(updateCallback);
+            } else {
+                updateCallback();
+            }
+        }
+
+        const MOCK_DATA = Object.freeze({
+            navigationLinks: ["Discover", "Live", "Jobs", "Conferences"],
+            conferences: [
+                {
+                    "id": 0,
+                    "title": "Bergen Commerce Summit",
+                    "startDate": "2023-11-01",
+                    "endDate": "2023-11-03",
+                    "location": "Bergen",
+                    "category": "Commerce",
+                    "isPostponed": false,
+                    "description": "A summit dedicated to the latest trends in commerce.",
+                    "speakers": ["John Doe", "Jane Smith"],
+                    "attendeesCount": 500,
+                    "website": "https://www.bergensummit.com"
+                },
+                {
+                    "id": 1,
+                    "title": "Bergen IoT Conference",
+                    "startDate": "2023-12-05",
+                    "endDate": "2023-12-07",
+                    "location": "Bergen",
+                    "category": "Internet of Things",
+                    "isPostponed": true,
+                    "description": "A conference focusing on the future of IoT.",
+                    "speakers": ["Alice Johnson", "Bob Williams"],
+                    "attendeesCount": 450,
+                    "website": "https://www.bergeniotconf.com"
+                },
+                {
+                    "id": 2,
+                    "title": "Bergen HR Symposium",
+                    "startDate": "2023-10-15",
+                    "endDate": "2023-10-17",
+                    "location": "Bergen",
+                    "category": "Human Resources",
+                    "isPostponed": false,
+                    "description": "Exploring modern HR practices and challenges.",
+                    "speakers": ["Charlie Brown", "Lucy Van Pelt"],
+                    "attendeesCount": 350,
+                    "website": "https://www.bergenhrsymposium.com"
+                },
+                {
+                    "id": 3,
+                    "title": "Bergen BI Expo",
+                    "startDate": "2023-09-20",
+                    "endDate": "2023-09-22",
+                    "location": "Bergen",
+                    "category": "Business Intelligence",
+                    "isPostponed": false,
+                    "description": "Showcasing the latest in BI tools and strategies.",
+                    "speakers": ["Linus Van Pelt", "Peppermint Patty"],
+                    "attendeesCount": 400,
+                    "website": "https://www.bergenbiexpo.com"
+                },
+                {
+                    "id": 4,
+                    "title": "Bergen Digital Transformation Forum",
+                    "startDate": "2023-08-10",
+                    "endDate": "2023-08-12",
+                    "location": "Bergen",
+                    "category": "Digital Transformation",
+                    "isPostponed": true,
+                    "description": "Discussing the digital future of businesses.",
+                    "speakers": ["Snoopy", "Woodstock"],
+                    "attendeesCount": 550,
+                    "website": "https://www.bergendigitalforum.com"
+                },
+                {
+                    "id": 5,
+                    "title": "Global Commerce Expo",
+                    "startDate": "2023-11-10",
+                    "endDate": "2023-11-12",
+                    "location": "New York",
+                    "category": "Commerce",
+                    "isPostponed": false,
+                    "description": "A global gathering for commerce professionals.",
+                    "speakers": ["Marcie", "Franklin"],
+                    "attendeesCount": 1000,
+                    "website": "https://www.globalcommerceexpo.com"
+                },
+                {
+                    "id": 6,
+                    "title": "IoT World Summit",
+                    "startDate": "2023-12-01",
+                    "endDate": "2023-12-03",
+                    "location": "London",
+                    "category": "Internet of Things",
+                    "isPostponed": true,
+                    "description": "The premier event for IoT enthusiasts.",
+                    "speakers": ["Rerun Van Pelt", "Pigpen"],
+                    "attendeesCount": 1200,
+                    "website": "https://www.iotworldsummit.com"
+                },
+                {
+                    "id": 7,
+                    "title": "International HR Conference",
+                    "startDate": "2023-10-05",
+                    "endDate": "2023-10-07",
+                    "location": "Paris",
+                    "category": "Human Resources",
+                    "isPostponed": false,
+                    "description": "A deep dive into global HR trends.",
+                    "speakers": ["Schroeder", "Violet Gray"],
+                    "attendeesCount": 800,
+                    "website": "https://www.internationalhrconf.com"
+                },
+                {
+                    "id": 8,
+                    "title": "BI and Analytics Summit",
+                    "startDate": "2023-09-01",
+                    "endDate": "2023-09-03",
+                    "location": "Tokyo",
+                    "category": "Business Intelligence",
+                    "isPostponed": false,
+                    "description": "Asia's leading event for BI professionals.",
+                    "speakers": ["Frieda", "Shermy"],
+                    "attendeesCount": 900,
+                    "website": "https://www.bianalyticsummit.com"
+                },
+                {
+                    "id": 9,
+                    "title": "Digital Commerce Forum",
+                    "startDate": "2023-08-20",
+                    "endDate": "2023-08-22",
+                    "location": "Sydney",
+                    "category": "Digital Commerce",
+                    "isPostponed": true,
+                    "description": "Exploring the future of online commerce.",
+                    "speakers": ["Patty", "Roy"],
+                    "attendeesCount": 650,
+                    "website": "https://www.digitalcommerceforum.com"
+                },
+                {
+                    "id": 10,
+                    "title": "IoT Innovations Conference",
+                    "startDate": new Date().toDateString(),
+                    "endDate": new Date(new Date().setDate(new Date().getDate() + 3)).toDateString(),
+                    "location": "Berlin",
+                    "category": "Internet of Things",
+                    "isPostponed": false,
+                    "description": "Showcasing innovative IoT solutions.",
+                    "speakers": ["Spike", "Belle"],
+                    "attendeesCount": 700,
+                    "website": "https://www.iotinnovationsconf.com"
+                },
+                {
+                    "id": 11,
+                    "title": "HR Tech Summit",
+                    "startDate": "2023-06-15",
+                    "endDate": "2023-06-17",
+                    "location": "Toronto",
+                    "category": "Human Resources",
+                    "isPostponed": true,
+                    "description": "The latest in HR technology and solutions.",
+                    "speakers": ["Andy", "Olaf"],
+                    "attendeesCount": 750,
+                    "website": "https://www.hrtechsummit.com"
+                },
+                {
+                    "id": 12,
+                    "title": "BI Leaders Forum",
+                    "startDate": "2023-05-05",
+                    "endDate": "2023-05-07",
+                    "location": "Singapore",
+                    "category": "Business Intelligence",
+                    "isPostponed": false,
+                    "description": "A gathering of BI leaders and experts.",
+                    "speakers": ["Molly Volley", "Clara"],
+                    "attendeesCount": 850,
+                    "website": "https://www.bileadersforum.com"
+                },
+                {
+                    "id": 13,
+                    "title": "E-Commerce World Expo",
+                    "startDate": "2023-04-10",
+                    "endDate": "2023-04-12",
+                    "location": "Dubai",
+                    "category": "E-Commerce",
+                    "isPostponed": true,
+                    "description": "The biggest e-commerce event in the Middle East.",
+                    "speakers": ["Harriet", "Poochie"],
+                    "attendeesCount": 950,
+                    "website": "https://www.ecommerceworldexpo.com"
+                },
+                {
+                    "id": 14,
+                    "title": "IoT Tech Expo",
+                    "startDate": "2023-03-20",
+                    "endDate": "2023-03-22",
+                    "location": "San Francisco",
+                    "category": "Internet of Things",
+                    "isPostponed": false,
+                    "description": "Explore the latest innovations in IoT technology.",
+                    "speakers": ["5", "444"],
+                    "attendeesCount": 1000,
+                    "website": "https://www.iottechexpo.com"
+                }
+            ],
+            categories: [
+                {
+                    name: "Business Intelligence",
+                    description: "Historical, curent, and predictive views of business operations."
+                },
+                {
+                    name: "Commerce",
+                    description: "Systems, goods and services, small and large scale"
+                },
+                {
+                    name: "Human Ressources",
+                    description: "About people who make up the workforce of an organization."
+                },
+                {
+                    name: "Internet of Things",
+                    description: "Human-to-human and human-to-computer interacton."
+                },
+            ],
+            periods: ["All", "Today", "This week", "November", "December"],
+        })
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Onest", "sans-serif"],
+                    serif: ["Lora", "Merriweather", "serif"]
+                },
+                extend: {
+                    colors: {
+                        white: "hsl(0, 0%, 100%)",
+                        blue:{
+                            400: "hsl(216, 100%, 66%)",
+                            500: "hsl(234, 59%, 33%)",
+                            600: "hsl(234, 73%, 26%)",
+                        },
+                        yellow: {
+                            400: "hsl(43, 94%, 58%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar {
+            /* Firefox */
+            scrollbar-width: none;
+        }
+
+        /* Safari and Chrome */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+
+        @keyframes fade-in {
+                from { opacity: 0; }
+        }
+
+        @keyframes fade-out {
+            to { opacity: 0; }
+        }
+
+        @keyframes slide-from-right {
+            from { transform: translateX(32em); }
+        }
+
+        @keyframes slide-to-left {
+            to { transform: translateX(-32em); }
+        }
+        
+        ::view-transition-group(root) {
+            --t1: 300ms;
+            --t2: 1000ms;
+            --t3: 500ms;
+        }
+        
+        ::view-transition-old(root) {
+            animation: var(--t1) cubic-bezier(0.4, 0, 1, 1) both fade-out,
+            var(--t2) cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+        }
+        
+        ::view-transition-new(root) {
+            animation: var(--t3) cubic-bezier(0, 0, 0.2, 1) var(--t1) both fade-in,
+            var(--t2) cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+        }
+    </style>
+</head>
+
+<body class="bg-yellow-400">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        function App() {
+            const [project, setProject] = React.useState(DATA.projects[0])
+
+            const getRandomNumber = (min = 0, max = 10) => {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            const shortenURL = (url) => {
+                return url.replace(/^https?:\/\//, 'www.');
+            }
+
+            const shortenNumber = (num) => {
+                if (Math.abs(num) < 1e3) return num.toString();
+
+                const units = ['k', 'M', 'B', 'T', 'P', 'E', 'Z', 'Y'];
+                let unitIndex = Math.min(Math.floor(Math.log10(Math.abs(num)) / 3), units.length - 1);
+
+                const shortenedNum = num / Math.pow(10, unitIndex * 3);
+                return shortenedNum.toFixed(1).replace(/\.0$/, '') + units[unitIndex - 1];
+            }
+
+            return (
+               <div 
+                className={`
+                    min-h-screen
+                    flex items-center justify-center 
+                    bg-yellow-400 text-white
+                `}
+               >
+                    <main className="grid justify-center gap-4 m-4 w-full lg:max-w-4xl">
+                        <h1 className="text-7xl font-serif lg:col-span-2 lg:mb-4 lg:text-center">{project.name}</h1>
+
+                        <Card title="Contributors" className="">
+                            <AvatarStack users={project.contributors} />
+                        </Card>
+
+                        <Card title="About" className="">
+                            <div className="space-y-3">
+                                <p>{project.description}</p>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-rounded -rotate-45">link</span>
+
+                                    <a onClick={(event) => event.preventDefault()} className="underline cursor-pointer">
+                                        {shortenURL(project.link)}
+                                    </a>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-rounded">star</span>
+
+                                    <p>{shortenNumber(project.stars)} stars</p>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-rounded">visibility</span>
+
+                                    <p>{project.userWatching} watching</p>
+                                </div>
+                            </div>
+                        </Card>
+
+                        <Card title="Languages" className="lg:col-span-2">
+                            <InlineGraph 
+                                values={project.languages} 
+                            />
+                        </Card>
+
+                        <button 
+                            className={`
+                                flex items-center justify-center 
+                                px-8 py-2 w-36 mx-auto
+                                bg-white/20 text-blue-500 rounded-full border-none 
+                                lg:col-span-2 lg:justify-self-center
+                                hover:scale-105 duration-500
+                                focus:outline-4 focus:outline-[hsla(0deg,0%,100%,.7)]
+                            `}
+                            onClick={() => {
+                                transitionViewIfSupported(() => {
+                                    setProject(DATA.projects[getRandomNumber(0, (DATA.projects.length) - 1)])
+                                })
+                            }}
+                        >
+                            <span className="material-symbols-rounded [font-size:2em]">arrow_right_alt</span>
+                        </button>
+                    </main>
+                </div>
+            );
+        }
+
+        function Card({title, className, centerChild = false, children}) {
+            return (
+                <div 
+                    className={`px-4 py-6 bg-blue-500 rounded-xl md:p-8 py-10 ${className}`} >
+                    <div className={`flex flex-col gap-y-4 h-full`}>
+                        <h3 className="text-2xl font-serif font-semibold tracking-wider">
+                            {title}
+                        </h3>
+    
+                        <div className="space-y-8">
+                            {children}
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        function AvatarStack({ users, maxVisible = 4 }) {
+            const overflowCount = users.length - maxVisible
+
+            const size = 10
+
+            return (
+                <div className="flex">
+                    {users.slice(0, maxVisible).map((user, index) => (
+                        <div 
+                            key={index}  
+                            className={`
+                                relative group w-${size} h-${size} 
+                                [margin-inline-start:-.5rem] 
+                                rounded-full border-4 border-blue-500
+                            `}
+                        >
+                            <img src={user.avatar} alt={`User ${index + 1}`} className={`w-full h-full object-cover rounded-full`}/>
+
+                            <div 
+                                className={`
+                                    relative -top-16 px-2 w-fit 
+                                    bg-white text-slate-700 text-sm rounded-lg
+                                    opacity-0 group-hover:opacity-100 duration-500
+                                    before:block before:absolute before:-z-10 
+                                    before:w-4 before:h-4 before:bg-white 
+                                    before:rotate-45 before:right-1/2 before:translate-x-1/2 before:top-2
+                                    before:opacity-0 group-hover:before:opacity-100
+                                    before:duration-300
+                                `}
+                            >
+                                {user.username}
+                            </div>
+                        </div>
+                    ))}
+                    {overflowCount > 0 && (
+                        <button 
+                            className={`
+                                w-${size} h-${size} 
+                                [margin-inline-start:-.5rem] 
+                                rounded-full bg-white 
+                                text-slate-700 text-sm text-center font-semibold leading-10 
+                            `}
+                        >
+                            +{overflowCount}
+                        </button>
+                    )}
+                </div>
+            )
+        }
+
+        function InlineGraph({values}) {
+            // For Tailwind arbitrary grid template columns
+            function concatenatePercentages(data) {
+                let totalPercent = 0
+                for (let i = 0; i < data.length; i++) {
+                    totalPercent += data[i].percent
+                }
+                
+                const percentages = []
+                for (let i = 0; i < data.length; i++) {
+                    const percentage = (data[i].percent / totalPercent) * 100
+                    percentages.push(percentage.toFixed(2) + '%')
+                }
+                
+                return percentages.join('_')
+            }
+
+            return (
+                <div className="space-y-3">
+                    <div 
+                        className={`
+                            w-full h-4 
+                            grid grid-cols-[${concatenatePercentages(values)}] overflow-hidden
+                            bg-white rounded-full
+                        `}
+                    >
+                        {values.map((value, index) => {
+                            return <div className={value.color} key={index}></div>
+                        })}
+                    </div>
+
+                    <div className="flex gap-4">
+                        {values.map((value, index) => {
+                            return (
+                                <div className="flex items-center gap-1" key={index}>
+                                    <div className={`w-3 h-3 ${value.color} rounded-full`}></div>
+
+                                    <div>{value.name}</div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            )
+        }
+
+        const transitionViewIfSupported = (updateCallback) => {
+            if (document.startViewTransition) {
+                document.startViewTransition(updateCallback);
+            } else {
+                updateCallback();
+            }
+        }
+
+        const DATA = Object.freeze({
+            projects: [
+                {
+                    name: "React",
+                    description: "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
+                    link: "https://github.com/facebook/react",
+                    stars: 170000,
+                    userWatching: 6500,
+                    contributors: [
+                        {username: "gaearon", avatar: "https://avatars.githubusercontent.com/u/810438?v=4"},
+                        {username: "acdlite", avatar: "https://avatars.githubusercontent.com/u/3624098?v=4"},
+                        {username: "bvaughn", avatar: "https://avatars.githubusercontent.com/u/29597?v=4"},
+                        {username: "sebmarkbage", avatar: "https://avatars.githubusercontent.com/u/63648?v=4"},
+                        {username: "sophiebits", avatar: "https://avatars.githubusercontent.com/u/6820?v=4"}
+                    ],
+                    languages: [
+                        {name: "JavaScript", percent: 85, color: "bg-blue-400"},
+                        {name: "HTML", percent: 10, color: "bg-red-400"},
+                        {name: "CSS", percent: 5, color: "bg-green-400"}
+                    ],
+                },
+                {
+                    name: "Vue.js",
+                    description: "A progressive, incrementally-adoptable JavaScript framework for building UI on the web.",
+                    link: "https://github.com/vuejs/vue",
+                    stars: 190000,
+                    userWatching: 6100,
+                    contributors: [
+                        {username: "yyx990803", avatar: "https://avatars.githubusercontent.com/u/499550?v=4"},
+                        {username: "sodatea", avatar: "https://avatars.githubusercontent.com/u/8424643?v=4"},
+                        {username: "posva", avatar: "https://avatars.githubusercontent.com/u/664177?v=4"},
+                        {username: "fnlctrl", avatar: "https://avatars.githubusercontent.com/u/499550?v=4"},
+                        {username: "Justineo", avatar: "https://avatars.githubusercontent.com/u/499550?v=4"}
+                    ],
+                    languages: [
+                        {name: "JavaScript", percent: 80, color: "bg-blue-400"},
+                        {name: "HTML", percent: 5, color: "bg-red-400"},
+                        {name: "CSS", percent: 15, color: "bg-green-400"}
+                    ],
+                },
+                {
+                    name: "Angular",
+                    description: "One framework. Mobile & desktop.",
+                    link: "https://github.com/angular/angular",
+                    stars: 76000,
+                    userWatching: 3200,
+                    contributors: [
+                        {username: "IgorMinar", avatar: "https://avatars.githubusercontent.com/u/216296?v=4"},
+                        {username: "kara", avatar: "https://avatars.githubusercontent.com/u/1946920?v=4"},
+                        {username: "mhevery", avatar: "https://avatars.githubusercontent.com/u/111951?v=4"},
+                        {username: "jelbourn", avatar: "https://avatars.githubusercontent.com/u/22898577?v=4"},
+                        {username: "vikerman", avatar: "https://avatars.githubusercontent.com/u/198247?v=4"}
+                    ],
+                    languages: [
+                        {name: "JavaScript", percent: 70, color: "bg-blue-400"},
+                        {name: "HTML", percent: 15, color: "bg-red-400"},
+                        {name: "CSS", percent: 10, color: "bg-green-400"},
+                        {name: "Others", percent: 10, color: "bg-orange-400"}
+                    ],
+                },
+                {
+                    name: "Bootstrap",
+                    description: "The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile-first projects on the web.",
+                    link: "https://github.com/twbs/bootstrap",
+                    stars: 155000,
+                    userWatching: 9700,
+                    contributors: [
+                        {username: "mdo", avatar: "https://avatars.githubusercontent.com/u/98681?v=4"},
+                        {username: "XhmikosR", avatar: "https://avatars.githubusercontent.com/u/349621?v=4"},
+                        {username: "patrickhlauke", avatar: "https://avatars.githubusercontent.com/u/895831?v=4"},
+                        {username: "MartijnCuppens", avatar: "https://avatars.githubusercontent.com/u/11559216?v=4"},
+                        {username: "Johann-S", avatar: "https://avatars.githubusercontent.com/u/1689750?v=4"}
+                    ],
+                    languages: [
+                        {name: "HTML", percent: 30, color: "bg-red-400"},
+                        {name: "CSS", percent: 30, color: "bg-green-400"},
+                        {name: "JavaScript", percent: 40, color: "bg-blue-400"}
+                    ],
+                },
+                {
+                    name: "Node.js",
+                    description: "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.",
+                    link: "https://github.com/nodejs/node",
+                    stars: 84000,
+                    userWatching: 3500,
+                    contributors: [
+                        {username: "addaleax", avatar: "https://avatars.githubusercontent.com/u/899444?v=4"},
+                        {username: "jasnell", avatar: "https://avatars.githubusercontent.com/u/439929?v=4"},
+                        {username: "mcollina", avatar: "https://avatars.githubusercontent.com/u/52195?v=4"},
+                        {username: "Fishrock123", avatar: "https://avatars.githubusercontent.com/u/37303?v=4"},
+                        {username: "joyeecheung", avatar: "https://avatars.githubusercontent.com/u/4299420?v=4"}
+                    ],
+                    languages: [
+                        {name: "JavaScript", percent: 65, color: "bg-blue-400"},
+                        {name: "C++", percent: 25, color: "bg-yellow-400"},
+                        {name: "Python", percent: 10, color: "bg-pink-400"}
+                    ],
+                }
+            ]
+        })
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
