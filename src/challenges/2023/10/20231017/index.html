@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" color-scheme="pink">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17/10/2023's challenge</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <section>
+            <form name="filter">
+                <fieldset>
+                    <input type="checkbox" name="filter-category" id="filter-category" class="visually-hidden">
+    
+                    <label for="filter-category">Categories</label>
+                </fieldset>
+
+                <fieldset>
+                    <input type="checkbox" name="filter-tag" id="filter-tag" class="visually-hidden">
+    
+                    <label for="filter-tag">Tags</label>
+                </fieldset>
+
+                <fieldset>
+                    <input type="checkbox" name="filter-sort" id="filter-sort" class="visually-hidden">
+    
+                    <label for="filter-sort">Latest</label>
+                </fieldset>
+            </form>
+
+            <ul>
+                <li>
+                    <h3>Navbardropdown on mobile</h3>
+                    <div>Design help</div>
+                    <ul class="users">
+                        <li>
+                            <img src="https://cdn.midjourney.com/e50ed43c-a4a1-4bbb-8467-f37827895eb6/0_2.png" alt="">
+                        </li>
+                        <li>
+                            <img src="https://cdn.midjourney.com/d6f61054-7444-4ab5-8206-aa417069c681/0_3_384_N.webp" alt="">
+                        </li>
+                        <li>
+                            <img src="https://cdn.midjourney.com/24ea3a63-786e-4146-9a1e-419d048f6752/0_3.png" alt="">
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <form name="create-topic">
+                <h2>Create new topic</h2>
+
+                <div>
+                    <label for="title" class="visually-hidden">Title</label>
+                    <input type="text" id="title" name="title" placeholder="Type title or paste link here">
+                </div>
+
+                <div>
+                    <label for="category" class="visually-hidden">Category</label>
+                    <input type="text" id="category" name="category">
+                </div>
+
+                <div>
+                    <label for="tags" class="visually-hidden">Tags</label>
+                    <input type="text" id="tags" name="tags">
+                </div>
+
+                <div>
+                    <label for="description" class="visually-hidden">Description</label>
+                    <textarea name="description" id="description" cols="30" rows="10" placeholder="Enter your description here"></textarea>
+                </div>
+
+                <div>
+                    <button type="submit">Create Topic</button>
+                    <button type="button">Cancel</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+</html>
