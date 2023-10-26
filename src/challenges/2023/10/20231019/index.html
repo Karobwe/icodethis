@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Onest:wght@400;500;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Onest", "Poppins, sans-serif"],
+                    serif: ["Lora", "Merriweather", "serif"],
+                },
+                extend: {
+                    colors: {}
+                }
+            }
+        };
+    </script>
+    <style>
+        .hide-scrollbar { scrollbar-width: none }
+        .hide-scrollbar::-webkit-scrollbar { display: none }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            return (
+               <div 
+                className={`
+                    flex items-center justify-center 
+                    w-full min-h-screen px-4 py-8 
+                    bg-slate-100
+                `}
+               >
+                    <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] w-full h-[90vh] max-w-7xl bg-white rounded-lg">
+                        <TopNav className="col-start-2 row-start-1 bg-amber-400"/>
+
+                        <SideNav className="col-start-1 md:row-span-2 bg-emerald-400"/>
+
+                        <MainView className="col-span-2 md:col-start-2 md:col-span-1 bg-fuchsia-400"/>
+                    </div>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function TopNav({className}) {
+            return (
+                <nav className={className}>
+                    <Wrapper></Wrapper>
+                </nav>
+            )
+        }
+            
+        function SideNav({className}) {
+            const [isOpened, setIsOpened] = React.useState(true)
+            const parentRef = React.useRef(null)
+            const [parentHeight, setParentHeight] = React.useState(0)
+
+            const toggleOpenStateHandler = () => {
+                setIsOpened(!isOpened)
+            }
+
+            React.useEffect(() => {
+                if (parentRef.current) {
+                    setParentHeight(parentRef.current.offsetHeight)
+                }
+            }, [])
+            
+            return (
+                <aside className={className} ref={parentRef}>
+                    <div className="relative md:flex md:justify-stretch md:h-full">
+                        <button 
+                            onClick={toggleOpenStateHandler}
+                            className="md:hidden"
+                        >
+                            <MaterialIcon iconName="menu" size="lg" />
+                        </button>
+
+                        <nav 
+                            className={`
+                                absolute top-full ${isOpened ? "-left-[400%] md:[left:initial]" : "left-0"} 
+                                flex flex-col items-between gap-6 
+                                h-[calc(100vh-${parentHeight}px-6.5em)] 
+                                duration-300
+                                md:relative md:[top:initial] md:h-full
+                            `}
+                        >
+                            <div className="text-4xl font-black">S</div>
+
+                            <ul>
+                                {DATA.verticalNavigation.map((item, index) => {
+                                    return (
+                                        <li key={index} className="flex items-center gap-2">
+                                            <MaterialIcon iconName={item.icon} />
+                                            {item.name}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+
+                            <button className="mt-auto border-t">
+                                <div className="w-10 h-10 aspect-square rounded-full overflow-hidden">
+                                    <img 
+                                        src="https://cdn.midjourney.com/5c06f431-bd84-4c4a-804f-4c50915d2897/0_2_384_N.webp" 
+                                        alt=""
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </button>
+                        </nav>
+                    </div>
+                </aside>
+            )
+        }
+
+        function MainView({className}) {
+            return (
+                <main className={className}>
+                    <Wrapper>
+                    </Wrapper>
+                </main>
+            )
+        }
+
+        function Wrapper({children, className}) {
+            return (
+                <div className={`p-4 md:p-8 ${className}`}>
+                    {children}
+                </div>
+            )
+        }
+
+        function MaterialIcon({iconName, size, className}) {
+            let sizeUtil = "md"
+            switch(size) {
+                case "md":
+                    sizeUtil = "2xl"
+                    break
+
+                case "lg":
+                    sizeUtil = "4xl"
+                    break
+
+                case "sm":
+                default:
+                    sizeUtil = "xl"
+                    break
+            }
+
+            return (
+                <span className={`material-symbols-rounded text-${sizeUtil} ${className}`}>
+                    {iconName}
+                </span>
+            )
+        }
+
+        const DATA = Object.freeze({
+            verticalNavigation: [
+                {
+                    name: "Dashboard", 
+                    icon: "monitoring"
+                },
+                {
+                    name: "Folders", 
+                    icon: "folder"
+                },
+                {
+                    name:  "Projects", 
+                    icon: "stack"
+                },
+                {
+                    name: "Task", 
+                    icon: "task"
+                },
+                {
+                    name: "Settings", 
+                    icon: "settings"
+                },
+            ]
+        })
+
+    </script>
+</body>
+
+</html>
