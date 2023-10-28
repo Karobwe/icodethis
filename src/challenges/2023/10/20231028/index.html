@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        pink: {
+                            400: "hsl(337, 87%, 62%)",
+                        },
+                        violet: {
+                            400: "hsl(302, 34%, 39%)",
+                        }
+                    },
+                    keyframes: {
+                        rainbow: {
+                            '0%, 100%': { 
+                                color: "hsl(337, 87%, 62%)" , 
+                                transform: "scale(1)",
+                            },
+                            '50%': { 
+                                color: "hsl(302, 34%, 39%)", 
+                                transform: "scale(1.6) rotate(1turn)",
+                            },
+                        }
+                    },
+                    animation: {
+                        rainbow: 'rainbow 1s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @import "https://unpkg.com/open-props";
+
+        .hide-scrollbar {
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [openSettings, setOpenSettings] = React.useState(true)
+
+            const settingsClickHandler = () => {
+                updateWithViewTransition(() => {
+                    setOpenSettings(!openSettings)
+                })
+            }
+            
+            const closeModalHandler = () => {
+                updateWithViewTransition(() => {
+                    setOpenSettings(!openSettings)
+                })
+            }
+            
+            return (
+               <div className={`relative bg-slate-100 text-slate-700 flex items-center justify-center w-full min-h-screen`}>
+                    <main className="relative z-10 flex items-center justify-center w-full max-w-[24em] min-h-[12em] m-4 lg:max-w-3xl">
+                        <button 
+                            onClick={settingsClickHandler} 
+                            className="absolute animate-[rainbow_5s_linear_infinite] hover:animate-[rainbow_30s_linear_infinite] focus:outline-4 focus:outline-pink-400/30 focus:border-pink-400/30 duration-300"
+                        >
+                            <HeroIcons.Cog className="w-16 h-16"/>
+                        </button>
+
+                        {openSettings && <Modal onClose={closeModalHandler} className="z-20 bg-white w-full rounded shadow-lg"/>}
+                    </main>
+
+                    <Wave className="absolute bottom-0 w-[100vw]"/>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function Modal({onClose, className}) {
+            return (
+                <div className={`flex flex-col p-4 space-y-6 sm:p-8 lg:p-16 lg:space-y-8 ${className}`}>
+                    <button 
+                        className="self-end flex flex-col items-center text-slate-400 text-xs font-semibold hover:text-slate-700 duration-300"
+                        onClick={onClose}
+                    >
+                        <HeroIcons.X/>
+                        {"Close"}
+                    </button>
+
+                    <h2 className="text-violet-400 text-2xl font-bold">
+                        Settings
+                    </h2>
+
+                    <fieldset>
+                        <h3 className="mb-1 text-violet-400 text-xl font-bold">Language</h3>
+
+                        <label htmlFor="language" className="sr-only">Language</label>
+                        <p className="text-sm">Let us know which language you're most comfortable using. You can change it back at any time.</p>
+
+                        <select 
+                            name="language" 
+                            id="language" 
+                            className="w-full max-w-xs mt-6 p-2 border rounded focus:outline-4 focus:outline-pink-400/30 focus:border-pink-400/30 lg:mt-8"
+                        >
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                        </select>
+                    </fieldset>
+
+                    <hr/>
+
+                    <fieldset className="flex items-end justify-between gap-4">
+                        <div>
+                            <h3 className="mb-1 text-violet-400 text-xl font-bold">Autoplay videos</h3>
+                            
+                            <p className="text-sm">Choose if you want to autoplay on your browser</p>
+                        </div>
+
+                        <Switch state={true} />
+                    </fieldset>
+                    
+                    <fieldset className="flex items-end justify-between gap-4">
+                        <div>
+                            <h3 className="mb-1 text-violet-400 text-xl font-bold">Show profile photos</h3>
+                            
+                            <p className="text-sm">Choose whether to show or hide profile photos of other members.</p>
+                        </div>
+                        
+                        <Switch />
+                    </fieldset>
+
+                    <div className="flex gap-2 max-w-sm">
+                        <Button text="Save" variant="filled" />
+                        <Button text="Cancel" />
+                    </div>
+                </div>
+            )
+        }
+
+        function Switch({state = false, className}) {
+            const [enabled, setEnabled] = React.useState(state)
+
+            const switchCLickHandler= () => {
+                setEnabled(!enabled)
+            }
+
+            return (
+                <button 
+                    onClick={switchCLickHandler}
+                    className={`
+                        isolate relative flex-none flex items-center
+                        w-16 h-8 
+                        border border-2 border-slate-300 rounded-full
+                        focus:outline-4 focus:outline-pink-400/30 focus:border-pink-400/30
+                        after:block after:relative
+                        after:left-1
+                        after:w-4 after:h-4 
+                        after:rounded-full
+                        ${!enabled ? "after:bg-slate-400" : "after:bg-pink-400 after:left-10"}
+                        after:duration-300
+                    `}
+                >
+                    <div className="sr-only">Enabled</div>
+                </button>
+            )
+        }
+
+        function Button({text, variant, className}) {
+            const colors = variant === "filled" ? "bg-pink-400 text-pink-100 border-pnk-400 hover:bg-pink-600 hover:boder-pink-600" : "text-slate-400 border-slate-300 hover:text-slate-700 hover:border-slate-400"
+
+            return (
+                <button 
+                    className={`
+                        w-full px-4 py-2 ${colors} border border-2 rounded 
+                        focus:outline-4 focus:outline-pink-400/30 focus:border-pink-400/30 
+                        active:scale-95  duration-300 ${className}
+                    `}
+                >
+                    {text}
+                </button>
+            )
+        }
+
+        function Wave({className}) {
+            return (
+                <div className={className}>
+                    <img 
+                        className="w-full h-full object-cover" 
+                        src={`
+                            data:image/svg+xml;base64,PHN2ZyBpZD0idmlzdWFsIiB2aWV3Qm94PSIwIDAgOTAwIDYwMCIgd2lkdGg9IjkwMCIgaGVpZ2h0PSI2MDAiIHhtbG5zPSJodHRwOi8vd3d3
+                            LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSI+PHBhdGggZD0iTTAgNDIyTDIxLjUgNDE5Qz
+                            QzIDQxNiA4NiA0MTAgMTI4LjggNDE2LjVDMTcxLjcgNDIzIDIxNC4zIDQ0MiAyNTcuMiA0NDguNUMzMDAgNDU1IDM0MyA0NDkgMzg1LjggNDM1LjJDNDI4LjcgNDIxLjMgNDcx
+                            LjMgMzk5LjcgNTE0LjIgMzg4LjVDNTU3IDM3Ny4zIDYwMCAzNzYuNyA2NDIuOCAzODUuNUM2ODUuNyAzOTQuMyA3MjguMyA0MTIuNyA3NzEuMiA0MThDODE0IDQyMy4zIDg1Ny
+                            A0MTUuNyA4NzguNSA0MTEuOEw5MDAgNDA4TDkwMCA2MDFMODc4LjUgNjAxQzg1NyA2MDEgODE0IDYwMSA3NzEuMiA2MDFDNzI4LjMgNjAxIDY4NS43IDYwMSA2NDIuOCA2MDFD
+                            NjAwIDYwMSA1NTcgNjAxIDUxNC4yIDYwMUM0NzEuMyA2MDEgNDI4LjcgNjAxIDM4NS44IDYwMUMzNDMgNjAxIDMwMCA2MDEgMjU3LjIgNjAxQzIxNC4zIDYwMSAxNzEuNyA2MD
+                            EgMTI4LjggNjAxQzg2IDYwMSA0MyA2MDEgMjEuNSA2MDFMMCA2MDFaIiBmaWxsPSIjZjM0YjhjIj48L3BhdGg+PHBhdGggZD0iTTAgNTMxTDIxLjUgNTMwLjVDNDMgNTMwIDg2
+                            IDUyOSAxMjguOCA1MzEuM0MxNzEuNyA1MzMuNyAyMTQuMyA1MzkuMyAyNTcuMiA1MzguM0MzMDAgNTM3LjMgMzQzIDUyOS43IDM4NS44IDUxNC4yQzQyOC43IDQ5OC43IDQ3MS
+                            4zIDQ3NS4zIDUxNC4yIDQ2NEM1NTcgNDUyLjcgNjAwIDQ1My4zIDY0Mi44IDQ2Ni43QzY4NS43IDQ4MCA3MjguMyA1MDYgNzcxLjIgNTIxLjJDODE0IDUzNi4zIDg1NyA1NDAu
+                            NyA4NzguNSA1NDIuOEw5MDAgNTQ1TDkwMCA2MDFMODc4LjUgNjAxQzg1NyA2MDEgODE0IDYwMSA3NzEuMiA2MDFDNzI4LjMgNjAxIDY4NS43IDYwMSA2NDIuOCA2MDFDNjAwID
+                            YwMSA1NTcgNjAxIDUxNC4yIDYwMUM0NzEuMyA2MDEgNDI4LjcgNjAxIDM4NS44IDYwMUMzNDMgNjAxIDMwMCA2MDEgMjU3LjIgNjAxQzIxNC4zIDYwMSAxNzEuNyA2MDEgMTI4
+                            LjggNjAxQzg2IDYwMSA0MyA2MDEgMjEuNSA2MDFMMCA2MDFaIiBmaWxsPSIjODc0Mjg1Ij48L3BhdGg+PC9zdmc+  
+                        `} 
+                        alt="" 
+                    />
+                </div>
+            )
+        }
+
+        function updateWithViewTransition(callback) {
+            if (!document.startViewTransition) {
+                callback();
+                return;
+            }
+
+            document.startViewTransition(() => {
+                ReactDOM.flushSync(() => {
+                    callback()
+                });
+            });
+        }
+
+        const DATA = Object.freeze({
+            wave: ''
+        })
+
+    </script>
+</body>
+
+</html>
