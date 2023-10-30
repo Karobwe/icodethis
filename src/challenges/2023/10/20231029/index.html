@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        green: {
+                            400: "hsl(94, 65%, 48%)",
+                            500: "hsl(96, 62%, 34%)",
+                            600: "hsl(97, 49%, 38%)",
+                        },
+                        dark: {
+                            600: "hsl(208, 38%, 8%)",
+                            700: "hsl(200, 9%, 6%)",
+                            800: "hsl(207, 35%, 6%)",
+                            900: "hsl(206, 37%, 4%)",
+                        }
+                    },
+                }
+            }
+        };
+    </script>
+    <style>
+        @import "https://unpkg.com/open-props";
+
+        .hide-scrollbar {
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+
+        ::view-transition-group(screen) {
+            --t1: 500ms;
+            --t2: 300ms;
+            --t3: 9000ms;
+        }
+        
+        ::view-transition-old(screen) {
+            animation: var(--t1) cubic-bezier(0.4, 0, 1, 1) both fade-out,
+            var(--t2) cubic-bezier(0.4, 0, 0.2, 1) both slide-left;
+        }
+        
+        ::view-transition-new(screen) {
+            animation: var(--t3) cubic-bezier(0, 0, 0.2, 1) var(--t1) both fade-in,
+            var(--t2) cubic-bezier(0.4, 0, 0.2, 1) both slide-righ;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to{ opacity: 1; }
+        }
+        
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        @keyframes slide-right {
+            from { transform: translateX(100%); }
+            to { transform: translateX(80%); }
+        }
+        
+        @keyframes slide-left {
+            from { transform: translateX(0%); }
+            to { transform: translateX(-80%); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react'
+
+        const SCREENS = Object.freeze({HOME: 1, USER_DETAILS: 2})
+
+        function App() {
+            const [users, setUsers] = React.useState([])
+            const [currentUser, setCurrentUser] = React.useState(null)
+            const [screen, setScreen] = React.useState(SCREENS.HOME)
+
+            const userCardCLickHadler = (user) => {
+                updateWithViewTransition(() => {
+                    setCurrentUser(user)
+                    setScreen(SCREENS.USER_DETAILS)
+                })
+            }
+
+            React.useEffect(() => {
+                fetch('https://dummyjson.com/users?limit=4&skip=20&select=firstName,lastName,email,image,gender')
+                .then(res => res.json())
+                .then(data => {
+
+                    // Change https://robohash.org avatars
+                    data.users.map(user => {
+                        // See https://xsgames.co/randomusers/assets/avatars/female/ for images count
+                        const imagesCount = 78
+                        const randomNumber = Math.round(Math.random() * imagesCount + 1)
+                        // Use user id if a corresponding image exist, for consistancy
+                        const imageIndex = user.id <= imagesCount ? user.id : randomNumber
+
+                        const image = `https://xsgames.co/randomusers/assets/avatars/${user.gender}/${imageIndex}.jpg`
+
+                        // Specific to this project
+                        const plantedTrees = Math.round(Math.random() * 100 + 10)
+                        user.plantedTrees = plantedTrees
+
+                        user.image = image
+                    })
+
+                    setUsers(data.users)
+                });
+            },[])
+
+            return (
+               <div className={`isolate bg-dark-700 text-neutral-300 flex items-center justify-center w-full min-h-screen`}>
+                    {/* TODO: replace min-h-[558px] magic number from browser */}
+                    <main 
+                        className={`
+                            w-full max-w-4xl min-h-[558px] m-4 p-2 [view-transition-name:screen]
+                            bg-dark-600 border border-8 border-dark-900 rounded-lg 
+                            md:p-8 md:pb-16
+                        `}
+                    >
+                        {
+                            screen === SCREENS.HOME && 
+                            <div className="flex flex-col items-center gap-12">
+                                <header className="max-w-sm flex flex-col items-center gap-y-2 text-center [text-wrap:balance]">
+                                    <TreeIcon className="w-20 h-20"/>
+        
+                                    <h1 className="text-neutral-200 text-2xl font-semibold">Join our community</h1>
+        
+                                    <p>Help us plant 20 million tress around the globe by january 1st, 2020.</p>
+                                </header>
+        
+                                <section>
+                                    <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+                                        {users.map(user => {
+                                            return <UserCard key={user.id} user={user} onSelect={userCardCLickHadler} />
+                                        })}
+                                    </ul>
+                                </section>
+        
+                                <Button text="Join now!" className="hover:animate-[var(--animation-blink)]" />
+                            </div> 
+                        }
+
+                        {
+                            screen === SCREENS.USER_DETAILS &&
+                            <div className="min-h-[550px] flex flex-col items-center gap-2">
+                                <div className="w-24 h-24 rounded-full overflow-hidden">
+                                    <img src={currentUser.image} alt="" className="w-full h-full obeject-cover" />
+                                </div>
+
+                                <h2 className="text-xl font-semibold">
+                                    {`${currentUser.firstName} ${currentUser.lastName}`}
+                                </h2>
+
+                                <p className="text-sm">
+                                    {DATA.user.bio}
+                                </p>
+
+                                <div className="w-fit my-8 px-4 text-green-400 text-lg border border-green-500 rounded-full hover:border-green-400 duration-300">
+                                    {currentUser.plantedTrees} planted trees
+                                </div>
+
+                                <ul className="self-start space-y-2">
+                                    <h2 className="flex items-center gap-2 text-green-400 text-xl">
+                                        Achievements
+                                        <span className="material-symbols-outlined">trophy</span>
+                                    </h2>
+
+                                    <div className="flex flex-wrap gap-2">
+                                        {DATA.user.achievements.map(item => {
+                                            return (
+                                                <li className="p-2 flex flex-col items-center gap-1 border border-2 border-green-500/10 rounded hover:bg-dark-700 duration-300">
+                                                    <span className="text-sm text-green-600">
+                                                        {item.title}
+                                                    </span>
+                                                    
+                                                    <span className="text-xs">
+                                                        {item.description}
+                                                    </span>
+                                                </li>
+                                            )
+                                        })}
+                                    </div>
+                                </ul>
+
+                                <ul className="self-start my-4 space-y-2">
+                                    <h2 className="flex items-center gap-2 text-green-400 text-xl">
+                                        Recent activity
+                                    </h2>
+
+                                    <div className="space-y-2">
+                                        {DATA.user.recentActivity.map(item => {
+                                            return (
+                                                <li className="flex flex-col">
+                                                    <span className="text-xs text-green-600/50">
+                                                        {item.date}
+                                                    </span>
+                                                    
+                                                    <span className="text-md">
+                                                        {item.activity}
+                                                    </span>
+                                                </li>
+                                            )
+                                        })}
+                                    </div>
+                                </ul>
+
+                                <Button 
+                                    text="Return" 
+                                    onClick={() => {
+                                        updateWithViewTransition(() => setScreen(SCREENS.HOME))
+                                    }} 
+                                    className="mt-auto" 
+                                />
+                            </div>
+                        }
+                    </main>
+                </div>
+            );
+        }
+
+        function UserCard({user, onSelect, className}) {
+            return (
+                <li className="group w-44 aspect-3/4 p-8 flex flex-col items-center gap-4 bg-dark-800 rounded-lg cursor-pointer" onClick={() => onSelect(user)}>
+                    <div className="w-20 aspect-square bg-dark-800 rounded-full overflow-hidden">
+                        <img src={user.image} alt="" className="w-full h-full object-cover" />
+                    </div>
+
+                    <h3 className="text-xs font-semibold">
+                        {`${user.firstName} ${user.lastName}`}
+                    </h3>
+
+                    <div className="w-fit px-2 text-green-400 text-xs border border-green-500 rounded-full hover:border-green-400 group-hover:animate-[var(--animation-blink),var(--animation-shake-x)] duration-300">
+                        {user.plantedTrees} Trees
+                    </div>
+                </li>
+            )
+        }
+
+        function Button({text, variant, onClick, className}) {
+            const colors = variant === "filled" ? "bg-green-600 text-green-100 border-green-500 hover:bg-green-400 hover:boder-green-400" : "text-green-600 border-green-600 hover:text-green-400 hover:border-green-400"
+
+            return (
+                <button 
+                    className={`
+                        px-8 py-2 ${colors} border border-2 rounded 
+                        focus:outline-4 focus:outline-green-400/30 focus:border-green-400/30 
+                        active:scale-95  duration-300 ${className}
+                    `}
+                    onClick={onClick}
+                >
+                    {text}
+                </button>
+            )
+        }
+
+        function TreeIcon({className}) {
+            return (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="200"
+                    height="200"
+                    fill="#000"
+                    version="1.1"
+                    viewBox="0 0 512.002 512.002"
+                    xmlSpace="preserve"
+                    className={className}
+                >
+                    <g>
+                        <path
+                        fill="#47821C"
+                        d="M204.238 280.912c-10.934-14.73-28.457-24.278-48.211-24.278-33.142 0-60.01 26.867-60.01 60.01s26.867 60.01 60.01 60.01a59.887 59.887 0 0019.239-3.17 49.374 49.374 0 0024.458 6.453c27.404 0 49.618-22.215 49.618-49.618 0-25.883-19.818-47.126-45.104-49.407z"
+                        ></path>
+                        <path
+                        fill="#CC7400"
+                        d="M248.985 512.001c-11.814 0-21.392-9.578-21.392-21.392V224.011c0-11.814 9.578-21.392 21.392-21.392s21.392 9.578 21.392 21.392v266.598c0 11.815-9.578 21.392-21.392 21.392z"
+                        ></path>
+                        <path
+                        fill="#AA6100"
+                        d="M248.985 490.609V224.011c0-7.913 4.308-14.806 10.696-18.507a21.256 21.256 0 00-10.696-2.885c-11.814 0-21.392 9.578-21.392 21.392v266.598c0 11.814 9.578 21.392 21.392 21.392 3.901 0 7.547-1.061 10.696-2.885-6.388-3.701-10.696-10.593-10.696-18.507z"
+                        ></path>
+                        <path
+                        fill="#4E901E"
+                        d="M432.464 178.436a71.488 71.488 0 004.189-24.161c0-39.561-32.07-71.631-71.631-71.631s-71.631 32.07-71.631 71.631c0 4.549.443 8.991 1.253 13.304-40.745 7.042-71.746 42.535-71.746 85.291 0 47.819 38.765 86.584 86.584 86.584 42.617 0 78.018-30.8 85.221-71.349a49.134 49.134 0 0026.684 7.84c27.274 0 49.386-22.111 49.386-49.386.003-23.465-16.368-43.094-38.309-48.123z"
+                        ></path>
+                        <g fill="#47821C">
+                        <path d="M399.965 158.283c0-27.919-9.67-54.277-26.63-75.144a72.186 72.186 0 00-8.313-.496c-39.561 0-71.631 32.07-71.631 71.631 0 4.549.443 8.991 1.253 13.304-40.745 7.042-71.746 42.535-71.746 85.291 0 36.69 22.832 68.027 55.053 80.637 14.276-15.826 23.793-36.026 26.224-58.332 54.557-10.911 95.79-59.174 95.79-116.891z"></path>
+                        <path d="M324.535 313.844a7.846 7.846 0 01-2.126-15.399c17.307-4.881 30.522-19.483 33.669-37.199.758-4.267 4.832-7.117 9.097-6.353a7.846 7.846 0 016.353 9.097c-4.193 23.602-21.801 43.056-44.859 49.559a7.95 7.95 0 01-2.134.295z"></path>
+                        </g>
+                        <path
+                        fill="#5EAC24"
+                        d="M200.627 191.729c-12.403 0-24.074 3.135-34.266 8.653-10.556-7.863-23.642-12.519-37.818-12.519-.536 0-1.064.027-1.596.041-7.086-15.474-22.695-26.23-40.827-26.23-24.794 0-44.893 20.099-44.893 44.893 0 17.308 9.8 32.318 24.15 39.811a64.488 64.488 0 00-.204 4.857c0 34.999 28.372 63.371 63.371 63.371 6.395 0 12.564-.956 18.384-2.718 13.198 14.733 32.363 24.011 53.699 24.011 39.811 0 72.084-32.273 72.084-72.084s-32.273-72.086-72.084-72.086z"
+                        ></path>
+                        <g fill="#4E901E">
+                        <path d="M119.301 272.699c-14.349-7.492-24.15-22.502-24.15-39.811 0-23.215 17.623-42.313 40.221-44.651a63.872 63.872 0 00-6.828-.377c-.536 0-1.064.027-1.596.041-7.085-15.474-22.695-26.23-40.827-26.23-24.794 0-44.893 20.099-44.893 44.893 0 17.308 9.8 32.318 24.151 39.811a63.965 63.965 0 00-.204 4.857c0 34.999 28.372 63.371 63.371 63.371.834 0 1.663-.018 2.49-.05-7.502-10.412-11.936-23.183-11.936-36.996-.003-1.637.08-3.253.201-4.858z"></path>
+                        <path d="M200.627 191.729c-12.403 0-24.074 3.135-34.266 8.653-10.557-7.863-23.642-12.519-37.818-12.519-.536 0-1.064.027-1.596.041-7.085-15.474-22.695-26.23-40.827-26.23-4.694 0-9.219.723-13.471 2.06 9.398 50.151 53.503 88.225 106.34 88.225 8.383 0 16.602-.938 24.597-2.802 19.031 16.236 42.647 26.019 67.88 27.959a72.394 72.394 0 001.245-13.3c.001-39.814-32.273-72.087-72.084-72.087z"></path>
+                        </g>
+                        <path
+                        fill="#6DC82A"
+                        d="M321.327 81.187c.429-3.168.671-6.396.671-9.682C321.997 32.015 289.984 0 250.492 0c-38.199 0-69.398 29.955-71.398 67.655-.036 0-.07-.003-.106-.003-42.033 0-76.107 34.074-76.107 76.107s34.074 76.107 76.107 76.107c11.964 0 23.278-2.768 33.351-7.687 15.954 20.224 40.661 33.222 68.419 33.222 48.115 0 87.12-39.005 87.12-87.12 0-33.461-18.876-62.5-46.551-77.094z"
+                        ></path>
+                        <g fill="#5EAC24">
+                        <path d="M216.32 111.237c.036 0 .07.003.106.003 2-37.7 33.2-67.655 71.398-67.655 11.14 0 21.683 2.549 31.081 7.093C309.988 21.348 282.737.001 250.492.001c-38.199 0-69.398 29.955-71.398 67.655-.036 0-.07-.003-.106-.003-42.033 0-76.107 34.074-76.107 76.107 0 29.461 16.75 54.992 41.236 67.642a75.999 75.999 0 01-3.904-24.059c0-42.031 34.074-76.106 76.107-76.106zM280.758 221.864a7.846 7.846 0 01-7.846-7.846 7.846 7.846 0 017.846-7.846c26.406 0 47.889-21.483 47.889-47.889a7.846 7.846 0 017.846-7.846 7.846 7.846 0 017.846 7.846c0 35.059-28.523 63.581-63.581 63.581z"></path>
+                        <circle cx="172.68" cy="184.512" r="19.929"></circle>
+                        </g>
+                        <circle cx="202.674" cy="294.61" r="19.929" fill="#4E901E"></circle>
+                        <g fill="#5EAC24">
+                        <circle cx="272.714" cy="108.028" r="19.929"></circle>
+                        <circle cx="292.633" cy="151.098" r="7.6"></circle>
+                        <circle cx="222.592" cy="155.011" r="7.6"></circle>
+                        <circle cx="245.189" cy="193.928" r="7.6"></circle>
+                        </g>
+                        <circle cx="149.372" cy="270.109" r="7.6" fill="#4E901E"></circle>
+                        <path
+                        fill="#6DC82A"
+                        d="M464.299 512.001a35.909 35.909 0 005.437-19.046c0-17.822-12.921-32.618-29.906-35.554-3.349-27.418-26.695-48.659-55.017-48.659-30.621 0-55.444 24.823-55.444 55.444 0 .989.028 1.97.079 2.945-12.26 5.396-20.823 17.643-20.823 31.898 0 4.586.894 8.96 2.506 12.971l153.168.001z"
+                        ></path>
+                        <g fill="#5EAC24">
+                        <path d="M365.162 483.871a56.371 56.371 0 01-.079-2.945c0-30.621 24.823-55.444 55.444-55.444 1.386 0 2.756.066 4.116.165-10.076-10.419-24.189-16.904-39.83-16.904-30.621 0-55.444 24.823-55.444 55.444 0 .989.028 1.97.079 2.945-12.26 5.396-20.823 17.643-20.823 31.898 0 4.586.894 8.96 2.506 12.971h33.434c1.359-12.617 9.435-23.217 20.597-28.13z"></path>
+                        <circle cx="404.718" cy="472.551" r="19.929"></circle>
+                        <circle cx="445.435" cy="480.157" r="7.6"></circle>
+                        </g>
+                        <path
+                        fill="#6DC82A"
+                        d="M187.441 511.682a33.91 33.91 0 002.309-12.312c0-18.773-15.22-33.993-33.993-33.993a34.35 34.35 0 00-4.927.36c-6.92-20.572-26.35-35.395-49.253-35.395-28.701 0-51.968 23.267-51.968 51.968a51.72 51.72 0 009.099 29.371h128.733v.001z"
+                        ></path>
+                        <g fill="#5EAC24">
+                        <path d="M133.339 447.087c2.317 0 4.597.159 6.834.453-9.508-10.555-23.271-17.198-38.596-17.198-28.701 0-51.968 23.267-51.968 51.968a51.72 51.72 0 009.099 29.371h24.22a51.978 51.978 0 01-1.557-12.627c0-28.7 23.267-51.967 51.968-51.967z"></path>
+                        <circle cx="112.076" cy="480.157" r="7.6"></circle>
+                        <circle cx="148.88" cy="492.481" r="7.6"></circle>
+                        </g>
+                    </g>
+                </svg>
+            )
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        function updateWithViewTransition(callback) {
+            if (!document.startViewTransition) {
+                callback();
+                return;
+            }
+
+            document.startViewTransition(() => {
+                ReactDOM.flushSync(() => {
+                    callback()
+                });
+            });
+        }
+
+        const DATA = {
+            user: {
+                name: "Doyle Ernser",
+                treesPlanted: 22,
+                profileImage: "url_to_profile_image",
+                joinedDate: "2021-05-17",
+                location: "New York, USA",
+                bio: "Passionate about reforestation and community involvement.",
+                achievements: [
+                {
+                    title: "Seedling",
+                    description: "Planted first 10 trees."
+                },
+                {
+                    title: "Sapling",
+                    description: "Reached 20 trees milestone."
+                }
+                ],
+                recentActivity: [
+                {
+                    date: "2023-10-28",
+                    activity: "Planted 3 trees in Central Park."
+                },
+                {
+                    date: "2023-10-27",
+                    activity: "Donated to local nursery."
+                }
+                ],
+                contact: {
+                    email: "doyle@example.com",
+                    phone: "123-456-7890"
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
