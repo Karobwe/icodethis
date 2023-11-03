@@ -1,0 +1,82 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03/11/2023's challenge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Merriweather Sans", "Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        yellow: {
+                            400: "hsl(43, 100%, 64%)",
+                        },
+                        blue: {
+                            400: "hsl(199, 98%, 49%)",
+                        },
+                        purple: {
+                            400: "hsl(279, 100%, 50%)",
+                        },
+                        red: {
+                            400: "hsl(339, 99%, 48%)",
+                        },
+                        gray: {
+                            400: "hsl(220, 3%, 19%)",
+                            600: "hsl(220, 4%, 14%)",
+                            800: "hsl(220, 4%, 16%)",
+                            900: "hsl(220, 5%, 12%)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+</head>
+
+<body class="bg-gray-800 text-white flex justify-center items-center min-h-screen">
+    <section class="max-w-7xl m-4 grid gap-8 md:grid-cols-3 [&>*:nth-child(1)>header>div:has(img)]:relative [&>*:nth-child(1)>header>div:has(img)]:-left-4"></section>
+
+    <template id="card-template">
+        <article class="relative bg-gray-600 w-full max-w-sm grid grid-rows-[3fr_2fr] data-[selected='true']:shadow-lg data-[selected='true']:shadow-yellow-400/10 duration-300">
+            <header class="bg-gray-400 p-6 space-y-4">
+                <p class="ribbon">
+                    <span class="text-xl font-semibold">
+                        $<output></output>
+                    </span>
+                    <span>/mo</span>
+                </p>
+
+                <div class="[:first-of-type]:outline w-24 h-24 pb-2">
+                    <img src="" alt="" class="w-full h-full obejct-contain">
+                </div>
+
+                <h2 class="text-yellow-400 text-xl font-semibold uppercase"></h2>
+
+                <p class="text-neutral-300 text-sm"></p>
+            </header>
+
+            <main class="p-6 flex flex-col gap-y-8">
+                <ul
+                    class="space-y-4 text-lg [&>li]:before:content-['&#10003;'] [&>li]:before:text-yellow-400 [&>li]:before:mr-1">
+                </ul>
+
+                <button type="button" class="bg-gray-900 w-full mt-auto px-8 py-4 text-yellow-400 uppercase hover:bg-neutral-900 duration-500">Select</button>
+            </main>
+        </article>
+    </template>
+</body>
+
+</html>
