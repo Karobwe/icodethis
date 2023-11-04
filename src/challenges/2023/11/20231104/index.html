@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminder App</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        tomato: {
+                            300: "hsl(14, 98%, 75%)",
+                            400: "hsl(4, 98%, 68%)",
+                        },
+                        gray: {
+                            300: "hsl(192, 17%, 94%)",
+                            400: "hsl(196, 10%, 56%)",
+                            500: "hsl(201, 18%, 31%)",
+                            600: "hsl(201, 21%, 26%)",
+                        }
+                    },
+                },
+                fontFamily: {
+                    sans: ["Poppins, sans-serif"],
+                },
+                keyframes: {
+                    show: {
+                        '0%': { maxHeight: '0' },
+                        '100%': { maxHeight: '1000em' },
+                    }
+                },
+                animation: {
+                    show: 'show 1s ease-in-out',
+                }
+            }
+        };
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            height: .6em;
+            width: .6em;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: hsl(218, 22%, 14%);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [types, setTypes] = React.useState({
+                1: { id: crypto.randomUUID(), name: "Reminders" },
+                2: { id: crypto.randomUUID(), name: "To-do" },
+                3: { id: crypto.randomUUID(), name: "Shopping" },
+                4: { id: crypto.randomUUID(), name: "Others" }
+            });
+
+            const [categories, setCategories] = React.useState({
+                1: { id: crypto.randomUUID(), typeID: types[3].id, name: "Food", itemIDs: [1, 2, 3, 4, 5, 6, 7] },
+                2: { id: crypto.randomUUID(), typeID: types[2].id, name: "Reading", itemIDs: [8, 9] },
+                3: { id: crypto.randomUUID(), typeID: types[3].id, name: "Electronics", itemIDs: [10, 11, 12] },
+                4: { id: crypto.randomUUID(), typeID: types[3].id, name: "Car", itemIDs: [17, 23, 24] },
+                5: { id: crypto.randomUUID(), typeID: types[1].id, name: "Appointments", itemIDs: [13, 14, 15, 16] },
+                6: { id: crypto.randomUUID(), typeID: types[3].id, name: "Clothes", itemIDs: [18, 19, 20, 21, 22] },
+                7: { id: crypto.randomUUID(), typeID: types[4].id, name: "Misc", itemIDs: [25, 26, 27] },
+            });
+
+            const [items, setItems] = React.useState({
+                1: { id: crypto.randomUUID(), name: "Butter", isDone: true },
+                2: { id: crypto.randomUUID(), name: "Orange Juice", isDone: true },
+                3: { id: crypto.randomUUID(), name: "Cheese", isDone: false} ,
+                4: { id: crypto.randomUUID(), name: "Chocolate", isDone: true} ,
+                5: { id: crypto.randomUUID(), name: "Corn Flakes", isDone: false} ,
+                6: { id: crypto.randomUUID(), name: "Potato", isDone: false} ,
+                7: { id: crypto.randomUUID(), name: "Avocado", isDone: false },
+                8: { id: crypto.randomUUID(), name: "1984 by George Orwell", isDone: false },
+                9: { id: crypto.randomUUID(), name: "The Great Gatsby by F. Scott Fitzgerald", isDone: true },
+                10: { id: crypto.randomUUID(), name: "Headphones", isDone: false },
+                11: { id: crypto.randomUUID(), name: "USB Cable", isDone: true },
+                12: { id: crypto.randomUUID(), name: "Charger", isDone: true },
+                13: { id: crypto.randomUUID(), name: "Doctor Appointment", isDone: true },
+                14: { id: crypto.randomUUID(), name: "Dentist Appointment", isDone: false },
+                15: { id: crypto.randomUUID(), name: "Haircut", isDone: true },
+                16: { id: crypto.randomUUID(), name: "Meeting with Bob", isDone: false },
+                17: { id: crypto.randomUUID(), name: "Oil Change", isDone: true },
+                18: { id: crypto.randomUUID(), name: "Jeans", isDone: false },
+                19: { id: crypto.randomUUID(), name: "Shirts", isDone: true },
+                20: { id: crypto.randomUUID(), name: "Shoes", isDone: false },
+                21: { id: crypto.randomUUID(), name: "Jackets", isDone: true },
+                22: { id: crypto.randomUUID(), name: "Hats", isDone: true },
+                23: { id: crypto.randomUUID(), name: "Tire Rotation", isDone: false },
+                24: { id: crypto.randomUUID(), name: "Brake Check", isDone: true },
+                25: { id: crypto.randomUUID(), name: "Garden Tools", isDone: false },
+                26: { id: crypto.randomUUID(), name: "Paint", isDone: true },
+                27: { id: crypto.randomUUID(), name: "Wall Art", isDone: false }
+            });
+
+            const [currentType, setCurrentType] = React.useState(types[3])
+            const [currentCategory, setCurrentCategory] = React.useState(categories[1])
+            const [searchTerm, setSearchTerm] = React.useState('');
+
+            const handleCheckboxChange = (item) => {
+                const itemId = getItemIndex(item)
+                
+                setItems(prevItems => ({
+                    ...prevItems,
+                    [itemId]: {
+                        ...prevItems[itemId],
+                        isDone: !item.isDone
+                    }
+                }))
+            }
+            const handleSearchChange = (event) => {
+                setSearchTerm(event.target.value.toLowerCase())
+            }
+
+            const getItemIndex = (item) => {
+                const targetItem = Object.entries(items).filter(element => element[1] === item)
+                 return parseInt(targetItem[0])
+            }
+
+            // Find the categories associated with the given type
+            const getCategoriesByType = (typeID) => {
+                return Object.values(categories).filter(category => category.typeID === typeID)
+            }
+
+            const getItemsByCategory = (category) => {
+                const itemsInCategory = category.itemIDs.map(itemID => items[itemID])
+                
+                return itemsInCategory
+            }
+
+            const getTotalItemsByType = (type) => {
+                const relevantCategories = getCategoriesByType(type[1].id)
+                const totalItems = relevantCategories.reduce((total, category) => total + category.itemIDs.length, 0)
+                
+                return totalItems
+            }
+
+            const getFilteredItemsByCategory = (category) => {
+                const itemsInCategory = getItemsByCategory(category)
+                if (searchTerm === '') {
+                    return itemsInCategory
+                }
+                return itemsInCategory.filter(item => item.name.toLowerCase().includes(searchTerm))
+            }
+
+            const addItem = (categoryID, itemName) => {
+                const categoryAsArray = Object.entries(categories).filter(element => element[1].id === categoryID)
+                const idOfCategoryToAddItem = categoryAsArray[0][0]
+                const newItemId = Object.keys(items).length + 1
+
+                if(typeof itemName !== "string" || itemName.trim() === "") return;
+
+                setItems(prevItems => ({
+                    ...prevItems,
+                    [newItemId]: { id: crypto.randomUUID(), name: itemName, isDone: false }
+                }))
+
+                setCategories(prevCategories => ({
+                    ...prevCategories,
+                    [idOfCategoryToAddItem]: {
+                        ...prevCategories[idOfCategoryToAddItem],
+                        itemIDs: [...prevCategories[idOfCategoryToAddItem].itemIDs, newItemId]
+                    }
+                }))
+            }
+            
+            const markAllAsDone = (categoryID) => {
+                const categoryAsArray = Object.entries(categories).filter(element => element[1].id === categoryID)
+                const idsOfItemsToUpdate = categoryAsArray[0][1].itemIDs
+                // const idOfCategoryToUpdate = categoryAsArray[0][0]
+                
+                /**
+                 * 
+                 * The empty object provided to reduce() function is used as initial value for the accumulator.
+                 * If not provided, the accumulator use the first item of idOfCategoryToUpdate as initial value,
+                 * and and so corresponding item is excluded from items to update
+                 * */
+                const updatedItems = idsOfItemsToUpdate.reduce((accumulator, itemID) => {
+                    return {
+                        ...accumulator,
+                        [itemID]: {...items[itemID], isDone: true}
+                    }
+                }, {})
+
+                setItems(prevItems => ({ ...prevItems, ...updatedItems }));
+            }
+            
+            const undoAll = (categoryID) => {
+                const categoryAsArray = Object.entries(categories).filter(element => element[1].id === categoryID)
+                const idsOfItemsToUpdate = categoryAsArray[0][1].itemIDs
+                // const idOfCategoryToUpdate = categoryAsArray[0][0]
+
+                /**
+                 * 
+                 * The empty object provided to reduce() function is used as initial value for the accumulator.
+                 * If not provided, the accumulator use the first item of idOfCategoryToUpdate as initial value,
+                 * and and so corresponding item is excluded from items to update
+                 * */
+                const updatedItems = idsOfItemsToUpdate.reduce((accumulator, itemID) => {
+                    return {
+                        ...accumulator,
+                        [itemID]: {...items[itemID], isDone: false}
+                    }
+                }, {})
+
+                setItems(prevItems => ({ ...prevItems, ...updatedItems }));
+            }
+            
+            const removeAll = (categoryID) => {
+                const categoryAsArray = Object.entries(categories).filter(element => element[1].id === categoryID)
+                const idOfCategoryToUpdate = categoryAsArray[0][0]
+
+                setCategories(prevCategories => ({
+                    ...prevCategories,
+                    [idOfCategoryToUpdate]: {
+                        ...prevCategories[idOfCategoryToUpdate],
+                        itemIDs: []
+                    }
+                }))
+            }
+
+            return (
+                <div 
+                    className={`
+                        bg-gradient-to-tr from-tomato-400 to-tomato-300 text-slate-800 
+                        w-full min-w-[384px] min-h-screen flex items-center justify-center
+                    `}
+                >
+                    <section className="bg-white w-full max-w-3xl h-[60vh] m-4 overflow-y-auto grid min-[448px]:grid-cols-[auto_1fr]">
+                        <aside className="bg-gray-600 text-slate-50">
+                            <div className=""> {/* I want to use position fixed but it break the layout, find an alternative */}
+                                <form className="m-4  min-[448px]:m-8">
+                                    <input 
+                                        type="search" 
+                                        id="search" 
+                                        placeholder="Search"
+                                        className={`
+                                            bg-gray-500 text-white placeholder:text-gray-400
+                                            w-full px-4 py-2 rounded-full 
+                                            border-none focus:outline-gray-400
+                                        `}
+                                        value={searchTerm}
+                                        onChange={handleSearchChange} 
+                                    />
+                                </form>
+
+                                <ul className="mb-4  min-[448px]:mb-8">
+                                    {Object.entries(types).map((type, index) => {
+                                        return (
+                                            <li 
+                                                key={index} 
+                                                className={`
+                                                    group px-4 py-2 flex justify-between min-[448px]:px-8 cursor-pointer 
+                                                    ${currentType.name === type[1].name ? "bg-white text-slate-800" : "hover:bg-gray-500/50"}
+                                                `}
+                                                onClick={() => setCurrentType(types[type[0]])}
+                                            >
+                                                {type[1].name}
+
+                                                <span 
+                                                    className={`
+                                                        flex items-center justify-center w-8 h-8 p- text-sm rounded-full
+                                                        ${currentType.name === type[1].name ? "bg-gray-300" : "bg-gray-500 group-hover:bg-gray-500 duration-100"}
+                                                    `}
+                                                >
+                                                    {getTotalItemsByType(type)}
+                                                </span>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                        </aside>
+
+                        <main className="p-4 space-y-2 min-[448px]:px-8">
+                            {
+                                searchTerm !== '' ? (
+                                    <SearchResultsTaskList 
+                                        searchTerm={searchTerm} 
+                                        getFilteredItemsByCategory={getFilteredItemsByCategory} 
+                                        handleCheckboxChange={handleCheckboxChange} 
+                                        categories={categories}
+                                    />) 
+                                : (
+                                    getCategoriesByType(currentType.id).map(category => {
+                                        return (
+                                            <TaskList 
+                                                key={category.id}
+                                                category={category} 
+                                                getItemsByCategory={getItemsByCategory} 
+                                                handleCheckboxChange={handleCheckboxChange}
+                                                addItem={addItem} 
+                                                markAllAsDone={markAllAsDone}
+                                                undoAll={undoAll} 
+                                                removeAll={removeAll}
+                                            />
+                                        )
+                                    })
+                                )
+                            }
+                        </main>
+                    </section>
+                </div>
+            );
+        }
+
+        function TaskList({category, getItemsByCategory, handleCheckboxChange, addItem, markAllAsDone, undoAll, removeAll}) {
+            const [showOptions, setShowOptions] = React.useState(false)
+            const [showTasks, setShowTasks] = React.useState(() => {
+                if(category.name === "Electronics") return false
+                return true
+            })
+
+            return (
+                <section key={category.id} className={`space-y-0`}>
+                    <h2 className="flex items-center justify-between text-lg uppercase">
+                        <div className="flex-1 cursor-pointer" onClick={() => setShowTasks(!showTasks)}>
+                            {category.name}
+                        </div>
+                        
+                        <div className="relative text-gray-400 hover:text-gray-500">
+                            <button onClick={() => setShowOptions(!showOptions)}>
+                                <span className="material-symbols-outlined">
+                                    more_vert
+                                </span>
+                            </button>
+                            
+                            { 
+                                showOptions &&
+                                <div className={`
+                                    absolute z-10 top-full right-full w-56 h-fit p-4 flex flex-col 
+                                    bg-white text-slate-800 text-sm border shadow
+                                    `}>
+                                    <button 
+                                        className="text-left hover:bg-gray-300 p-2"
+                                        onClick={() => {
+                                            addItem(category.id, prompt("Enter the name of the item:"))
+                                            setShowOptions(false)
+                                        }}
+                                    >
+                                        Add item
+                                    </button>
+                                    
+                                    <button 
+                                        className="text-left hover:bg-gray-300 p-2"
+                                        onClick={() => {
+                                            markAllAsDone(category.id)
+                                            setShowOptions(false)
+                                        }}
+                                    >
+                                        Mark all as done
+                                    </button>
+                                    
+                                    <button 
+                                        className="text-left hover:bg-gray-300 p-2"
+                                        onClick={() => {
+                                            undoAll(category.id)
+                                            setShowOptions(false)
+                                        }}
+                                    >
+                                        Undo all
+                                    </button>
+                                    
+                                    <button 
+                                        className="text-left hover:bg-gray-300 p-2"
+                                        onClick={() => {
+                                            removeAll(category.id)
+                                            setShowOptions(false)
+                                        }}
+                                    >
+                                        Remove all
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </h2>
+
+                    <div className={`text-gray-500 ml-4 space-y-1 ${showTasks ? "max-h-[500px]" : "max-h-[0px] overflow-hidden"} duration-1000`}>
+                        {getItemsByCategory(category).map(item => {
+                            return (
+                            <Task key={item.id} item={item} onItemSelection={handleCheckboxChange} />
+                            )
+                        })}
+                    </div>
+                </section>
+            )
+        }
+
+        function Task({item, onItemSelection}) {
+            return (
+                <fieldset key={item.id}>
+                    <input 
+                    type="checkbox" 
+                    id={item.id} 
+                    className="peer hidden" 
+                    checked={item.isDone} 
+                    onChange={() => {
+                        onItemSelection(item)
+                    }}
+                    />
+                    <label htmlFor={item.id} className="cursor-pointer decoration-gray-400 decoration-2 peer-checked:line-through">
+                        {item.name}
+                    </label>
+                </fieldset>
+            )
+        }
+
+        function SearchResultsTaskList({ searchTerm, getFilteredItemsByCategory, handleCheckboxChange, categories }) {
+            const allCategories = Object.values(categories);
+            return (
+            <section className="space-y-2">
+                <h2 className="text-lg uppercase">
+                    Search Results
+                </h2>
+                <div className="text-gray-500 ml-4 space-y-1">
+                    {allCategories.map(category => {
+                        const filteredItems = getFilteredItemsByCategory(category);
+                        return filteredItems.map(item => {
+                            return (
+                            <Task key={item.id} item={item} onItemSelection={handleCheckboxChange} />
+                            );
+                        });
+                    })}
+                </div>
+            </section>
+            )
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
