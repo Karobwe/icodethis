@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        blue:{
+                            200: "hsl(222, 100%, 97%)",
+                            400: "hsl(226, 55%, 62%)",
+                            700: "hsl(225, 42%, 31%)",
+                            800: "hsl(225, 44%, 28%)",
+                            900: "hsl(226, 50%, 23%)",
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'linear-gradient(to bottom, transparent 40%, var(--screen-color) 40%), radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --screen-color: hsl(225, 44%, 28%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [lightOn, setLightOn] = React.useState(false)
+            const [isLoggedIn, setIsLoggedIn] = React.useState(true)
+
+            const handleLogin = () => {
+                setIsLoggedIn(true)
+            }
+
+            return (
+               <div className={"bg-blue-100 flex items-center justify-center w-screen min-h-screen"}>
+                    <main 
+                        className={`
+                            bg-white rounded-lg 
+                            flex items-start justify-center 
+                            w-[24em] h-[36em] m-4 
+                        `}
+                    >
+                            {!isLoggedIn && <LoginScreen onLogIn={handleLogin}/>}
+                            {isLoggedIn && <LoggedInScreen />}
+                    </main>
+                </div>
+            );
+        }
+
+        function LoginScreen({lightOn, onLogIn}) {
+            const [username, setUsername] = React.useState("")
+            const [password, setPassword] = React.useState("")
+            const [showPassword, setShowPassword] = React.useState(false)
+            const [status, setStatus] = React.useState("")
+
+            const handleFormSubmit = (event) => {
+                event.preventDefault()
+
+                if(username !== "" && password !== "") {
+                    setStatus("success")
+
+                    setTimeout(() => {
+                        onLogIn()
+                    }, 1000)
+                } else {
+                    setStatus("error")
+                }
+            }
+
+            return (
+                <form onSubmit={handleFormSubmit} className="px-4 mb-12">
+                    <Lamp lightOn={lightOn} status={status} />
+
+                    <fieldset className="mt-16 space-y-4">
+                        <div className="flex flex-col">
+                            <label htmlFor="username" className="text-slate-400 text-sm font-semibold uppercase">
+                                Username
+                            </label>
+
+                            <input 
+                                type="text" 
+                                id="username" 
+                                className={`
+                                    px-4 py-2
+                                    border-2 border-slate-300 rounded focus:outline-slate-400
+                                    ${username === "" && status === "error" ? "border-red-400" : ""}
+                                    ${username === "" && status === "success" ? "border-emerald-400" : ""}
+                                `}
+                                value={username} 
+                                onChange={event => {
+                                    setUsername(event.target.value)
+                                }} 
+                            />
+                        </div>
+                        
+                        <div className="flex flex-col">
+                            <label htmlFor="password" className="text-slate-400 text-sm font-semibold uppercase">
+                                Password
+                            </label>
+
+                            <div 
+                                className={`
+                                    flex gap-1 pr-4 border-2 border-slate-300 rounded focus-within:outline-slate-400
+                                    ${password === "" && status === "error" ? "border-red-400" : ""}
+                                    ${password === "" && status === "success" ? "border-emerald-400" : ""}
+                                `}
+                            >
+                                <input 
+                                    type={showPassword ? "text" : "password"} 
+                                    id="password" 
+                                    className="peer px-4 py-2 border-none focus:outline-none"
+                                    value={password} 
+                                    onChange={event => {
+                                        setPassword(event.target.value)
+                                    }} 
+                                />
+
+                                <button className="text-slate-300 peer-focus:text-slate-400" onClick={() => setShowPassword(!showPassword)}>
+                                    <HeroIcons.Eye/>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" className="bg-blue-400 text-white font-semibold uppercase w-full p-4 rounded hover:bg-indigo-500/90 duration-300">
+                            Log in
+                        </button>
+                    </fieldset>
+                </form>
+            )
+        }
+
+        function LoggedInScreen() {
+            const [isDarkMode, setIsDarkMode] = React.useState(true)
+
+            return (
+                <section 
+                    className={`
+                        flex items-end w-full h-full px-4 py-8 rounded-lg overflow-hidden
+                        ${isDarkMode ? "bg-blue-800" : "bg-white"} duration-300 
+                    `}
+                >
+                    <div className="isolate w-full flex items-end justify-between">
+                        <LightBulb className="w-12 h-12" />
+
+                        <button 
+                            className={`
+                                bg-white text-slate-700 relative w-20 h-20 font-semibold uppercase rounded-full
+                                border border-8 
+                                ${isDarkMode ? "border-blue-900" : "border-border-slate-300"}
+                                before:block before:absolute before:-z-10 before:-left-32 before:-top-20 
+                                before:w-80 before:aspect-square before:rounded-full before:duration-0 
+                                before:bg-gradient-radial before:from-transparent before:from-[69%] before:to-gray-400/50 before:to-[69%]
+                                after:block after:absolute after:-z-10
+                                after:w-6 after:aspect-square after:rounded-full
+                                after:bg-blue-400 after:duration-1000
+                                after:origin-[6em_0em] ${isDarkMode ? "after:-translate-x-32 after:-translate-y-4" : "after:rotate-[185deg]"}
+                            `}
+                            style={{ "--screen-color": isDarkMode ? "hsl(225,44%,28%)" : "white"}}
+                            onClick={() => setIsDarkMode(!isDarkMode)}
+                        >
+                            {isDarkMode ? "Off" : "On"}
+                        </button>
+
+                        <LightBulb lightOn={true} className="w-12 h-12" />
+                    </div>
+                </section>
+            )
+        }
+
+        function LightBulb({lightOn = false, className}) {
+            const colors = {
+                gray: {lighter: "#E8EDEE", darker: "#CBD4D8"},
+                yellow: {lighter: "#F0CE49", darker: "#B79529"}
+            }
+
+            // let glassColor = lightOn === true ? `fill-[${colors.yellow.lighter}]` : `fill-[${colors.yellow.lighter}]`
+            // let wiresColor = lightOn === true ? `fill-[${colors.yellow.darker}]` : `fill-[${colors.yellow.darker}]`
+            // console.log(glassColor, wiresColor)
+
+            return (
+                <svg height="200px" width="200px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className={className}>
+                    <g>
+                        <path className={`${lightOn ? `fill-yellow-400` : `fill-gray-300`} duration-300`} d="M422.841,152.717C414.014,73.269,350.455,9.71,271.007,0.883C265.71,0.883,261.297,0,256,0 c-5.297,0-9.71,0-15.007,0.883C161.545,9.71,97.986,74.152,89.159,152.717c-6.179,56.497,15.007,107.697,52.083,143.007 c21.186,20.303,38.841,46.786,44.138,75.034h141.241c5.297-28.248,22.952-54.731,44.138-75.034 C407.834,260.414,429.021,209.214,422.841,152.717"></path> 
+                        <path className={`${lightOn ? `fill-yellow-500` : `fill-gray-400`} duration-300`} d="M203.034,176.552c-9.71,0-17.655,7.945-17.655,17.655c0,9.71,7.945,17.655,17.655,17.655h17.655 v-17.655C220.69,184.497,212.745,176.552,203.034,176.552L203.034,176.552z M291.31,211.862h17.655 c9.71,0,17.655-7.945,17.655-17.655c0-9.71-7.945-17.655-17.655-17.655s-17.655,7.945-17.655,17.655V211.862z M282.483,379.586 c-5.297,0-8.828-3.531-8.828-8.828V229.517h-35.31v141.241c0,5.297-3.531,8.828-8.828,8.828s-8.828-3.531-8.828-8.828V229.517 h-17.655c-19.421,0-35.31-15.89-35.31-35.31s15.89-35.31,35.31-35.31s35.31,15.89,35.31,35.31v17.655h35.31v-17.655 c0-19.421,15.89-35.31,35.31-35.31s35.31,15.89,35.31,35.31s-15.89,35.31-35.31,35.31H291.31v141.241 C291.31,376.055,287.779,379.586,282.483,379.586L282.483,379.586z"></path> 
+                        <path className={`fill-[${colors.gray.lighter}]`} d="M185.379,370.759V476.69h141.241v-70.621v-35.31H185.379z"></path> 
+                        <g> 
+                            <path className={`fill-[${colors.gray.darker}]`} d="M269.241,512h-26.483c-7.945,0-15.89-3.531-21.186-10.593l-18.538-24.717h105.931l-18.538,24.717 C285.131,508.469,277.186,512,269.241,512"></path> 
+                            <path className={`fill-[${colors.gray.darker}]`} d="M247.172,414.897c5.297,0,8.828-3.531,8.828-8.828s-3.531-8.828-8.828-8.828h-61.793v17.655H247.172 z"></path> 
+                            <path className={`fill-[${colors.gray.darker}]`} d="M220.69,450.207c5.297,0,8.828-3.531,8.828-8.828s-3.531-8.828-8.828-8.828h-35.31v17.655H220.69z"></path> 
+                            <path className={`fill-[${colors.gray.darker}]`} d="M326.621,397.241h-35.31c-5.297,0-8.828,3.531-8.828,8.828s3.531,8.828,8.828,8.828h35.31v-8.828 V397.241z"></path> 
+                            <path className={`fill-[${colors.gray.darker}]`} d="M264.828,432.552c-5.297,0-8.828,3.531-8.828,8.828s3.531,8.828,8.828,8.828h61.793v-17.655H264.828 z"></path> 
+                        </g> 
+                    </g>
+                </svg>
+            )
+        }
+
+        function Lamp({lightOn = false, status = "", className}) {
+            const colors = {
+                gray: {lighter: "#E8EDEE", darker: "#CBD4D8"},
+                yellow: {lighter: "#F0CE49", darker: "#B79529"},
+                green: {lighter: "#51EaC0", darker: "#44C4A1"},
+                red: {lighter: "#E56353", darker: "#B24C40"}, 
+            }
+
+            let lightColor = colors.yellow.lighter
+
+            switch(status) {
+                case "success": 
+                    lightColor = colors.green.lighter
+                    break
+                case "error":
+                    lightColor = colors.red.lighter
+                    break
+                case "neutral": 
+                lightColor = colors.yellow.lighter
+                    break
+                case "":
+                default:
+                    lightColor = colors.gray.darker
+                    break
+            }
+
+            return (
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 491.54 491.54" className={className}>
+                    <g> 
+                        <rect className={`fill-neutral-400`} x="237.015" width="17.505" height="252.467"></rect> 
+                        <path className={`fill-[${colors.gray.lighter}]`} d="M245.77,180.726c-102.702,0-186.656,80.266-192.552,181.488c-0.361,6.192,4.646,11.395,10.848,11.395 h363.408c6.202,0,11.209-5.203,10.849-11.395C432.426,260.992,348.471,180.726,245.77,180.726z"></path> 
+                        <path className={`fill-[${colors.gray.lighter}]`} d="M229.47,196.951c-1.893,0-3.766,0.076-5.646,0.13c89.097,8.648,158.514,77.572,158.514,161.335 h23.715C406.054,269.241,326.994,196.951,229.47,196.951z"></path> 
+                        <g className={`fill-[${lightColor}] duration-300`}> 
+                            <path d="M245.77,460.52c48,0,86.911-38.911,86.911-86.911H158.858 C158.858,421.608,197.77,460.52,245.77,460.52z"></path> 
+                            <rect x="241.981" y="473.754" width="7.598" height="17.787"></rect> 
+                            <rect x="296.47" y="459.114" transform="matrix(-0.8659 0.5001 -0.5001 -0.8659 794.3576 723.0944)" width="7.598" height="17.787"></rect> 
+                            <rect x="142.448" y="424.271" transform="matrix(-0.8661 0.4999 -0.4999 -0.8661 496.4186 723.1449)" width="17.787" height="7.598"></rect> 
+                            <rect x="182.37" y="464.235" transform="matrix(-0.5 0.866 -0.866 -0.5 692.2267 536.399)" width="17.787" height="7.598"></rect> 
+                            <rect x="336.391" y="419.207" transform="matrix(-0.5 0.866 -0.866 -0.5 881.0286 347.5234)" width="7.598" height="17.787"></rect> 
+                        </g> 
+                    </g>
+                </svg>
+            )
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
