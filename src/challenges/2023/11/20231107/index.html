@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trying React here</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Poppins", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        red: {
+                            555: "hsl(346, 62%, 62%)",
+                        },
+                        blue: {
+                            950: "hsl(216, 59%, 17%)",
+                            1000: "hsl(216, 71%, 14%)",
+                        },
+                        orange: {
+                            555: "hsl(10, 94%, 67%)",
+                        },
+                        purple: {
+                            555: "hsl(307, 50%, 40%)",
+                        },
+                        indigo: {
+                            555: "hsl(267, 63%, 55%)"
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from 'https://cdn.skypack.dev/heroicons-react';
+
+        function App() {
+            const [steps, setSteps] = React.useState([
+                {id: 1, name: "Audio", isDone: true},
+                {id: 2, name: "Video", isDone: false},
+                {id: 3, name: "Performance", isDone: false},
+            ])
+
+            const [currentStep, setCurrentStep] = React.useState(steps[1])
+
+            const stepChangeHandler = (nextStep) => {
+                setCurrentStep(nextStep)
+            }
+
+            return (
+               <div className={"bg-blue-1000 text-white flex items-center justify-center w-full min-h-screen"}>
+                    <Feedback>
+                        <FeedbackStepper 
+                            steps={steps} 
+                            currentStep={currentStep} 
+                            onStepChange={stepChangeHandler} 
+                            className="col-span-3"
+                        />
+
+                        <FeedbackStaredRating className="lg:col-span-2" />
+
+                        <FeedbackNumberedRating className="lg:col-start-2 lg:col-span-2 lg:-translate-y-12" />
+
+                        <FeedbackCheckboxMultiple className="lg:col-span-2 lg:-translate-x-8" />
+                    </Feedback>
+                </div>
+            );
+        }
+
+        function Feedback({children, className}) {
+            return (
+                <main className={`m-4 flex flex-col gap-8 lg:grid lg:grid-cols-5 ${className} lg:gap-16`}>
+                    {children}
+                </main>
+            )
+        }
+
+        function FeedbackStepper({steps, currentStep, className, onStepChange}) {
+            const stepSelectedHandler = (selectedStep) => {
+                onStepChange(selectedStep)
+            }
+
+            const addSeparator = (arr, separator) => {
+                let result = [];
+                    
+                arr.forEach((item, index) => {
+                    result.push(item); // Add the first item
+                    if (index !== arr.length - 1) { // Check if it's not the last item
+                        result.push(separator); // Add the separator
+                    }
+                });
+                
+                return result;
+            }
+
+            return (
+                <section className={className}>
+                    <Wrapper className="bg-orange-555 px-12">
+                        <ul className={`pb-6 grid grid-cols-${addSeparator(steps, null).length} items-center gap-1`}>
+                            {addSeparator(steps, null).map(step => {
+                                if(step === null) {
+                                    return (
+                                        <li key={crypto.randomUUID()} className="bg-white block w-full h-0.5"></li>
+                                    )
+                                }
+
+                                return (
+                                    <li 
+                                        key={step.id}
+                                        className="relative flex flex-col items-center gap-4 cursor-pointer"
+                                        onClick={() => stepSelectedHandler(step)}
+                                    >
+                                        <div 
+                                            className={`
+                                                bg-white/50 w-12 aspect-square grid place-content-center rounded-full
+                                                ${step == currentStep ? "border border-8" : ""}
+                                            `}
+                                        >
+                                            { step !== null && step.isDone && <span className="material-symbols-rounded">done</span> }
+                                        </div>
+
+                                        <div className="absolute translate-y-[3.4em]">
+                                            {step.name}
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </Wrapper>
+                </section>
+            )
+        }
+
+        function FeedbackStaredRating({className}) {
+            const [rating, setRating] = React.useState(3)
+            const badId = React.useId()
+            const fairId = React.useId()
+            const mediocreId = React.useId()
+            const goodId = React.useId()
+            const veryGoodId = React.useId()
+
+            const handleRatingChange = (event) => {
+                setRating(event.target.value)
+            }
+
+            return (
+                <section className={className}>
+                    <Wrapper className="bg-red-555 text-center space-y-8">
+                        <h2 className="text-lg">
+                            How do you rate our services?
+                        </h2>
+
+                        <div className="grid grid-cols-5 gap-2">
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="rating" 
+                                    id={badId} 
+                                    className="peer hidden" 
+                                    value={1}
+                                    onChange={handleRatingChange}
+                                />
+
+                                <label htmlFor={badId} className="cursor-pointer">
+                                    <span 
+                                        className={`material-symbols-rounded ${ parseInt(rating) > 0 ? "[font-variation-settings:'FILL'1]" : ""}`} 
+                                    >
+                                        kid_star
+                                    </span>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="rating" 
+                                    id={fairId} 
+                                    className="peer hidden" 
+                                    value={2}
+                                    onChange={handleRatingChange}
+                                />
+
+                                <label htmlFor={fairId} className="cursor-pointer">
+                                    <span 
+                                        className={`material-symbols-rounded ${ parseInt(rating) > 1 ? "[font-variation-settings:'FILL'1]" : ""}`} 
+                                    >
+                                        kid_star
+                                    </span>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="rating" 
+                                    id={mediocreId} 
+                                    className="peer hidden" 
+                                    value={3}
+                                    onChange={handleRatingChange}
+                                />
+
+                                <label htmlFor={mediocreId} className="cursor-pointer">
+                                    <span 
+                                        className={`material-symbols-rounded ${ parseInt(rating) > 2 ? "[font-variation-settings:'FILL'1]" : ""}`} 
+                                    >
+                                        kid_star
+                                    </span>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="rating" 
+                                    id={goodId} 
+                                    className="peer hidden" 
+                                    value={4}
+                                    onChange={handleRatingChange}
+                                />
+
+                                <label htmlFor={goodId} className="cursor-pointer">
+                                    <span 
+                                        className={`material-symbols-rounded ${ parseInt(rating) > 3 ? "[font-variation-settings:'FILL'1]" : ""}`} 
+                                    >
+                                        kid_star
+                                    </span>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="rating" 
+                                    id={veryGoodId} 
+                                    className="peer hidden" 
+                                    value={5}
+                                    onChange={handleRatingChange}
+                                />
+
+                                <label htmlFor={veryGoodId} className="cursor-pointer">
+                                    <span 
+                                        className={`material-symbols-rounded ${ parseInt(rating) > 4 ? "[font-variation-settings:'FILL'1]" : ""}`} 
+                                    >
+                                        kid_star
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="text-xs flex justify-between">
+                            <label htmlFor={badId} className="cursor-pointer" onClick={() => setRating(1)} >
+                                Bad
+                            </label>
+                            <label htmlFor={veryGoodId} className="cursor-pointer" onClick={() => setRating(5)} >
+                                Very Good
+                            </label>
+                        </div>
+                    </Wrapper>
+                </section>
+            )
+        }
+        
+        function FeedbackNumberedRating({className}) {
+            const [rating, setRating] = React.useState(3)
+
+            const radioButtonChangeHandler = (event) => {
+                setRating(parseInt(event.target.value))
+            }
+
+            return (
+                <section  className={className}>
+                    <Wrapper className="bg-purple-555 space-y-4">
+                        <div className="flex gap-1">
+                            <div className="bg-purple-400/40 w-16 h-1 rounded-full"></div>
+                            <div className="bg-purple-400/40 w-16 h-1 rounded-full"></div>
+                        </div>
+
+                        <h2 className="text-lg">
+                            Rate your experience
+                        </h2>
+
+                        <fieldset className="flex gap-4">
+                            <CustomRadioButton name="expericence" value={1} currentValue={rating} label="1" onChange={radioButtonChangeHandler} />
+                            <CustomRadioButton name="expericence" value={2} currentValue={rating} label="2" onChange={radioButtonChangeHandler} />
+                            <CustomRadioButton name="expericence" value={3} currentValue={rating} label="3" onChange={radioButtonChangeHandler} />
+                            <CustomRadioButton name="expericence" value={4} currentValue={rating} label="4" onChange={radioButtonChangeHandler} />
+                            <CustomRadioButton name="expericence" value={5} currentValue={rating} label="5" onChange={radioButtonChangeHandler} />
+                        </fieldset>
+                    </Wrapper>
+                </section>
+            )
+        }
+        
+        function FeedbackCheckboxMultiple({className}) {
+            const [videoIssue, setVideoIssue] = React.useState(true)
+            const [soundIssue, setSoundIssue] = React.useState(false)
+            const [crashingIssue, setCrashingIssue] = React.useState(false)
+            const [othersIssue, setOthersIssue] = React.useState(false)
+
+            return (
+                <section  className={className}>
+                    <Wrapper className="bg-indigo-555 space-y-8 lg:pr-20">
+                        <h2 className="text-lg">
+                            What didn't worked properly?
+                        </h2>
+
+                        <fieldset className="space-y-4">
+                            <CustomCheckbox name="issue" value={videoIssue} label="Video was blurry" onChange={() => setVideoIssue(!videoIssue)} />
+                            <CustomCheckbox name="issue" value={soundIssue} label="Sound wasn't working" onChange={() => setSoundIssue(!soundIssue)} />
+                            <CustomCheckbox name="issue" value={crashingIssue} label="App was crashing" onChange={() => setCrashingIssue(!crashingIssue)} />
+                            <CustomCheckbox name="issue" value={othersIssue} label="Else" onChange={() => setOthersIssue(!othersIssue)} />
+                        </fieldset>
+                    </Wrapper>
+                </section>
+            )
+        }
+
+        function Wrapper({children, className}) {
+            return (
+                <div className={`p-8 rounded-lg ${className}`}>
+                    {children}
+                </div>
+            )
+        }
+
+        function CustomCheckbox({name, value, label, onChange}) {
+            const id = React.useId()
+
+            return (
+                <div className="flex items-center gap-2">
+                    <input 
+                        type="checkbox" 
+                        name="issue" 
+                        id={id} 
+                        className={`
+                            appearance-none w-5 h-5 border border-2 rounded flex items-center justify-center cursor-pointer 
+                            checked:bg-indigo-100
+                            before:block before:bg-transparent before:w-2 before:h-3
+                            before:border-r-2 before:border-b-2 before:rotate-45 before:-translate-y-0.5 
+                            before:border-transparent checked:before:border-indigo-555 before:duration-200
+                            focus:ring-[.2em] focus:ring-purple-400/70
+                        `}
+                        value={value}
+                        onChange={onChange} 
+                    />
+                        
+                    <label htmlFor={id} className="cursor-pointer">
+                        {label}
+                    </label>
+                </div>
+            )
+        }
+
+        function CustomRadioButton({name, value, currentValue, label, onChange}) {
+            const id = React.useId()
+
+            return (
+                <div>
+                    <input type="radio" name={name} id={id} value={value} onChange={onChange} className="peer hidden" />
+
+                    <label 
+                        htmlFor={id} 
+                        className={`
+                            w-8 h-8 grid place-content-center rounded-full cursor-pointer duration-300 
+                            ${value === currentValue ? "bg-purple-400/50 hover:bg-purple-400/70" : "hover:bg-purple-400/20"}
+                        `}
+                    >
+                        {label}
+                    </label>
+                </div>
+            )
+        }
+
+        const container = document.getElementById('root')
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+    </script>
+</body>
+
+</html>
