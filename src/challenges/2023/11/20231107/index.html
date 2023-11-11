@@ -79,14 +79,14 @@
                             steps={steps} 
                             currentStep={currentStep} 
                             onStepChange={stepChangeHandler} 
-                            className="col-span-3"
+                            className="w-full col-span-3"
                         />
 
-                        <FeedbackStaredRating className="lg:col-span-2" />
+                        <FeedbackStaredRating className="w-full lg:col-span-2" />
 
-                        <FeedbackNumberedRating className="lg:col-start-2 lg:col-span-2 lg:-translate-y-12" />
+                        <FeedbackNumberedRating className="w-full lg:col-start-2 lg:col-span-2 lg:-translate-y-12" />
 
-                        <FeedbackCheckboxMultiple className="lg:col-span-2 lg:-translate-x-8" />
+                        <FeedbackCheckboxMultiple className="w-full lg:col-span-2 lg:-translate-x-8" />
                     </Feedback>
                 </div>
             );
@@ -94,7 +94,7 @@
 
         function Feedback({children, className}) {
             return (
-                <main className={`m-4 flex flex-col gap-8 lg:grid lg:grid-cols-5 ${className} lg:gap-16`}>
+                <main className={`m-4 flex flex-col gap-8 lg:grid lg:grid-cols-[repeat(5,8em)] lg:gap-x-16 lg:gap-y-8 ${className}`}>
                     {children}
                 </main>
             )
@@ -286,32 +286,85 @@
         }
         
         function FeedbackNumberedRating({className}) {
-            const [rating, setRating] = React.useState(3)
+            const [rating, setRating] = React.useState(0)
+            const [quality, setQuality] = React.useState(0)
+            const [step, setStep] = React.useState(1)
 
             const radioButtonChangeHandler = (event) => {
-                setRating(parseInt(event.target.value))
+                if (event.target.name === "expericence") setRating(parseInt(event.target.value))
+                if (event.target.name === "quality") setQuality(parseInt(event.target.value))
+                // if(step === 1) setStep(2)
+            }
+
+            const changeViewHandler = (event) => {
+                document.startViewTransition(() => {
+                    ReactDOM.flushSync(() => {
+                        if (event.target.getAttribute("name") === "experience") setQuality(2)
+                        if (event.target.getAttribute("name") === "quality") setQuality(1)
+                        step === 1 ? setStep(2) : setStep(1)
+                    })
+                });
             }
 
             return (
                 <section  className={className}>
-                    <Wrapper className="bg-purple-555 space-y-4">
-                        <div className="flex gap-1">
-                            <div className="bg-purple-400/40 w-16 h-1 rounded-full"></div>
-                            <div className="bg-purple-400/40 w-16 h-1 rounded-full"></div>
-                        </div>
+                    { step === 1 &&
+                        <Wrapper className="bg-purple-555 flex flex-col gap-y-4">
+                            <div className="flex gap-1">
+                                <div className="bg-purple-400/90 w-16 h-1 rounded-full cursor-pointer" onClick={() => setStep(1)} ></div>
+                                <div className="bg-purple-400/40 w-16 h-1 rounded-full cursor-pointer" onClick={() => setStep(2)} ></div>
+                            </div>
 
-                        <h2 className="text-lg">
-                            Rate your experience
-                        </h2>
+                            <h2 className="text-lg">
+                                Rate your experience
+                            </h2>
 
-                        <fieldset className="flex gap-4">
-                            <CustomRadioButton name="expericence" value={1} currentValue={rating} label="1" onChange={radioButtonChangeHandler} />
-                            <CustomRadioButton name="expericence" value={2} currentValue={rating} label="2" onChange={radioButtonChangeHandler} />
-                            <CustomRadioButton name="expericence" value={3} currentValue={rating} label="3" onChange={radioButtonChangeHandler} />
-                            <CustomRadioButton name="expericence" value={4} currentValue={rating} label="4" onChange={radioButtonChangeHandler} />
-                            <CustomRadioButton name="expericence" value={5} currentValue={rating} label="5" onChange={radioButtonChangeHandler} />
-                        </fieldset>
-                    </Wrapper>
+                            <fieldset className="flex gap-4">
+                                <CustomRadioButton name="expericence" value={1} currentValue={rating} label="1" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="expericence" value={2} currentValue={rating} label="2" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="expericence" value={3} currentValue={rating} label="3" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="expericence" value={4} currentValue={rating} label="4" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="expericence" value={5} currentValue={rating} label="5" onChange={radioButtonChangeHandler} />
+                            </fieldset>
+
+                            <button 
+                                className="self-end w-8 h-8 bg-purple-400/40 text-white p-2  grid place-content-center rounded-full"
+                                onClick={() => setStep(2)}
+                                data-name="expericence"
+                            >
+                                <span className="material-symbols-rounded text-sm">arrow_forward_ios</span>
+                            </button>
+                        </Wrapper>
+                    }
+
+                    { step === 2 &&
+                        <Wrapper className="bg-purple-555 space-y-4">
+                            <div className="flex gap-1">
+                                <div className="bg-purple-400/40 w-16 h-1 rounded-full"></div>
+                                <div className="bg-purple-400/90 w-16 h-1 rounded-full"></div>
+                            </div>
+
+                            <h2 className="text-lg">
+                                How was the quality of our services?
+                            </h2>
+
+                            <fieldset className="flex gap-4">
+                                <CustomRadioButton name="quality" value={1} currentValue={quality} label="1" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="quality" value={2} currentValue={quality} label="2" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="quality" value={3} currentValue={quality} label="3" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="quality" value={4} currentValue={quality} label="4" onChange={radioButtonChangeHandler} />
+                                <CustomRadioButton name="quality" value={5} currentValue={quality} label="5" onChange={radioButtonChangeHandler} />
+                            </fieldset>
+
+                            <button 
+                                className="self-start w-8 h-8 bg-purple-400/40 text-white p-2  grid place-content-center rounded-full"
+                                onClick={() => setStep(1)}
+                                data-name="quality"
+                            >
+                                <span className="material-symbols-rounded text-sm">arrow_back_ios</span>
+                            </button>
+                        </Wrapper>
+                    }
                 </section>
             )
         }

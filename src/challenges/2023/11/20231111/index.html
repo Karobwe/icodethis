@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        gray: {
+                            777: "hsl(220, 3%, 19%)",
+                            888: "hsl(220, 4%, 16%)",
+                            999: "hsl(220, 5%, 12%)",
+                        },
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        lookatme: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.1em) scaleX(1.3)",
+                                "color": "hsl(195, 72%, 55%)",
+                            },
+                            '50%': {
+                                "transform": "translateY(0.1em) scaleX(0.9)",
+                                "color": "hsl(181, 74%, 67%)",
+                            },
+                        }
+                    },
+                    animation: {
+                        lookatme: 'lookatme 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .6em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(202, 80%, 24%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(171, 77%, 64%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+
+        let QUIZZ_STATUS = {NOT_STARTED: 1, STARTED: 2, ENDED: 3}
+
+        function App() {
+            const [currentQuestion, setCurrentQuestion] = React.useState(DATA.quizz[0])
+            const [selectedAnswer, setSelectedAnswer] = React.useState(null)
+            const [result, setResult] = React.useState({correct: [], incorrect: []})
+            const [status, setStatus] = React.useState(QUIZZ_STATUS.NOT_STARTED)
+            const [countdown, setCountdown] = React.useState(60 * 5) // 60s * 5 = 5 min
+            const [skippedQuestions, setSkippedQuestions] = React.useState([])
+
+            // Modeved skipped questions from {correct: [], incorrect: [], skip: []} to separate state for simplicity but worked well before
+
+            const answerSelectionHandler = (answerIndex) => {
+                setSelectedAnswer(answerIndex)
+            }
+
+            const sendAnswerHandler = () => {
+                if(selectedAnswer === null) {
+                    alert("Please choose an answer")
+                    return
+                }
+
+                // Make sure a question that was skipped previously, is removed from skipped questions once it was answered
+                const updatedSkippedQuestions = skippedQuestions.filter(q => q.id !== currentQuestion.id)
+                setSkippedQuestions(updatedSkippedQuestions)
+
+
+                if(currentQuestion !== null) {
+                    const nextQuestionId = currentQuestion.id + 1
+                    // Next question
+                    if(nextQuestionId <= DATA.quizz.length){
+                        setCurrentQuestion(DATA.quizz[nextQuestionId - 1])
+                    } else if(updatedSkippedQuestions.length > 0 && countdown > 0) {
+                        // If there are skipped questions and time left
+                        // Ask first question of skipped question, then remove it from skiped array
+                        setCurrentQuestion(updatedSkippedQuestions.shift())
+                    } else {
+                        // End of the quiz
+                        setStatus(QUIZZ_STATUS.ENDED)
+                    }
+                    
+                    if(selectedAnswer === currentQuestion.correctAnswer) {
+                        setResult(prevResult => ({
+                            ...prevResult,
+                            correct: [...prevResult.correct, currentQuestion.id]
+                        }))
+                    } else {
+                        setResult(prevResult => ({
+                            ...prevResult,
+                            incorrect: [...prevResult.incorrect, currentQuestion.id]
+                        }))
+                    }
+                    
+                    setSelectedAnswer(null)
+                }
+            }
+            
+            const skipAnswerHandler = () => {
+
+                // Add current question to skippedQuestions ONLY if it's not already there
+                if (!skippedQuestions.some(q => q.id === currentQuestion.id)) {
+                    setSkippedQuestions([...skippedQuestions, currentQuestion]);
+                }
+                
+                // Move to the next question or cycle back to skipped questions
+                const nextQuestionId = currentQuestion.id + 1
+                if (nextQuestionId <= DATA.quizz.length) {
+                    setCurrentQuestion(DATA.quizz[nextQuestionId - 1])
+                } else if (skippedQuestions.length > 0 && countdown > 0) {
+                    setCurrentQuestion(skippedQuestions.shift())
+                } else {
+                    setStatus(QUIZZ_STATUS.ENDED)
+                }
+                
+                setSelectedAnswer(null);
+            }
+
+            const timeUpHandler = () => {
+                setStatus(QUIZZ_STATUS.ENDED)
+            }
+
+            const startQuizzHandler = () => {
+                setResult({correct: [], incorrect: []})
+                setCurrentQuestion(DATA.quizz[0])
+                setCountdown(60 * 5) // 5min
+                setStatus(QUIZZ_STATUS.STARTED)
+            }
+
+            const returnToStartHandler = () => {
+                setResult({correct: [], incorrect: []})
+                
+                setStatus(QUIZZ_STATUS.NOT_STARTED)
+            }
+
+            return (
+                <div className="bg-indigo-50/50 flex items-center justify-center w-full h-screen overflow-auto">
+                    <div className="bg-white text-gray-800 w-full max-w-3xl min-w-[24em] m-4 overflow-x-auto">
+                        <header 
+                            className={`
+                                bg-gradient-to-r from-blue-400 to-teal-400/70 text-white p-8 pb-16
+                                relative isolate overflow-hidden before:block before:absolute before:-z-10 before:w-full before:h-[600%] 
+                                before:rounded-full  before:bg-gradient-to-r before:from-blue-400 before:to-teal-200 
+                                before:-left-[30%] before:top-4 before:opacity-70
+                            `}
+                        >
+                            <div className="flex flex-wrap gap-2 md:flex-nowrap md:gap-8">
+                                <div className="flex items-center gap-1">
+                                    <span className="material-symbols-rounded text-3xl">check</span>
+                                    <output className="text-lg font-semibold">
+                                        {result.correct.length}
+                                    </output>
+                                    <span>Correct</span>
+                                </div>
+                                
+                                <div className="flex items-center gap-1">
+                                    <span className="material-symbols-rounded text-3xl">close</span>
+                                    <output className="text-lg font-semibold">
+                                        {result.incorrect.length}
+                                    </output>
+                                    <span>Wrong</span>
+                                </div>
+
+                                <div className="flex items-center gap-1">
+                                    <span className="material-symbols-rounded text-3xl">more_horiz</span>
+                                    <output className="text-lg font-semibold">
+                                        {skippedQuestions.length}
+                                    </output>
+                                    <span>Skipped</span>
+                                </div>
+                                
+                                <div className="self-center flex items-center gap-1 mx-auto md:mr-initial md:ml-auto">
+                                    <span className="material-symbols-rounded text-3xl">alarm</span>
+                                    <Countdown 
+                                        initialCount={60 * 5} 
+                                        currentCount={countdown}
+                                        quizStatus={status} 
+                                        setCount={setCountdown} 
+                                        onTimeUp={timeUpHandler} 
+                                    />
+                                </div>
+                            </div>
+                        </header>
+
+                        <main className="relative p-8">
+                            <section className="bg-white shadow-lg relative -top-16 h-96 p-8">
+                                {status === QUIZZ_STATUS.NOT_STARTED && <SplashScreen onQuizzStart={startQuizzHandler} />}
+
+                                {status === QUIZZ_STATUS.STARTED && 
+                                    <Question 
+                                        question={currentQuestion} 
+                                        totalQuestion={DATA.quizz.length} 
+                                        selectedAnswer={selectedAnswer} 
+                                        answerSelectionHandler={answerSelectionHandler} 
+                                    />
+                                }
+
+                                {status === QUIZZ_STATUS.ENDED && <ResultScreen result={result} onReturnToStart={returnToStartHandler} questions={DATA.quizz} />}
+                            </section>
+
+                            <footer className="flex flex-wrap items-center justify-center gap-4">
+                                <button 
+                                    className={`
+                                        bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-300 
+                                        text-lg font-semibold uppercase 
+                                        w-56 px-4 py-2 border border-sky-300 rounded-lg
+                                        hover:to-teal-500 active:scale-95 duration-300
+                                    `}
+                                    onClick={() => {
+                                        if(status !== QUIZZ_STATUS.STARTED) {
+                                            alert("You must start the quizz first")
+                                            return
+                                        }
+                                        skipAnswerHandler()
+                                    }}
+                                >
+                                    Answer later
+                                </button>
+
+                                <button 
+                                    className={`
+                                        bg-gradient-to-r from-blue-400 to-teal-400/50 
+                                        text-white text-lg font-semibold uppercase w-56 
+                                        px-4 py-2 border border-sky-300 rounded-lg 
+                                        active:scale-95 duration-300
+                                        relative before:absolute before:block before:inset-0 before:rounded-lg
+                                        hover:before:bg-black/[8%] before:duration-300
+                                    `}
+                                    onClick={() => {
+                                        if(status !== QUIZZ_STATUS.STARTED) {
+                                            alert("You must start the quizz first")
+                                            return
+                                        }
+
+                                        useViewTransitionIfSupported(sendAnswerHandler)
+                                    }}
+                                >
+                                    Send answer
+                                </button>
+                            </footer>
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        function Question({question, selectedAnswer, totalQuestion, answerSelectionHandler, className}) {
+            return (
+                <article className={`${className}`}>
+                    <div className="pl-4 mb-8 space-y-2">
+                        <p className="text-gray-400">Question {question.id} ({totalQuestion - question.id} remaining)</p>
+                        
+                        <h3 className="text-xl">
+                            {question.question}
+                        </h3>
+                    </div>
+                    
+                    <div>
+                        <p className="text-gray-400 pl-4">Answer options</p>
+                        
+                        <ul className={`space-y-4 [&>li:hover]:bg-sky-50`}>
+                            {question.options.map((option, index) => {
+                                return (
+                                    <Answer key={index} answer={option} selectedAnswer={selectedAnswer} index={index} onAnswerSelection={answerSelectionHandler} />
+                                )
+                            })}
+                        </ul>
+                    </div>
+                </article>
+            )
+        }
+
+        function Answer({answer, index, selectedAnswer, onAnswerSelection, className}) {
+            const letter = ["A", "B", "C"][index]
+
+            return (
+                <li 
+                    className={`
+                        text-lg px-4 py-2 rounded cursor-pointer flex gap-2 duration-100
+                        ${selectedAnswer === index + 1 ? "bg-gradient-to-r from-blue-400 to-teal-200 text-white" : ""} 
+                        ${className}
+                    `}
+                    onClick={() => {
+                        // + 1 because correctAnswer start from 1, not 0
+                        // Same reason for the "index + 1" on className
+                        onAnswerSelection(index + 1)
+                    }}
+                >
+                    <span className="text-2xl font-semibold">
+                        {letter}
+                    </span>
+                    
+                    <p>
+                        {answer}
+                    </p>
+                </li>
+            )
+        }
+
+        function SplashScreen({onQuizzStart, className}) {
+            return (
+                <div className={`text-center h-full space-y-8 flex flex-col ${className}`}>
+                    <h2 className="text-xl font-semibold">
+                        HTML & CSS Quizz
+                    </h2>
+
+                    <div className="isolate h-full grid place-content-center">
+                        {/* <span class="material-symbols-rounded -z-10 text-7xl animate-lookatme">code</span> */}
+
+                        <button 
+                            className={`
+                                bg-gradient-to-r from-blue-400 to-teal-400/50 
+                                text-white text-lg font-semibold uppercase w-56 
+                                px-8 py-6 border border-sky-300 rounded-lg
+                                active:scale-95 duration-300
+                                relative before:absolute before:block before:inset-0 before:rounded-lg
+                                hover:before:bg-black/[8%] before:duration-300
+                            `}
+                            onClick={() => {
+                                useViewTransitionIfSupported(onQuizzStart)
+                            }}
+                        >
+                            Start
+                        </button>
+                    </div>
+                </div>
+            )
+        }
+        
+        function ResultScreen({result, onReturnToStart, questions, className}) {
+            return (
+                <div className={`text-center space-y-4 ${className}`}>
+                    <h2 className="text-xl font-semibold">
+                        Result
+                    </h2>
+
+                    <div className="h-full py-8 grid grid-cols-2 place-content-center gap-8">
+                        <p>
+                            <span>Correct: </span>
+                            <span className="text-xl font-semibold">
+                                {result.correct.length}
+                            </span>
+                        </p>
+                        
+                        <p>
+                            <span>Incorrect: </span>
+                            <span className="text-xl font-semibold">
+                                {result.incorrect.length}
+                            </span>
+                        </p>
+
+                        {/* TODO: move this outside of the JSX */}
+                        <div className="col-span-2 text-left max-h-[8em] overflow-y-auto border-4 p-4">
+                            {questions.map((question, index) => {
+                                const isCorrect = result.correct.includes(question.id)
+                                const isIncorrect = result.incorrect.includes(question.id)
+                                // const status = isCorrect ? "Correct" : isIncorrect ? "Incorrect" : "Unanswered or Skipped"
+                                
+                                return ( isIncorrect &&
+                                    <div key={index} className="py-2 [&:not(:last-child)]:border-b">
+                                        <p className="text-sm">
+                                            <span className="font-semibold">Question: </span> 
+                                            {question.question}
+                                        </p>
+    
+                                        {/*<p><span className="font-semibold">Status</span>: {status}</p>*/}
+    
+                                        <ul>
+                                            {question.options.map((option, index) => {
+                                                const letter = ["A", "B", "C"][index]
+                                                return (
+                                                    <li className="flex flex-col">
+                                                        <span className={question.answer === option ? "text-teal-400" : "line-through"}>
+                                                            {option}
+                                                        </span>
+                                                    </li>
+                                                )
+                                            })}
+                                        </ul>
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        <button 
+                            className={`
+                                bg-gradient-to-r from-blue-400 to-teal-400/50 
+                                col-span-2 justify-self-center
+                                text-white text-lg font-semibold uppercase w-56 
+                                px-4 py-2 border border-sky-300 rounded-lg
+                                active:scale-95 duration-300
+                                relative before:absolute before:block before:inset-0 before:rounded-lg
+                                hover:before:bg-black/[8%] before:duration-300
+                            `}
+                            onClick={() => {
+                                useViewTransitionIfSupported(onReturnToStart)
+                            }}
+                        >
+                            Return to start
+                        </button>
+                    </div>
+                </div>
+            )
+        }
+
+        function Countdown({ initialCount, currentCount, onTimeUp, setCount, quizStatus }) {
+            React.useEffect(() => {
+                if(quizStatus === QUIZZ_STATUS.STARTED) {
+                    if (initialCount === 0) {
+                        // Execute the callback function when the timer reaches zero
+                        onTimeUp()
+                        return;
+                    }
+                    
+                    const intervalId = setInterval(() => {
+                        setCount(prevCount => {
+                            // When count reaches 0
+                            if (prevCount <= 1) {
+                                clearInterval(intervalId)
+                                onTimeUp()
+                                return 0
+                            }
+                            return prevCount - 1
+                        })
+                    }, 1000)
+                    
+                    return () => clearInterval(intervalId);
+                }
+            }, [initialCount, onTimeUp, setCount])
+
+            const formatTime = (totalSeconds) => {
+                let hours = Math.floor(totalSeconds / 3600)
+                let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60)
+                let seconds = totalSeconds - (hours * 3600) - (minutes * 60)
+
+                hours = String(hours).padStart(2, '0')
+                minutes = String(minutes).padStart(2, '0')
+                seconds = String(seconds).padStart(2, '0')
+
+                return `${minutes}:${seconds}`
+            }
+            
+            return <span>{formatTime(currentCount)}</span>
+        }
+
+        function useViewTransitionIfSupported(callback) {
+            if(document.startViewTransition) {
+                document.startViewTransition(() => {
+                    ReactDOM.flushSync(() => {
+                        callback()
+                    })
+                })
+            } else {
+                callback()
+            }
+        }
+    
+        const container = document.getElementById("root")
+        const root = ReactDOM.createRoot(container)
+        root.render(<App />)
+
+        let DATA = Object.freeze({
+            quizz: [
+                {
+                    id: 1,
+                    question: "Which HTML5 element is used to specify a footer for a document or section?",
+                    options: ["<bottom>", "<footer>", "<foot>"],
+                    answer: "<footer>",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 2,
+                    question: "How do you apply a CSS style for all 'a' elements with the 'title' attribute?",
+                    options: ["a[title]", "a > title", "a.title"],
+                    answer: "a[title]",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 3,
+                    question: "Which HTML attribute is used to define inline styles?",
+                    options: ["style", "styles", "css"],
+                    answer: "style",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 4,
+                    question: "What does 'CSS' stand for?",
+                    options: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets"],
+                    answer: "Cascading Style Sheets",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 5,
+                    question: "Which CSS property is used to remove the underline from links?",
+                    options: ["text-decoration: none", "text-style: none", "font-style: none"],
+                    answer: "text-decoration: none",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 6,
+                    question: "In HTML, which attribute is used to specify that an input field must be filled out?",
+                    options: ["placeholder", "required", "validate"],
+                    answer: "required",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 7,
+                    question: "Which CSS property changes the color of text?",
+                    options: ["font-color", "text-color", "color"],
+                    answer: "color",
+                    correctAnswer: 3,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 8,
+                    question: "How can you make the background color of an element semi-transparent in CSS?",
+                    options: ["opacity: 0.5", "background-color: rgba(0,0,0,0.5)", "alpha: 50%"],
+                    answer: "background-color: rgba(0,0,0,0.5)",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 9,
+                    question: "What is the purpose of the alt attribute for images in HTML?",
+                    options: ["To create a caption", "To specify the image dimensions", "To provide alternative text"],
+                    answer: "To provide alternative text",
+                    correctAnswer: 3,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 10,
+                    question: "Which HTML5 element defines navigation links?",
+                    options: ["<navigation>", "<nav>", "<navigate>"],
+                    answer: "<nav>",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 11,
+                    question: "What is the correct HTML for adding a background color?",
+                    options: ["<body bg=\"yellow\">", "<body style=\"background-color:yellow;\">", "<background>yellow</background>"],
+                    answer: "<body style=\"background-color:yellow;\">",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 12,
+                    question: "In CSS, what does 'em' unit stand for?",
+                    options: ["Exact measurement", "Element measurement", "Relative to the font-size of the element"],
+                    answer: "Relative to the font-size of the element",
+                    correctAnswer: 3,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 13,
+                    question: "Which HTML tag is used for playing video files?",
+                    options: ["<media>", "<video>", "<movie>"],
+                    answer: "<video>",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 14,
+                    question: "In CSS, which property is used to align items in a Flexbox container?",
+                    options: ["align-items", "justify-content", "flex-align"],
+                    answer: "align-items",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 15,
+                    question: "What is the correct HTML element for inserting a line break?",
+                    options: ["<lb>", "<break>", "<br>"],
+                    answer: "<br>",
+                    correctAnswer: 3,
+                    type: "multiple-choice",
+                    difficulty: "intermediate"
+                },
+                {
+                    id: 16,
+                    question: "Which HTML element is used for specifying a header for a document or section?",
+                    options: ["<header>", "<head>", "<top>"],
+                    answer: "<header>",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 17,
+                    question: "How can you display hyperlinks without an underline?",
+                    options: ["a {decoration: none}", "a {underline: none}", "a {text-decoration: none}"],
+                    answer: "a {text-decoration: none}",
+                    correctAnswer: 3,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 18,
+                    question: "Which tag is used to define an interactive field where users can enter data?",
+                    options: ["<dataput>", "<input>", "<entry>"],
+                    answer: "<input>",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 19,
+                    question: "In CSS, what does 'vh' unit stand for?",
+                    options: ["Viewport height", "Vertical height", "Virtual height"],
+                    answer: "Viewport height",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 20,
+                    question: "Which attribute is used in HTML to reference the URL of external JavaScript file?",
+                    options: ["src", "href", "script"],
+                    answer: "src",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 21,
+                    question: "In HTML, which attribute is used to define a block of preformatted text?",
+                    options: ["<pre>", "<code>", "<block>"],
+                    answer: "<pre>",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 22,
+                    question: "In CSS, how do you select an element with a specific attribute value?",
+                    options: ["element[attribute='value']", "element='attribute-value'", "element.attribute='value'"],
+                    answer: "element[attribute='value']",
+                    correctAnswer: 1,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 23,
+                    question: "What does the 'box-sizing: border-box;' property do in CSS?",
+                    options: ["Changes the border size", "Includes padding and border in the element's total width and height", "Creates a box around the element"],
+                    answer: "Includes padding and border in the element's total width and height",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 24,
+                    question: "Which HTML tag is used to define a table heading?",
+                    options: ["<thead>", "<th>", "<header>"],
+                    answer: "<th>",
+                    correctAnswer: 2,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                },
+                {
+                    id: 25,
+                    question: "How can you make a numbered list in HTML?",
+                    options: ["<ul>", "<list>", "<ol>"],
+                    answer: "<ol>",
+                    correctAnswer: 3,
+                    type: "multiple-choice",
+                    difficulty: "advanced"
+                }
+            ]
+        })
+</script>
+</body>
+
+</html>
