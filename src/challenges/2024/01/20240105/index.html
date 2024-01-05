@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        gray: {
+                            777: "hsl(220, 3%, 19%)",
+                            888: "hsl(220, 4%, 16%)",
+                            999: "hsl(220, 5%, 12%)",
+                        },
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        jump: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.4)"
+                            },
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        jump: 'jump 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .6em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 16%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+        
+        function App() {
+            return (
+                <div className="bg-slate-700 text-white flex items-center justify-center w-full h-screen">
+                    <main className="bg-slate-800 w-full max-w-md">
+                        <Calculator/>
+                    </main>
+                </div>
+            );
+        }
+
+        function Calculator() {
+            const [userInput, setUserInput] = React.useState("");
+            const [result, setResult] = React.useState(0);
+
+            const mathSymbols = [
+                "AC", "±", "%", "/",
+                "7", "8", "9", "×",
+                "4", "5", "6", "+",
+                "1", "2", "3", "−",
+                "0", ",", "=",
+            ];
+
+            const handleInputChange = (e) => {
+                setUserInput(e.target.value);
+            };
+
+            const handleButtonClick = (symbol) => {
+                if(symbol === "AC"){
+                    setUserInput("");
+                    setResult("0");
+                } else if(symbol === "="){
+                    try{
+                        // Replace '×' and '−' with '*' and '-' for eval to understand
+                        const calculation = userInput.replace(/×/g, '*').replace(/−/g, '-');
+                        setResult(eval(calculation).toString());
+                    } catch(error){
+                        setUserInput("Error");
+                    }
+                } else if(symbol === '.' && (userInput.slice(-1) === '.' || userInput === '')) {
+                    // If the input is empty and symbol is '.', add '0.' to userInput
+                    setUserInput(`${userInput}0.`);
+                } else if (symbol === '.' && userInput.slice(-1) === '.') {
+                    // If the last character is already a decimal, ignore the input
+                    return;
+                } else {
+                    // Add space around operators
+                    if(symbol === '+' || symbol === '−' || symbol === '×' || symbol === '/'){
+                        setUserInput(`${userInput} ${symbol} `);
+                    } else {
+                        setUserInput(`${userInput}${symbol}`);
+                    }
+                }
+            };
+
+            const handleKeyPress = (e) => {
+                let key = e.key;
+
+                if (key === 'Enter') {
+                    key = "=";
+                }
+                
+                if (key === 'Backspace') {
+                    setUserInput(userInput.slice(0, -1));
+                } else if (mathSymbols.includes(key) || !isNaN(key) || key === '.' || key === '/') {
+                    handleButtonClick(key);
+                }
+            };
+
+            React.useEffect(() => {
+                window.addEventListener('keydown', handleKeyPress);
+                return () => {
+                    window.removeEventListener('keydown', handleKeyPress);
+                };
+            }, [userInput]);
+
+            return (
+                <React.Fragment>
+                    <form className="bg-white text-black flex flex-col items-end gap-2 px-4">
+                        <input 
+                            type="text" 
+                            className={`
+                                peer w-full m-0 p-4 appearance-none border-b border-slate-100 focus:outline-none
+                            `}
+                            value={userInput}
+                            onChange={handleInputChange}
+                        />
+
+                        <output 
+                            className={`
+                                self-end text-slate-400 text-2xl font-semibold 
+                            `}
+                        >
+                            {result}
+                        </output>
+                    </form>
+
+                    <section className="grid grid-cols-4 divide-x divide-y divide-slate-900">
+                        {
+                            mathSymbols.map((symbol, index) => {
+                                return (
+                                    <button 
+                                        key={index}
+                                        className={`
+                                            grid place-content-center min-w-[2rem] p-4 text-xl duration-500
+                                            ${(index == mathSymbols.length - 1) ? "col-span-2 bg-pink-600 hover:bg-pink-700" : "hover:bg-slate-900"}
+                                        `}
+                                        onClick={() => handleButtonClick(symbol)}
+                                    >
+                                        {symbol}
+                                    </button>
+                                );
+                            })
+                        }
+                    </section>
+                </React.Fragment>
+            );
+        }
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
