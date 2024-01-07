@@ -81,7 +81,13 @@
         
         function App() {
             const currentYear = new Date().getFullYear();
+            const currentDate = new Date();
             const terms = {
+                [`spring${currentYear}`]: {
+                    deadline: "01 March",
+                    commencement: "15 March",
+                    completion: "31 May",
+                },
                 [`summer${currentYear}`]: {
                     deadline: "01 June",
                     commencement: "15 June",
@@ -99,7 +105,24 @@
                 },
             };
 
-            const defaultTerm = `autumn${currentYear}`;
+            const seasons = ['spring', 'summer', 'autumn', 'winter'];
+            const currentMonth = currentDate.getMonth(); 
+            const currentSeasonIndex = Math.floor(currentMonth / 3);
+            const currentSeason = seasons[currentSeasonIndex];
+
+            let nextSeasonIndex = (currentSeasonIndex + 1) % seasons.length;
+            let nextNextSeasonIndex = (currentSeasonIndex + 2) % seasons.length;
+
+            // Current and the next two seasons
+            const displayedTerms = [
+                `${seasons[currentSeasonIndex]}${currentYear}`,
+                `${seasons[nextSeasonIndex]}${currentYear}`,
+                `${seasons[nextNextSeasonIndex]}${currentYear}`
+            ];
+
+
+            // const defaultTerm = displayedTerms.includes(`autumn${currentYear}`) ? `autumn${currentYear}` : displayedTerms[0];
+            const defaultTerm = displayedTerms[0];
             const [enrollmentDate, setEnrollmentDate] = React.useState(defaultTerm);
             const [dates, setDates] = React.useState(terms[defaultTerm]);
 
@@ -140,7 +163,7 @@
                             </h2>
 
                             <fieldset className="py-4">
-                                {Object.entries(terms).map(([termKey, termValues]) => {
+                                {displayedTerms.map((termKey) => {
                                     const term = termKey.replace(currentYear, "");
                                     const label = `${term.charAt(0).toUpperCase() + term.slice(1)} ${currentYear}`;
 
