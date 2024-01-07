@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Inter", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "#0C0058"
+                        },
+                        accent: {
+                            400: "#FF6E6E",
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        cookies: {
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        cookies: 'cookies 2s ease-in-out',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        .debug {
+            outline: solid 2px fuchsia;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+        
+        function App() {
+            const [showSettings, setShowSettings] = React.useState(true);
+
+            const handleShowSettings = () => {
+                setShowSettings(!showSettings);
+            }
+
+            const abortEvent = (e) => {
+                e.preventDefault();
+            }
+
+            return (
+                <div className="bg-slate-200 relative flex items-center justify-center w-full h-screen">
+                    <main className="bg-white flex flex-col items-center w-full max-w-2xl p-8 rounded-lg">
+                        <button className="self-end p-2 border border-primary-400/20 rounded-full text-primary-400/70 hover:text-primary-400 hover:bg-primary-400/5 active:scale-95 duration-500">
+                            <HeroIcons.X/>
+                        </button>
+
+                        <div className="bg-accent-400/20 grid place-content-center p-8 rounded-full">
+                            <CookieSVGComponent className="size-16"/>
+                        </div>
+
+                        <p className="text-balance text-center my-8">
+                            By clicking "Accept All Cookies", you agree to the storing of cookies on your 
+                            device to enchance site navigation, analyse site usage and assist in  our marketing effort. 
+                            <a href="" className="underline" onClick={abortEvent}>More info</a>
+                        </p>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <Button text="Accept cookies" className="bg-primary-400 text-white hover:bg-primary-400/85 hover:border-primary-400/85"/>
+                            <Button text="Decline cookies"/>
+                        </div>
+
+                        <button href="" className="text-primary-400 text-center underline mt-8" onClick={handleShowSettings}>
+                            Cookies settings
+                        </button>
+                    </main>
+
+                    {showSettings && <CookiesSettings onClose={handleShowSettings}/>}
+
+                    <Toast className="absolute top-8"/>
+                </div>
+            );
+        }
+
+        function CookieSVGComponent({className}) {
+            return (
+                <svg viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <g strokeWidth={0} />
+                    <g strokeLinecap="round" strokeLinejoin="round" />
+                    <g fill="none" fillRule="evenodd">
+                    <path
+                        d="M34 21.6a17.976 17.976 0 0 1-29.265 7.655 18.08 18.08 0 0 1 7.36-29.259A5.373 5.373 0 0 0 13.779 2.1a5.8 5.8 0 0 0 1.06 1.075c-.424 1.105-1.643 4.895.9 6.37.534.958 1.616 1.66 3.613 1.7.02 1.381.325 3.629 1.969 4.624.925 1.482 2.811 2.365 6.6.751A5.55 5.55 0 0 0 30 20.228a3.282 3.282 0 0 0 4 1.372Z"
+                        className="fill-accent-400"
+                    />
+                    <path
+                        d="M6.5 18a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm9 9a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm0-10a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-6-10a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm17 15a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+                        className="fill-primary-400"
+                    />
+                    </g>
+                </svg>
+            );
+        }
+
+        function Button({text, className}) {
+            return (
+                <button className={`px-6 py-2 border border-primary-400 rounded-full text-primary-400 font-medium duration-500 hover:bg-primary-400/5 ${className}`}>
+                    {text}
+                </button>
+            );
+        }
+
+        function CookiesSettings({className, onClose}) {
+            const settingsContentRef = React.useRef();
+
+            const handleOutsideClick = (e) => {
+                if(e.target !== settingsContentRef.current) {
+                    onClose();
+                }
+            }
+
+            return (
+                <div className={`bg-primary-400/70 z-10 absolute inset-0 grid place-content-center ${className}`} onClick={handleOutsideClick}>
+                    <section ref={settingsContentRef} className="bg-white flex flex-col items-center w-full max-w-xl min-w-[16rem] min-h-[16rem] p-4 rounded-lg">
+                        <button 
+                            className={`
+                                self-end p-2 border border-primary-400/20 rounded-full text-primary-400/70 
+                                hover:text-primary-400 hover:bg-primary-400/5 active:scale-95 duration-500
+                            `}
+                            onClick={onClose}
+                        >
+                            <HeroIcons.X/>
+                        </button>
+
+                        <div className="grid place-content-center h-full">
+                            <p className="text-primary-400 text-2xl font-medium">Work in progress</p>
+                        </div>
+                    </section>
+                </div>
+            );
+        }
+
+        function Toast({className}) {
+            const [isToastVisible, setIsToastVisible] = React.useState(true);
+
+            const handleToastClose = () => {
+                setIsToastVisible(!isToastVisible);
+            }
+
+            return (
+                <div 
+                    className={`
+                        bg-primary-400 text-white flex items-center gap-4 justify-between px-8 py-4 rounded-full 
+                        ${className}
+                    `}
+                >
+                    <p>We are now part of Salesforce. <a href="" className="underline font-medium">Learn why we're even better together</a></p>
+
+                    <button 
+                        className={`
+                            self-end p-2 text-white/70 rounded-full hover:text-white hover:bg-accent-400/30
+                             active:scale-95 duration-500
+                        `}
+                        onClick={handleToastClose}
+                    >
+                        <HeroIcons.X/>
+                    </button>
+                </div>
+            );
+        }
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
