@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        gray: {
+                            777: "hsl(220, 3%, 19%)",
+                            888: "hsl(220, 4%, 16%)",
+                            999: "hsl(220, 5%, 12%)",
+                        },
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        jump: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.4)"
+                            },
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        jump: 'jump 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .6em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 16%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+        
+        function App() {
+            const [firstItem, setFirstItem] = React.useState(false);
+            const [secondItem, setSecondItem] = React.useState(false);
+            const [thirdItem, setThirdItem] = React.useState(false);
+
+            return (
+                <div className="bg-neutral-900/5 flex items-center justify-center w-full h-screen">
+                    <main className="bg-white w-full max-w-xs m-4 p-4 space-y-8 rounded-lg sm:p-8">
+                        <header className="self-center grid place-content-center size-32 mx-auto border-4 rounded-full">
+                            <div className="text-center self-center flex flex-col gap-1">
+                                <span className="text-4xl font-black">25%</span>
+                                <span className="text-xs">Content progress</span>
+                            </div>
+
+                        </header>
+
+                        <section className="space-y-4">
+                            <h2 className="text-lg font-semibold">Curriculum</h2>
+
+                            <fieldset className="space-y-2">
+                                <div className="flex items-center gap-4 p-4 border border-blue-900 rounded-lg">
+                                    <input 
+                                        type="checkbox" 
+                                        name="progress" 
+                                        id="chapter1" 
+                                        className="peer hidden" 
+                                        value={firstItem} 
+                                        onChange={() => {
+                                            setFirstItem(!firstItem)
+                                        }}
+                                    />
+
+                                    <label 
+                                        htmlFor="chapter1" 
+                                        className={`
+                                            text-white grid place-content-center size-8 
+                                            border-4 border-slate-300 rounded-full peer-checked:bg-blue-900
+                                        `}
+                                    >
+                                        <span className="material-symbols-rounded text-xl">done</span>
+                                    </label>
+
+                                    <label htmlFor="chapter1" className="space-y-1">
+                                        <div className="font-medium">Chapter 1</div>
+    
+                                        <div>Introduction</div>
+                                    </label>
+                                </div>
+                                
+                                <div className="flex items-center gap-4 p-4 border border-blue-900 rounded-lg">
+                                    <input 
+                                        type="checkbox" 
+                                        name="progress" 
+                                        id="chapter2" 
+                                        className="peer hidden" 
+                                        value={secondItem} 
+                                        onChange={() => {
+                                            setSecondItem(!secondItem)
+                                        }}
+                                    />
+
+                                    <label 
+                                        htmlFor="chapter2" 
+                                        className={`
+                                            text-white grid place-content-center size-8 
+                                            border-4 border-slate-300 rounded-full peer-checked:bg-blue-900
+                                        `}
+                                    >
+                                        <span className="material-symbols-rounded text-xl">done</span>
+                                    </label>
+
+                                    <label htmlFor="chapter2" className="space-y-1">
+                                        <div className="font-medium">Chapter 2</div>
+    
+                                        <div>Information architecture</div>
+                                    </label>
+                                </div>
+                                
+                                <div className="flex items-center gap-4 p-4 border border-blue-900 rounded-lg">
+                                    <input 
+                                        type="checkbox" 
+                                        name="progress" 
+                                        id="chapter3" 
+                                        className="peer hidden" 
+                                        value={thirdItem} 
+                                        onChange={() => {
+                                            setThirdItem(!thirdItem)
+                                        }}
+                                    />
+
+                                    <label 
+                                        htmlFor="chapter3" 
+                                        className={`
+                                            text-white grid place-content-center size-8 
+                                            border-4 border-slate-300 rounded-full peer-checked:bg-blue-900
+                                        `}
+                                    >
+                                        <span className="material-symbols-rounded text-xl">done</span>
+                                    </label>
+
+                                    <label htmlFor="chapter3" className="space-y-1">
+                                        <div className="font-medium">Chapter 3</div>
+    
+                                        <div>Data and security</div>
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
