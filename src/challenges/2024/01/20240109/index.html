@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        gray: {
+                            777: "hsl(220, 3%, 19%)",
+                            888: "hsl(220, 4%, 16%)",
+                            999: "hsl(220, 5%, 12%)",
+                        },
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        jump: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.4)"
+                            },
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        jump: 'jump 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .6em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 16%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+        
+        function App() {
+            return (
+                <div className="bg-white flex items-center justify-center w-full min-h-dvh">
+                    <main className="bg-zinc-50 flex flex-col gap-8 w-full max-w-sm m-4 p-4 rounded-lg">
+                        <aside className="bg-blue-500 text-white relative flex flex-col p-4 rounded-lg  overflow-hidden">
+                            <button className="bg-blue-600 absolute -right-1 -top-0.5 p-2 rounded-full">
+                                <HeroIcons.X/>
+                            </button>
+
+                            <p className="text-center">
+                                Our new <a onClick={e => e.preventDefault()} className="text-semibold">Terms of Service</a> and 
+                                <a onClick={e => e.preventDefault()} className="text-semibold">Privacy Statements</a> are in effect. 
+                            </p>
+                        </aside>
+
+                        <header className="flex flex-wrap items-center gap-4 justify-between">
+                            <h2>Documents</h2>
+
+                            <button className="flex items-center gap-2 px-4 py-2 text-blue-600 border-2 border-blue-600 rounded-full">
+                                <HeroIcons.Plus/>
+                                Add New
+                            </button>
+
+                            <fieldset className="flex items-center gap-2 w-full p-2 border rounded">
+                                <input 
+                                    type="search" 
+                                    name="search" 
+                                    id="search" 
+                                    placeholder="Search documents"
+                                    className="bg-transparent peer w-full border-none text-zinc-700 placeholder:text-zinc-500 focus:outline-none"
+                                />
+
+                                <label htmlFor="search" className="w-fit -order-1 text-zinc-500 peer-focus:text-zinc-700 duration-500">
+                                    <span className="sr-only">Search</span>
+                                    <HeroIcons.Search/>
+                                </label>
+                            </fieldset>
+                        </header>
+
+                        <section>
+                            <ul className="grid gap-4">
+                                <li className="flex items-center gap-4">
+                                    <div className="bg-zinc-300 grid place-content-center size-12 rounded-full overflow-hidden">
+                                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" className="size-6 object-contain" />
+                                    </div>
+
+                                    <div>iCodeThis / Document App</div>
+                                </li>
+                                
+                                <li className="flex items-center gap-4">
+                                    <div className="bg-zinc-300 grid place-content-center size-12 rounded-full overflow-hidden">
+                                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" className="size-6 object-contain" />
+                                    </div>
+
+                                    <div>iCodeThis / Document App</div>
+                                </li>
+                                
+                                <li className="flex items-center gap-4">
+                                    <div className="bg-zinc-300 grid place-content-center size-12 rounded-full overflow-hidden">
+                                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" className="size-6 object-contain" />
+                                    </div>
+
+                                    <div>iCodeThis / Document App</div>
+                                </li>
+                            </ul>
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        function CSSIconSVG({className}) {
+            return (
+                <svg viewBox="0 0 128 128" className={`${className}`}>
+                    <path fill="#1572B6" d="M18.814 114.123L8.76 1.352h110.48l-10.064 112.754-45.243 12.543-45.119-12.526z"></path><path fill="#33A9DC" d="M64.001 117.062l36.559-10.136 8.601-96.354h-45.16v106.49z"></path><path fill="#fff" d="M64.001 51.429h18.302l1.264-14.163H64.001V23.435h34.682l-.332 3.711-3.4 38.114h-30.95V51.429z"></path><path fill="#EBEBEB" d="M64.083 87.349l-.061.018-15.403-4.159-.985-11.031H33.752l1.937 21.717 28.331 7.863.063-.018v-14.39z"></path><path fill="#fff" d="M81.127 64.675l-1.666 18.522-15.426 4.164v14.39l28.354-7.858.208-2.337 2.406-26.881H81.127z"></path><path fill="#EBEBEB" d="M64.048 23.435v13.831H30.64l-.277-3.108-.63-7.012-.331-3.711h34.646zm-.047 27.996v13.831H48.792l-.277-3.108-.631-7.012-.33-3.711h16.447z"></path>
+                </svg>
+            );
+        }
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
