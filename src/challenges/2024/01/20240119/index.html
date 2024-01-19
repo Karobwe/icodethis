@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        primary: {
+                            400: "hsl(11, 87%, 68%)", // #f48267 | rgb(244, 130, 103)
+                            600: "hsl(13, 66%, 59%)", // #db6e51 | rgb(219, 110, 81) 
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        jump: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.4)"
+                            },
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        jump: 'jump 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .6em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 16%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+
+        // console.log(Object.keys(HeroIcons));
+        
+        function App() {
+            const [restaurants, setRestaurants] = React.useState(data);
+            const [activeCardId, setActiveCardId] = React.useState(restaurants[2].id);
+
+            const handleCardClick = (id) => {
+                setActiveCardId(id);
+                console.log(id)
+            }
+
+            return (
+                <div className="bg-gradient-to-tr from-green-100 via-violet-50 to-green-100 flex items-center justify-center w-full h-screen">
+                    <main className="bg-primary-400 text-white w-full rounded-xl overflow-hidden max-w-sm grid grid-rows-[4rem_42rem]">
+                        <header className="bg-primary-600 h-16 px-4 flex items-center justify-between sm:px-8">
+                            <button>
+                                <HeroIcons.Menu/>
+                            </button>
+
+                            <h1 className="text-xl font-medium">
+                                Restaurants
+                            </h1>
+
+                            <div className="flex items-center">
+                                <input type="search" name="search" id="search" className="w-0"/>
+                                <label htmlFor="search">
+                                    <HeroIcons.Search/>
+                                </label>
+                            </div>
+                        </header>
+
+                        <section className="pt-2 grid divide-y-2 divide-primary-600 overflow-y-scroll hidden-scrollbar">
+                            {restaurants.map((restaurant, index) => (
+                                <RestaurantCard restaurant={restaurant} isActive={activeCardId === restaurant.id} onClick={handleCardClick} key={index}/>
+                            ))}
+                        </section>
+                    </main>
+                </div>
+            );
+        }
+
+        function RestaurantCard({restaurant, isActive, onClick}) {
+            return (
+                <article key={restaurant.id} onClick={() => {onClick(restaurant.id)}} className={`${isActive && "bg-primary-600"} relative flex items-center justify-between cursor-pointer duration-500`}>
+                    <div className={`p-4 flex items-center justify-between duration-500 ${isActive && "-translate-x-24"}`}>
+                        <div className="flex items-center">
+                            <img src={restaurant.imageUrl} alt={restaurant.name} className="flex-none w-16 h-16 rounded-full mr-4" />
+    
+                            <div className="flex flex-col gap-2">
+                                <h2 className="leading-3">{restaurant.name}</h2>
+    
+                                <Rating rating={restaurant.rating}/>
+    
+                                <div className="flex items-center flex-wrap gap-1">
+                                    {restaurant.tags.map((tag, index) => (
+                                        <Tag key={index} text={tag} isActive={isActive}/>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div className="flex-none flex flex-col items-center gap-0.5">
+                            <ArrowTurnRightIcon size="20"/>
+    
+                            <span>{restaurant.distance}</span>
+                        </div>
+                    </div>
+
+                    <div className={`bg-white text-gray-600 absolute ${isActive ? "right-0" : "-right-[100%]"} min-w-[8rem] h-full p-4 grid grid-cols-2 items-center gap-2 justify-center duration-500`}>
+                        <button className="flex flex-col items-center duration-500 hover:text-primary-600 active:text-primary-600">
+                            <HeroIcons.Phone/>
+                            
+                            <span>Order</span>
+                        </button>
+                        
+                        <button className="flex flex-col items-center duration-500 hover:text-primary-600 active:text-primary-600">
+                            <HeroIcons.Bookmark/>
+                            
+                            <span>Bookmark</span>
+                        </button>
+                    </div>
+                </article>
+            );
+        }
+
+        function Rating({ rating, className }) {
+            return (
+                <div className={`flex items-center ${className}`}>
+                    {Array.from({ length: 5 }, (_, index) => {
+                        if (index < rating) {
+                            return <StarIcon key={index} className="text-yellow-400 h-4 w-4" />;
+                        }
+                        
+                        // return <OutlineStarIcon key={index} className="text-yellow-400 h-4 w-4" />;
+                        return <StarIcon key={index} className="text-primary-600 h-4 w-4" />;
+                    })}
+                </div>
+            );
+        }
+
+        function Tag({text, isActive, className}) {
+            return (
+                <span className={`${!isActive ? "bg-primary-600" : "bg-white/10"} text-xs font-light tracking-wider rounded-full px-2 py-0.5 text-white duration-500 ${className}`}>
+                    {text}
+                </span>
+            );
+        }
+
+        function StarIcon({size = 24, className}) {
+            return (
+                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M10.7881 3.2108C11.2364 2.13286 12.7635 2.13286 13.2118 3.2108L15.2938 8.21652L20.6979 8.64976C21.8616 8.74306 22.3335 10.1953 21.4469 10.9549L17.3295 14.4818L18.5874 19.7553C18.8583 20.8909 17.6229 21.7884 16.6266 21.1799L11.9999 18.354L7.37329 21.1799C6.37697 21.7884 5.14158 20.8909 5.41246 19.7553L6.67038 14.4818L2.55303 10.9549C1.66639 10.1953 2.13826 8.74306 3.302 8.64976L8.70609 8.21652L10.7881 3.2108Z" fill="currentColor" />
+                </svg>
+            );
+        }
+
+        function OutlineStarIcon({size = 24, className}) {
+            return (
+                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <path d="M11.4806 3.49883C11.6728 3.03685 12.3272 3.03685 12.5193 3.49883L14.6453 8.61028C14.7263 8.80504 14.9095 8.93811 15.1197 8.95497L20.638 9.39736C21.1367 9.43735 21.339 10.0598 20.959 10.3853L16.7546 13.9867C16.5945 14.1239 16.5245 14.3392 16.5734 14.5444L17.8579 19.9293C17.974 20.416 17.4446 20.8007 17.0176 20.5398L12.2932 17.6542C12.1132 17.5443 11.8868 17.5443 11.7068 17.6542L6.98238 20.5398C6.55539 20.8007 6.02594 20.416 6.14203 19.9293L7.42652 14.5444C7.47546 14.3392 7.4055 14.1239 7.24531 13.9867L3.04099 10.3853C2.661 10.0598 2.86323 9.43735 3.36197 9.39736L8.88022 8.95497C9.09048 8.93811 9.27363 8.80504 9.35464 8.61028L11.4806 3.49883Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            );
+        }
+
+        function ArrowTurnRightIcon({size = 24, className}) {
+            return (
+                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M14.4697 2.46967C14.7626 2.17678 15.2374 2.17678 15.5303 2.46967L21.5303 8.46967C21.8232 8.76256 21.8232 9.23744 21.5303 9.53033L15.5303 15.5303C15.2374 15.8232 14.7626 15.8232 14.4697 15.5303C14.1768 15.2374 14.1768 14.7626 14.4697 14.4697L19.1893 9.75H9C6.10051 9.75 3.75 12.1005 3.75 15C3.75 17.8995 6.10051 20.25 9 20.25H12C12.4142 20.25 12.75 20.5858 12.75 21C12.75 21.4142 12.4142 21.75 12 21.75H9C5.27208 21.75 2.25 18.7279 2.25 15C2.25 11.2721 5.27208 8.25 9 8.25H19.1893L14.4697 3.53033C14.1768 3.23744 14.1768 2.76256 14.4697 2.46967Z" fill="currentColor" />
+                </svg>
+            );
+        }
+
+        const data = [
+            {
+                "id": 1,
+                "name": "The Green Terrace",
+                "distance": "1.2 km",
+                "rating": 4,
+                "tags": ["Salads", "Vegetarian", "Eco-Friendly", "Fresh"],
+                "imageUrl": "https://images.pexels.com/photos/7821843/pexels-photo-7821843.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 2,
+                "name": "Ocean's Bounty",
+                "distance": "3.4 km",
+                "rating": 5,
+                "tags": ["Seafood", "Sustainable", "Fresh Fish", "Ocean View"],
+                "imageUrl": "https://images.pexels.com/photos/10610008/pexels-photo-10610008.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 3,
+                "name": "Mountain Delight",
+                "distance": "5.7 km",
+                "rating": 3,
+                "tags": ["Traditional", "Homemade", "Grilled", "Cozy Atmosphere"],
+                "imageUrl": "https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 4,
+                "name": "Urban Eats",
+                "distance": "0.8 km",
+                "rating": 4,
+                "tags": ["Modern Cuisine", "Burgers", "American", "Craft Cocktails"],
+                "imageUrl": "https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 5,
+                "name": "Spice Symphony",
+                "distance": "2.1 km",
+                "rating": 5,
+                "tags": ["Indian Cuisine", "Spicy", "Vegetarian Options", "Authentic Flavors"],
+                "imageUrl": "https://images.pexels.com/photos/460537/pexels-photo-460537.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 6,
+                "name": "Pasta Paradise",
+                "distance": "1.5 km",
+                "rating": 4,
+                "tags": ["Italian", "Pasta", "Gluten-Free Options", "Wine Selection"],
+                "imageUrl": "https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 7,
+                "name": "Garden Bistro",
+                "distance": "0.9 km",
+                "rating": 3,
+                "tags": ["Mediterranean", "Salads", "Vegetarian", "Garden Fresh"],
+                "imageUrl": "https://images.pexels.com/photos/10533243/pexels-photo-10533243.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 8,
+                "name": "The Sushi Corner",
+                "distance": "3.2 km",
+                "rating": 5,
+                "tags": ["Sushi", "Japanese", "Seafood", "Ramen"],
+                "imageUrl": "https://images.pexels.com/photos/1872892/pexels-photo-1872892.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 9,
+                "name": "Curry House",
+                "distance": "2.2 km",
+                "rating": 4,
+                "tags": ["Curry", "Indian", "Spicy", "Vegan Options"],
+                "imageUrl": "https://images.pexels.com/photos/4372141/pexels-photo-4372141.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            },
+            {
+                "id": 10,
+                "name": "Grill and Barbecue",
+                "distance": "4.0 km",
+                "rating": 4,
+                "tags": ["BBQ", "Steakhouse", "Grill", "American"],
+                "imageUrl": "https://images.pexels.com/photos/4661882/pexels-photo-4661882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            }
+        ];
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
