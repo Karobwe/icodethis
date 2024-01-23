@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        gray: {
+                            777: "hsl(220, 3%, 19%)",
+                            888: "hsl(220, 4%, 16%)",
+                            999: "hsl(220, 5%, 12%)",
+                        },
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        jump: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.4)"
+                            },
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        jump: 'jump 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .6em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 16%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import * as HeroIcons from "https://cdn.skypack.dev/heroicons-react";
+        
+        function App() {
+            return (
+                <div className="bg-slate-100 flex items-center justify-center w-full h-screen">
+                    <main className="max-w-md md:max-w-lg">
+                        <SubscriptionCard/>
+                    </main>
+                </div>
+            );
+        }
+
+        function SubscriptionCard() {
+            const [selectedOption, setSelectedOption] = React.useState('monthly');
+
+            const handleSubmit = (event) => {
+                event.preventDefault();
+            }
+            
+            return (
+                <form className="bg-white p-6 max-w-sm rounded shadow-lg flex flex-col items-center" onSubmit={handleSubmit}>
+                    <div className="space-y-4 mb-4 text-center">
+                        <h2 className="text-2xl font-bold">
+                            Try FREE for 4 weeks
+                        </h2>
+    
+                        <p className="text-gray-700 max-w-xs">
+                            We uncover the facts around the clock, all over the globe.
+                        </p>
+                    </div>
+
+                    <div className="mb-6 space-y-4">
+                        <fieldset 
+                            className={`
+                                w-full p-4 flex items-center gap-3 rounded-lg cursor-pointer duration-500 
+                                ${selectedOption === "monthly" ? "ring-2 ring-blue-600" : "ring ring-4 ring-gray-300"}
+                            `} 
+                            onClick={() => setSelectedOption('monthly')}
+                        >
+                            <input
+                                type="radio"
+                                id="monthlySubscription"
+                                className="peer sr-only"
+                                name="subscriptionOption"
+                                value="monthly"
+                                checked={selectedOption === 'monthly'}
+                                onChange={() => setSelectedOption('monthly')}
+                            />
+
+                            <span className="inline-flex flex-none size-6 flex items-center justify-center border border-gray-700 rounded-full duration-300 peer-checked:bg-slate-800 peer-checked:text-white [&_svg]:hidden peer-checked:[&_svg]:block">
+                                <HeroIcons.Check/>
+                            </span>
+
+                            <div className="space-y-1">
+                                <label htmlFor="monthlySubscription" className="text-sm font-semibold uppercase">Monthly</label>
+        
+                                <p className="col-start-2 mt-sm text-gray-600">
+                                    4 weeks for free
+                                </p>
+        
+                                <p className="col-start-2 text-sm text-gray-600">
+                                    Then $3 every month for the first year
+                                </p>
+                            </div>
+                        </fieldset>
+    
+                        <fieldset 
+                            className={`
+                            w-full p-4 flex items-center gap-3 rounded-lg cursor-pointer duration-500 
+                            ${selectedOption === "yearly" ? "ring-2 ring-blue-600" : "ring ring-4 ring-gray-300"}
+                        `} 
+                            onClick={() => setSelectedOption('yearly')}
+                        >
+                            <input
+                                type="radio"
+                                id="yearlySubscription"
+                                className="peer sr-only"
+                                name="subscriptionOption"
+                                value="yearly"
+                                checked={selectedOption === 'yearly'}
+                                onChange={() => setSelectedOption('yearly')}
+                            />
+
+                            <span className="inline-flex flex-none size-6 flex items-center justify-center border border-gray-700 rounded-full duration-300 peer-checked:bg-slate-800 peer-checked:text-white [&_svg]:hidden peer-checked:[&_svg]:block">
+                                <HeroIcons.Check/>
+                            </span>
+
+                            <div className="space-y-1">
+                                <div className="bg-blue-500 text-white text-xs px-3 py-1 mb-1 w-fit rounded-full uppercase">
+                                    Best value
+                                </div>
+
+                                <label htmlFor="" className="text-sm font-semibold uppercase">Yearly</label>
+        
+                                <p className="col-start-2 text-sm text-gray-600">
+                                    4 weeks for free
+                                </p>
+        
+                                <p className="col-start-2 text-sm text-gray-600">
+                                    Then $30 for the first year
+                                </p>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <button className="bg-gray-700 text-white w-full max-w-[80%] py-2 px-4 rounded-full mb-4 duration-500 hover:bg-gray-900">
+                        Continue
+                    </button>
+
+                    <button className="w-full max-w-[80%] py-2 px-4 flex items-center justify-center gap-2 border rounded-full mb-4 duration-500 hover:bg-gray-100">
+                        {"Continue with"} 
+                        <img className="w-auto h-5" src="https://asset.brandfetch.io/id-Wd4a4TS/id4wNJYpBf.svg?updated=1667560344914" alt=""/>
+                    </button>
+                    
+                    <button className="text-blue-500 hover:text-blue-700 text-sm font-semibold py-2">
+                        View more offers
+                    </button>
+                </form>
+            );
+        }
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
