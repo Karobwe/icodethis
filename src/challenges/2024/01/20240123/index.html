@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge's name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/framer-motion@10.18.0/dist/framer-motion.min.js
+"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                fontFamily: {
+                    sans: ["Roboto", "sans-serif"],
+                },
+                extend: {
+                    colors: {
+                        turquoise: {
+                            300: "hsl(199, 92%, 56%)",
+                            400: "hsl(200, 100%, 41%)",
+                        },
+                        cerulean: {
+                            400: "hsl(185, 100%, 38%)",
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        jump: {
+                            '0%, 100%': {
+                                "transform": "translateY(-0.4)"
+                            },
+                            '50%': {
+                                "transform": "translateY(0.4em)"
+                            },
+                        }
+                    },
+                    animation: {
+                        jump: 'jump 2s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings: 
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0, 
+                'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            height: .2em;
+            width: .4em;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 16%);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0em;
+            background: hsl(207, 31%, 94%);
+            cursor: pointer;
+        }
+        
+        .hidden-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        function App() {
+            const {motion, AnimatePresence} = window.Motion;
+
+            const SCREENS = {FLIGHT_LIST: 0, CHECKIN_PROGRESS: 1, FLIGHT_BOOKED: 2, PREPARATION: 3, CHECK_IN: 4, PACKING: 5}
+            const [currentScreen, setCurrentScreen] = React.useState(SCREENS.CHECKIN_PROGRESS);
+
+            const [steps, setSteps] = React.useState([
+                { title: 'Flight Booked', isCompleted: true, component: FlightBooked, props: { confirmationCode: '678900' } },
+                { title: 'Preparation', isCompleted: true, component: Preparation },
+                { title: 'Check-in', isCompleted: true, component: CheckIn },
+                { title: 'Packing', isCompleted: false, component: Packing },
+            ]);
+
+            const getEnrichedSteps = () => {
+                return steps.map((step, index, array) => {
+                    // If current step is the first incomplete step
+                    const isCurrent = step.isCompleted && !array.slice(0, index).some(s => !s.isCompleted);
+                    
+                    return {
+                        ...step,
+                        isCurrent: isCurrent,
+                        children: React.createElement(step.component, step.props || {}),
+                        isLast: index === steps.length - 1,
+                        onClick: () => handleStepClick(SCREENS[step.title.toUpperCase().replace(/ /g, '_')]),
+                    };
+                });
+            };
+
+            const handleClickOnBack = () => {
+                setCurrentScreen(SCREENS.FLIGHT_LIST);
+
+                setTimeout(() => {
+                    setCurrentScreen(SCREENS.CHECKIN_PROGRESS);
+                }, 1500);
+            }
+            
+            const handleStepClick = (screen) => {
+                setCurrentScreen(screen);
+            }
+
+            const renderCurrentScreen = () => {
+                let screenComponent = null;
+                switch (currentScreen) {
+                    case SCREENS.CHECKIN_PROGRESS:
+                        screenComponent = <CheckInProgressScreen onBack={handleClickOnBack} steps={getEnrichedSteps()} />;
+                        break;
+                    case SCREENS.FLIGHT_BOOKED:
+                        screenComponent = <FlightBookedDetail onBack={handleClickOnBack} confirmationCode="678900" />;
+                        break;
+                    case SCREENS.PREPARATION:
+                        screenComponent = <PreparationScreen onBack={handleClickOnBack} />;
+                        break;
+                    case SCREENS.CHECK_IN:
+                        screenComponent = <CheckInScreen onBack={handleClickOnBack} />;
+                        break;
+                    case SCREENS.PACKING:
+                        screenComponent = <PackingScreen onBack={handleClickOnBack} />;
+                        break;
+                    default:
+                        screenComponent = null;
+                }
+
+                return (
+                    <AnimatePresence>
+                        {screenComponent && (
+                            <motion.div
+                                key={currentScreen} 
+                                initial={{ opacity: 0, scale: 0}}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: .9 }}
+                                transition={{ type: 'spring', stiffness: 200, damping: 30 }}
+                                className="absolute"
+                            >
+                                {screenComponent}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                );
+            };
+
+            return (
+                <div className="bg-gradient-to-r from-turquoise-400 to-cerulean-400 flex items-center justify-center w-full h-screen">
+                    <main className="relative w-full max-w-sm m-4 flex items-center justify-center">
+                        {renderCurrentScreen()}
+                    </main>
+                </div>
+            );
+        }
+
+        function ScreenPage({children, className}) {
+            return (
+                <section className={`bg-white w-full h-[38.6rem] aspect-[2/3.6] rounded-lg overflow-hidden ${className}`}>
+                    {children}
+                </section>
+            );
+        }
+
+        function NavbarTop({children, className}) {
+            return (
+                <header className={`bg-slate-100 h-16 ${className}`}>
+                    {children}
+                </header>
+            );
+        }
+
+        function ProgressIndicator({ className, steps }) {
+            const { motion } = window.Motion;
+            return (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className={`flex flex-col gap-y-0 p-4 overflow-y-scroll hidden-scrollbar ${className}`}
+                >
+                    {steps.map((step, index) => (
+                        <Step key={index} {...step} />
+                    ))}
+                </motion.div>
+            );
+        }
+
+        function Step({ title, isCompleted, isCurrent, isLast, onClick, children }) {
+            const { motion } = window.Motion;
+            let statusClass = isCurrent ? 'text-turquoise-400' : isCompleted ? 'text-green-500' : 'text-gray-500';
+
+            return (
+                <motion.div
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ type: 'spring', stiffness: 170, damping: 10 }}
+                    onClick={onClick}
+                    className={`relative isolate pb-4 flex items-center ${statusClass}`}
+                >
+                    <div 
+                        className={`
+                            self-start size-5 p-0.5 rounded-full shadow flex items-center justify-center 
+                            ${!isLast && "before:absolute before:top-0 before:-z-10 before:w-1 before:h-[96%] before:bg-gray-200 before:rounded-full"}
+                            ${isCompleted ? 'bg-green-500' : 'bg-gray-200'} mr-2
+                        `}
+                    >
+                        {isCompleted && <CheckIcon className="text-white"/>}
+                    </div>
+                    <div className="flex-1 space-y-4">
+                        <h2 className="text-lg font-medium cursor-pointer">{title}</h2>
+
+                        {children}
+                    </div>
+                </motion.div>
+            );
+        }
+
+        function FlightBooked({ confirmationCode }) {
+            return (
+                <div className="space-y-2">
+                    <div>
+                        <p className="text-sm text-gray-600">Confirmation Code</p>
+
+                        <p className="text-xl text-black font-semibold">{confirmationCode}</p>
+                    </div>
+
+                    <Button>Show Booking Summary</Button>
+                </div>
+            );
+        }
+
+        function Preparation() {
+            return (
+                <div className="flex flex-col gap-y-2">
+                    <Badge text="Priority"/>
+
+                    <Button className="w-fit">Add Services</Button>
+                </div>
+            );
+        }
+
+        function CheckIn() {
+            return (
+                <div className="space-y-2">
+                    <p className="text-sm text-gray-600">
+                        All Passengers Checked-in
+                    </p>
+
+                    <div className="flex items-center gap-1">
+                        <Badge text="AG"/>
+                        <Badge text="II"/>
+                    </div>
+                </div>
+            );
+        }
+
+        function Packing() {
+            return (
+                <div className="space-y-2">
+                    <p className="text-sm">
+                        You may upgrade your baggage up to three hours before departure
+                    </p>
+
+                    <Button>Add baggage</Button>
+                </div>
+            );
+        }
+
+        function Button({children, className}) {
+            return (
+                <button className={`bg-turquoise-300 text-white text-xs uppercase p-2 rounded duration-500 hover:bg-turquoise-400 active:scale-95 ${className}`}>
+                    {children}
+                </button>
+            );
+        }
+
+        function Badge({text, className}) {
+            return (
+                <span className="bg-gray-200 text-gray-500 text-xs w-fit px-2 py-0.5 rounded-full duration-500 hover:bg-gray-300 hover:text-gray-600">
+                    {text}
+                </span>
+            );
+        }
+
+        function CheckInProgressScreen({ onBack, steps }) {
+            const {motion} = window.Motion;
+
+            return (
+                <ScreenPage className="grid gird-rows-[4rem_1fr]">
+                    <NavbarTop className="px-4 flex items-center justify-between gap-2">
+                        <button onClick={onBack}>
+                            <ChevronLeftIcon/>
+                        </button>
+
+                        <h1 className="text-lg font-semibold">
+                            Bergen - Budapest
+                        </h1>
+
+                        <button>
+                            <EllipsisHorizontalIcon/>
+                        </button>
+                    </NavbarTop>
+
+                    <ProgressIndicator steps={steps} />
+                </ScreenPage>
+            );
+        }
+
+        function FlightBookedDetail({ onBack, confirmationCode }) {
+            return (
+                <ScreenPage>
+                    <NavbarTop className="px-4 flex items-center justify-between gap-2">
+                        <button onClick={onBack}>
+                            <ChevronLeftIcon/>
+                        </button>
+
+                        <h1 className="text-lg font-semibold">Preparation Details</h1>
+
+                        <button>
+                            <EllipsisHorizontalIcon/>
+                        </button>
+                    </NavbarTop>
+                    <div className="p-4">
+                        <h1 className="text-lg font-semibold">Flight Details</h1>
+                        
+                        <p>TODO...</p>
+                    </div>
+                </ScreenPage>
+            );
+        }
+
+        function PreparationScreen({ onBack }) {
+            return (
+                <ScreenPage>
+                    <NavbarTop className="px-4 flex items-center justify-between gap-2">
+                        <button onClick={onBack}>
+                            <ChevronLeftIcon/>
+                        </button>
+
+                        <h1 className="text-lg font-semibold">Preparation Details</h1>
+
+                        <button>
+                            <EllipsisHorizontalIcon/>
+                        </button>
+                    </NavbarTop>
+
+                    <div className="p-4">
+                        <h2 className="text-xl font-semibold mb-4">Preparation</h2>
+
+                        <p className="text-sm text-gray-600">TODO...</p>
+
+                        <Button className="mt-4">Add Services</Button>
+                    </div>
+                </ScreenPage>
+            );
+        }
+
+        function CheckInScreen({ onBack }) {
+            return (
+                <ScreenPage>
+                    <NavbarTop className="px-4 flex items-center justify-between gap-2">
+                        <button onClick={onBack}>
+                            <ChevronLeftIcon/>
+                        </button>
+
+                        <h1 className="text-lg font-semibold">Check-In Details</h1>
+
+                        <button>
+                            <EllipsisHorizontalIcon/>
+                        </button>
+                    </NavbarTop>
+
+                    <div className="p-4">
+                        <h2 className="text-xl font-semibold mb-4">Check-In</h2>
+
+                        <p className="text-sm text-gray-600">TODO...</p>
+
+                        <Button className="mt-4">Check-In Now</Button>
+                    </div>
+                </ScreenPage>
+            );
+        }
+
+        function PackingScreen({ onBack }) {
+            return (
+                <ScreenPage>
+                    <NavbarTop className="px-4 flex items-center justify-between gap-2">
+                        <button onClick={onBack}>
+                            <ChevronLeftIcon/>
+                        </button>
+
+                        <h1 className="text-lg font-semibold">Packing Details</h1>
+
+                        <button>
+                            <EllipsisHorizontalIcon/>
+                        </button>
+                    </NavbarTop>
+
+                    <div className="p-4">
+                        <h2 className="text-xl font-semibold mb-4">Packing</h2>
+                        
+                        <p className="text-sm text-gray-600">
+                           TODO...
+                        </p>
+
+                        <Button className="mt-4">Add Extra Baggage</Button>
+                    </div>
+                </ScreenPage>
+            );
+        }
+
+        function ChevronLeftIcon({size = 24, className}) {
+            return (
+                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M7.71967 12.5303C7.42678 12.2374 7.42678 11.7626 7.71967 11.4697L15.2197 3.96967C15.5126 3.67678 15.9874 3.67678 16.2803 3.96967C16.5732 4.26256 16.5732 4.73744 16.2803 5.03033L9.31066 12L16.2803 18.9697C16.5732 19.2626 16.5732 19.7374 16.2803 20.0303C15.9874 20.3232 15.5126 20.3232 15.2197 20.0303L7.71967 12.5303Z" fill="currentColor" />
+                </svg>
+            );
+        }
+
+        function EllipsisHorizontalIcon({size = 24, className}) {
+            return (
+                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M4.5 12C4.5 11.1716 5.17157 10.5 6 10.5C6.82843 10.5 7.5 11.1716 7.5 12C7.5 12.8284 6.82843 13.5 6 13.5C5.17157 13.5 4.5 12.8284 4.5 12ZM10.5 12C10.5 11.1716 11.1716 10.5 12 10.5C12.8284 10.5 13.5 11.1716 13.5 12C13.5 12.8284 12.8284 13.5 12 13.5C11.1716 13.5 10.5 12.8284 10.5 12ZM16.5 12C16.5 11.1716 17.1716 10.5 18 10.5C18.8284 10.5 19.5 11.1716 19.5 12C19.5 12.8284 18.8284 13.5 18 13.5C17.1716 13.5 16.5 12.8284 16.5 12Z" fill="currentColor" />
+                </svg>
+            );
+        }
+
+        function CheckIcon({size = 24, className}) {
+            return (
+                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M19.916 4.62604C20.2607 4.85581 20.3538 5.32146 20.124 5.6661L11.124 19.1661C10.9994 19.3531 10.7975 19.4743 10.5739 19.4964C10.3503 19.5186 10.1286 19.4393 9.96967 19.2804L3.96967 13.2804C3.67678 12.9875 3.67678 12.5126 3.96967 12.2197C4.26256 11.9269 4.73744 11.9269 5.03033 12.2197L10.3834 17.5729L18.876 4.83405C19.1057 4.48941 19.5714 4.39628 19.916 4.62604Z" fill="currentColor" />
+                </svg>
+            );
+        }
+    
+        const container = document.getElementById("root");
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);  
+</script>
+</body>
+
+</html>
